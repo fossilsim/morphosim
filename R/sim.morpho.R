@@ -42,15 +42,7 @@ sim.morpho = function(tree, k = 2, nchar = c(10), variable.coding = FALSE, parti
 }
 
 
-# Step 1. regular RB inference
 
-# Step 2. simulate data in R using the var trees
-  # 2a. draw values from Mike's prior
-
-# Step 3. run inference on those replicates RB
-  # Check we can estimate alpha
-
-# ?Next steps... do the PP simulations in R?
 
 
 
