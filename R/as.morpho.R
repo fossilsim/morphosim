@@ -28,17 +28,21 @@ morpho <- function(data, tree, model) {
 # Define print method for the morpho object
 ### this was copied from fossil sim so might want to change it up at some stage!!
 # Define print method for the morpho object
+# probably don't need to print the whole alignmnet here
 print.morpho <- function(x, max.length = 5, ...) {
   # Convert sequences into a data frame
   seq_data <- t(as.data.frame(x$sequences))
 
   # Print first `max.length` rows (or fewer if max.length exceeds the number of rows)
   #print(head(seq_data, max.length))
-    print(seq_data)
+
+  print(seq_data[,1:max.length])
+
   # Print a summary of the morphological data
   cat("Morphological data for", length(x$sequences), "taxa with",
       length(x$sequences[[1]]), "traits per taxon and", sort(unique(c(seq_data[,1], seq_data[,2]))),
       "as character states\n")
+      cat("Showing", max.length, "traits here for now\n")
 }
 # Define summary method for the morpho object
 summary.morpho <- function(object, max.length = 5, ...) {
