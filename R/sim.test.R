@@ -1,10 +1,9 @@
 sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
 
-  Q  <- NULL
-  #Q <- list(rbind(c(-.5, .5), c(.5, -.5))) #TODO: generate a Q matrix of size k, later add variable bf
-  Q <- list(rbind(c(-.75, .25, .25, .25), c(.25, -.75, .25, .25), c(.25, .25, -.75, .25), c(.25, .25, .25, -.75) ))
+  ### for a symmetric Q matrix (default?)
+  Q <- symmetric_Q_matrix(k)
+  trait.num <- trait.num
 
-  #trait.num <- 2 #TODO >1
   states <- as.character(c(0:(k-1)))
 
   # reorder branches in the phylogeny
@@ -43,7 +42,7 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
     #P <- getP(tl[i], eig, rate)[[1]]
     # probability of change along each branch
     #P  <- lapply(bl[i], function(l) ape::matexpo(Q[[1]] * l))
-    P  <- ape::matexpo(Q[[1]] * bl[i])
+    P  <- ape::matexpo(Q * bl[i])
 
     # avoid numerical problems for larger P and small bl
     if (any(P < 0)) P[P < 0] <- 0
@@ -55,13 +54,25 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
     }
   }
 
-  tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
+ tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
   rownames(output) <- tip.labels
-
+  
   # remove ancestral sequences
   if (!ancestral) output <- output[tree.ordered$tip.label, , drop = FALSE]
-
-  return(output)
+  
+  # formatting for morpho object
+   tip_sequences <- rownames(output)
+   sequence = list()
+   
+   for ( i in 1:length(tip_sequences)){
+     sequence[[tip_sequences[i]]] <- output[tip_sequences[i],]
+   }
+  
+  
+  sim.output <- as.morpho(sequence, tree.ordered, "Mk")
+  
+  
+  return(sim.output)
 }
 
 set.seed(123)
