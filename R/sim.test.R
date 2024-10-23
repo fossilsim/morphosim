@@ -56,25 +56,27 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
 
  tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
   rownames(output) <- tip.labels
-  
+
   # remove ancestral sequences
   if (!ancestral) output <- output[tree.ordered$tip.label, , drop = FALSE]
-  
+
   # formatting for morpho object
    tip_sequences <- rownames(output)
    sequence = list()
-   
-  #  create list of simulated traits 
+
+  #  create list of simulated traits
    for ( i in 1:length(tip_sequences)){
      sequence[[tip_sequences[i]]] <- output[tip_sequences[i],]
    }
-  
+
   # create morpho object
   sim.output <- as.morpho(sequence, tree.ordered, "Mk")
-  
-  
+
+
   return(sim.output)
 }
+
+
 
 set.seed(123)
 phy <- ape::rtree(15)
