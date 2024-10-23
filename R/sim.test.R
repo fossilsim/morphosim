@@ -76,7 +76,8 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
 }
 
 set.seed(123)
-phy <- ape::rtree(6)
+phy <- ape::rtree(15)
 plot(phy)
-sim.test(phy, k = 4)
+simulated_morpho <- sim.test(phy, k = 5, trait.num = 10)
+simulated_morpho
 
