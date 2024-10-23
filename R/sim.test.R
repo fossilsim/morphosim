@@ -54,7 +54,7 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
     }
   }
 
- tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
+   tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
   rownames(output) <- tip.labels
 
   # remove ancestral sequences
@@ -79,8 +79,8 @@ sim.test <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
 
 
 set.seed(123)
-phy <- ape::rtree(15)
+phy <- ape::rtree(10)
 plot(phy)
-simulated_morpho <- sim.test(phy, k = 5, trait.num = 10)
+simulated_morpho <- sim.test(phy, k = 2, trait.num = 20)
 simulated_morpho
 

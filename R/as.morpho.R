@@ -30,11 +30,11 @@ morpho <- function(data, tree, model) {
 # Define print method for the morpho object
 print.morpho <- function(x, max.length = 5, ...) {
   # Convert sequences into a data frame
-  seq_data <- as.data.frame(x$sequences)
+  seq_data <- t(as.data.frame(x$sequences))
 
   # Print first `max.length` rows (or fewer if max.length exceeds the number of rows)
-  print(head(seq_data, max.length))
-
+  #print(head(seq_data, max.length))
+    print(seq_data)
   # Print a summary of the morphological data
   cat("Morphological data for", length(x$sequences), "taxa with",
       length(x$sequences[[1]]), "traits per taxon and", sort(unique(c(seq_data[,1], seq_data[,2]))),
@@ -46,8 +46,8 @@ summary.morpho <- function(object, max.length = 5, ...) {
   print(object, max.length = max.length)
 
   # Additional information about the tree and model
-  cat("Tree with", length(object$tree$tip.label), "tips.\n")
-  cat("Model:", object$model, ".\n")
+  cat("Tree with", length(object$tree$tip.label), "tips\n")
+  cat("Model:", object$model, "\n")
 }
 
 # Define the as.morpho generic function
