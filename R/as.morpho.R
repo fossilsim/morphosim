@@ -26,6 +26,7 @@ morpho <- function(data, tree, model) {
 }
 
 # Define print method for the morpho object
+### this was copied from fossil sim so might want to change it up at some stage!!
 print.morpho <- function(x, max.length = 5, ...) {
   # Convert sequences into a data frame
   seq_data <- as.data.frame(x$sequences)
