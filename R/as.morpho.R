@@ -35,8 +35,8 @@ print.morpho <- function(x, max.length = 5, ...) {
   
   # Print a summary of the morphological data
   cat("Morphological data for", length(x$sequences), "taxa with", 
-      length(x$sequences[[1]]), "traits per taxon.\n")
-}
+      length(x$sequences[[1]]), "traits per taxon and", unique(c(seq_data[,1], seq_data[,2])),
+      "as character states\n")
 
 # Define summary method for the morpho object
 summary.morpho <- function(object, max.length = 5, ...) {
