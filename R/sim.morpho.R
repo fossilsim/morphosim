@@ -40,14 +40,3 @@ sim.morpho = function(tree, k = 2, nchar = c(10), variable.coding = FALSE, parti
   }
   seq
 }
-
-
-
-
-
-
-v = c()
-for(i in 1:100000){
-  v = c(v, 1/rexp(1))
-}
-mean(v)
