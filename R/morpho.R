@@ -27,9 +27,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL){
     model = model
   )
 
-  # Assign class "morpho" to the object
-  #attr(morpho, "class") <- c("morphology", class(morpho))
-  class(morpho.list) <- "morpho"
+  # assign class "morpho" to the object
+  attr(morpho.list, "class") <- c("morpho", class(morpho.list))
   return(morpho.list)
 }
 
