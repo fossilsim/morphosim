@@ -62,9 +62,8 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- function(data, tree, model) {
-  UseMethod("as.morpho")
-}
+as.morpho <- function(data, tree, model) UseMethod("as.morpho")
+
 
 #' @export
 as.morpho.default <- function(data, ...) {
