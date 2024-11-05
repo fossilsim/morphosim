@@ -3,6 +3,13 @@
 sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
                        k = 2, trait.num = 2, ancestral = FALSE){
 
+  # check that a tree is provided
+  if (is.null(tree) && is.null(time.tree)) stop(cat("Must provide a tree object"))
+  # check that there are more then two states
+  if (k < 2) stop(cat("Trait data must have more than 1 state"))
+
+
+
   ## if provided with time tree, need to transform branches in genetic distance
   ## rates can be a single value or a vector for each branch
   if (is.null(tree) && !is.null(time.tree)){
