@@ -8,7 +8,7 @@
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #'
 #' @export
-morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL){
+morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, node.seq = NULL){
 
   # check the number of sequences match the number of tips in the tree
   if (length(data) != length(tree$tip.label)) {
@@ -24,7 +24,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL){
   morpho.list <- list(
     sequences = data,
     tree = tree,
-    model = model
+    model = model,
+    node.sequences = node.seq
   )
 
   # assign class "morpho" to the object
@@ -62,7 +63,7 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- function(data, tree, model) UseMethod("as.morpho")
+as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL) UseMethod("as.morpho")
 
 
 #' @export

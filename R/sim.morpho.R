@@ -59,20 +59,38 @@ sim.morpho <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
   tip.labels <- c(tree.ordered$tip.label, as.character( (num.tips + 1):num.nodes))
   rownames(output) <- tip.labels
 
-  # remove ancestral sequences
-  if (!ancestral) output <- output[tree.ordered$tip.label, , drop = FALSE]
+  # do we want information about the node
+  if (ancestral) {
+    output_node.seq <- output[setdiff(rownames(output), tree.ordered$tip.label), , drop = FALSE]
+    output <- output[tree.ordered$tip.label,  ,drop = FALSE]
 
+  } else {
+   output <- output[tree.ordered$tip.label,  ,drop = FALSE]
+   output_node.seq <- NULL
+}
   # formatting for morpho object
-  tip_sequences <- rownames(output)
-  sequence = list()
+  tip_names <- rownames(output)
+  tip_sequence = list()
 
   #  create list of simulated traits
-  for ( i in 1:length(tip_sequences)){
-    sequence[[tip_sequences[i]]] <- output[tip_sequences[i],]
+  for ( i in 1:length(tip_names)){
+    tip_sequence[[tip_names[i]]] <- output[tip_names[i],]
   }
 
+  if (ancestral){
+    # formatting for morpho object
+    node_names <- rownames(output_node.seq)
+    node_sequence = list()
+
+    #  create list of simulated traits
+    for ( i in 1:length(node_names)){
+      node_sequence[[node_names[i]]] <- output_node.seq[node_names[i],]
+    }
+  } else {
+    node_sequence <- NULL
+  }
   # create morpho object
-  sim.output <- as.morpho(sequence, tree.ordered, "Mk")
+  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk", node.seq = node_sequence )
 
 
   return(sim.output)
