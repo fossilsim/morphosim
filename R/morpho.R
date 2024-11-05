@@ -25,7 +25,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, nod
     sequences = data,
     tree = tree,
     model = model,
-    node.sequences = node.seq
+    node.sequences = node.seq,
+    time.tree = time.tree
   )
 
   # assign class "morpho" to the object

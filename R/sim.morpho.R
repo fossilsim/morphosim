@@ -1,6 +1,22 @@
 # https://github.com/KlausVigo/phangorn/blob/master/R/simSeq.R
 
-sim.morpho <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
+sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
+                       k = 2, trait.num = 2, ancestral = FALSE){
+
+  ## if provided with time tree, need to transform branches in genetic distance
+  ## rates can be a single value or a vector for each branch
+  if (is.null(tree) && !is.null(time.tree)){
+    tree <- time.tree
+
+    if(is.null(br.rates)){
+      print("No branch rate provide, using default of 0.1 for all branches")
+      tree$edge.length <- time.tree$edge.length * 0.1
+    } else {
+    tree$edge.length <- time.tree$edge.length * br.rates
+    }
+  }
+
+
 
   ### for a symmetric Q matrix (default?)
   Q <- symmetric.Q.matrix(k)
@@ -11,6 +27,12 @@ sim.morpho <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
   # reorder branches in the phylogeny
   #tree.ordered <- ape::reorder.phylo(tree, "postorder")
   tree.ordered <- reorder(tree)
+
+  ##reorder the nodes on the time tree to match the format of the genetic distance tree
+  if (!is.null(time.tree)) {
+    time.tree.order <- reorder(time.tree)
+  } else {time.tree.order = NULL}
+
   edge <- tree.ordered$edge
   num.nodes <- max(edge)
   num.tips <- ape::Ntip(tree.ordered)
@@ -90,7 +112,8 @@ sim.morpho <- function(tree, k = 2, trait.num = 2, ancestral = FALSE){
     node_sequence <- NULL
   }
   # create morpho object
-  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk", node.seq = node_sequence )
+  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
+                          node.seq = node_sequence, time.tree = time.tree.order )
 
 
   return(sim.output)
