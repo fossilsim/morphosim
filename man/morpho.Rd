@@ -6,18 +6,26 @@
 \alias{is.morpho}
 \title{Mopho object}
 \usage{
-morpho(data = NULL, tree = NULL, time.tree = NULL, model = NULL)
+morpho(
+  data = NULL,
+  tree = NULL,
+  time.tree = NULL,
+  model = NULL,
+  node.seq = NULL
+)
 
-as.morpho(data, tree, model)
+as.morpho(data, tree, time.tree = NULL, model = NULL, node.seq = NULL)
 
 is.morpho(data)
 }
 \arguments{
-\item{data}{?}
+\item{data}{Trait data associated with the tips of the tree}
 
 \item{tree}{Tree with branches that represent genetic distance associated with the character data.}
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
+
+\item{node.seq}{Trait data associated with the internal nodes of the tree}
 }
 \description{
 Create a morpho.

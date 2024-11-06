@@ -1,3 +1,7 @@
+#' This function plots your morpho object to the tree
+#' @param x an object of class "morpho"
+#' @param tree an object of class "phy
+#' @export 
 plot.morpho = function(x, tree, show.tree = TRUE,
                      # age info/options
                      max.age = NULL, show.axis = TRUE,
@@ -7,10 +11,10 @@ plot.morpho = function(x, tree, show.tree = TRUE,
                      root.edge = TRUE, hide.edge = FALSE, edge.width = 1, show.tip.label = FALSE, align.tip.label = FALSE,
                      # taxa appearance
                      extant.col = 1, taxa.palette = "viridis",
-                     col.axis = "gray35", cex = 1.2, pch = evol$bp_change, ...) {
+                     col.axis = "gray35", cex = 1.2, pch = morpho$bp_change, ...) {
   
   # hard coded options for tree appearance
-  evol = x
+  morpho = x
   edge.color = "black"
   edge.lty = 1
   font = 3 # italic
@@ -27,14 +31,14 @@ plot.morpho = function(x, tree, show.tree = TRUE,
   
   if(!show.tree) align.tip.label = TRUE
   
-  if(class(evol)[1]!="evol")
-    stop("x must be an object of class \"evol\"")
+  if(class(morpho)[1]!="morpho")
+    stop("x must be an object of class \"morpho\"")
   
   if(!"phylo" %in% class(tree))
     stop("tree must be an object of class \"phylo\"")
   
-  if(!all( as.vector(na.omit(evol$edge)) %in% tree$edge))
-    stop("Mismatch between evol and tree objects")
+  if(!all( as.vector(na.omit(morpho$edge)) %in% tree$edge))
+    stop("Mismatch between morpho and tree objects")
   
   if(!(rho >= 0 && rho <= 1))
     stop("rho must be a probability between 0 and 1")
@@ -213,9 +217,9 @@ plot.morpho = function(x, tree, show.tree = TRUE,
       }
       text(xx.tmp + lox, yy.tmp + loy, tree$tip.label,adj = adj, font = font, srt = srt, cex = cex, col = tip.color)
     }
-    evol$r = max(xx) - evol$hmax + offset 
-    evol = na.omit(evol)
-    points(evol$r,yy[evol$edge], cex = cex, pch = pch)
+    morpho$r = max(xx) - morpho$hmax + offset 
+    morpho = na.omit(morpho)
+    points(morpho$r,yy[morpho$edge], cex = cex, pch = pch)
   }
   
   if(!is.na(old.par[1])) par(old.par)
