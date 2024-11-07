@@ -52,7 +52,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
   child <- as.integer(edge[, 2])
 
   # identify the root
-  root <- as.integer(parent[!match(parent, child, 0)][1])
+  root<- as.integer(parent[!match(parent, child, 0)][1])
 
   # simulate the root state
   root.state <- sample(states, trait.num, replace = TRUE, prob = rep(1/k, k)) #later prob would need to take into account for bf
