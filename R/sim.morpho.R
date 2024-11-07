@@ -1,4 +1,12 @@
-# https://github.com/KlausVigo/phangorn/blob/master/R/simSeq.R
+#' @param data Trait data associated with the tips of the tree
+#' @param tree Tree with branches that represent genetic distance associated with the character data.
+#' @param time.tree Tree with branches that represent time associated with the character data.
+#' @param br.rate clock Rate, currently can only be strict clock (a single rate)
+#' @param k Number of states
+#' @param trait.num The number of traits to simulate
+#' @param ancestral T/F Whether or not to output information from internal nodes
+#'
+
 
 sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
                        k = 2, trait.num = 2, ancestral = FALSE){
