@@ -8,17 +8,17 @@
 #' @param node.seq Trait data associated with the internal nodes of the tree
 #'
 #' @export
-morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, node.seq = NULL){
+morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, node.seq = NULL, continuous_traits = NULL){
 
   # check the number of sequences match the number of tips in the tree
-  if (length(data) != length(tree$tip.label)) {
-    stop("Number of sequences doesn't match the number of tips in the tree.")
-  }
+  #if (length(data) != length(tree$tip.label)) {
+  #  stop("Number of sequences doesn't match the number of tips in the tree.")
+ # }
 
   # check each sequence contains the same number of characters
-  if (length(unique(sapply(data, length))) != 1) {
-    stop("Each sequence should contain the same number of characters.")
-  }
+  #if (length(unique(sapply(data, length))) != 1) {
+  #  stop("Each sequence should contain the same number of characters.")
+  #}
 
   # Create a list to store sequences, tree, and model
   morpho.list <- list(
@@ -26,7 +26,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, nod
     tree = tree,
     model = model,
     node.sequences = node.seq,
-    time.tree = time.tree
+    time.tree = time.tree,
+    continuous_traits = continuous_traits
   )
 
   # assign class "morpho" to the object
@@ -64,7 +65,7 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL) UseMethod("as.morpho")
+as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL, continuous_traits = NULL) UseMethod("as.morpho")
 
 
 #' @export

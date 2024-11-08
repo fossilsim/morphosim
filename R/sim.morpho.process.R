@@ -44,11 +44,11 @@ sim.morpho.process <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
     time.tree.order <- reorder(time.tree)
   } else {time.tree.order = NULL}
 
-  edge <- tree.ordered$edge
-  num.nodes <- max(edge)
-  num.tips <- ape::Ntip(tree.ordered)
+
 
 continuous_traits <- list()
+keep_root.states <- c()
+state_at_tips <- matrix(nrow = num.tips, ncol = trait.num)
 
   for (trait in 1:trait.num){
 
@@ -237,7 +237,11 @@ if (position < br_len){
   rm(current_state)
 }
  # return(transitions)
-  return(continuous_traits)
+
+sim.output <- as.morpho(data = "todo", tree = tree.ordered, model = "Mk",
+                       time.tree = time.tree.order, continuous_traits= continuous_traits )
+
+  return(sim.output )
 }
 
 ##### to get from the tip to the root of the tree
