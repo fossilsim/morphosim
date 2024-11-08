@@ -48,8 +48,9 @@ sim.morpho.process <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
   num.nodes <- max(edge)
   num.tips <- ape::Ntip(tree.ordered)
 
+continuous_traits <- list()
 
-  ### for (trait in 1:length(triat.num))
+  for (trait in 1:trait.num){
 
 
   # container for the transitions
@@ -120,7 +121,7 @@ root <- as.integer(parent[!match(parent, child, 0)][1])
 
 if(!exists("root.state")){
  # simulate the root state
-root.state <- sample(states, trait.num, replace = TRUE, prob = rep(1/k, k)) #later prob would need to take into account for bf
+root.state <- sample(states, 1, replace = TRUE, prob = rep(1/k, k)) #later prob would need to take into account for bf
 # set the root state as current state. This will be updated
 }
 current_state <- as.numeric(root.state)
@@ -231,8 +232,12 @@ if (position < br_len){
 }
 
 }
-
-  return(transitions)
+  continuous_traits[[trait]] <- transitions
+  rm(root.state)
+  rm(current_state)
+}
+ # return(transitions)
+  return(continuous_traits)
 }
 
 ##### to get from the tip to the root of the tree
