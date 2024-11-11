@@ -1,4 +1,19 @@
 
+#' @param tree Tree with branches that represent genetic distance associated with the character data.
+#' @param time.tree Tree with branches that represent time associated with the character data.
+#' @param br.rate clock Rate, currently can only be strict clock (a single rate)
+#' @param k Number of states
+#' @param trait.num The number of traits to simulate
+
+#' @examples
+#'  # simulated tree
+#'  phy <- ape::rtree(10)
+#'
+#'  # simulate characters along the branches of the tree
+#'  continuous_traits <- sim.morpho.completeprocess(phy, k=4, trait.num =12)
+#'
+
+
 sim.morpho.completeprocess <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
                        k = 2, trait.num = 2){
 
@@ -49,6 +64,7 @@ sim.morpho.completeprocess <- function(tree = NULL, time.tree= NULL, br.rates = 
 continuous_traits <- list()
 keep_root.states <- c()
 state_at_tips <- matrix(nrow = num.tips, ncol = trait.num)
+rownames(state_at_tips) <- tree.ordered$tip.label
 
   for (trait in 1:trait.num){
 
@@ -229,16 +245,27 @@ if (position < br_len){
 
 }
 }
-
+state_at_tips[branches, trait ] <- current_state
 }
   keep_root.states <- rbind(keep_root.states, root.state)
   continuous_traits[[trait]] <- as.data.frame(transitions)
+  # what is the state of the traits at the tips
+
   rm(root.state)
   rm(current_state)
 }
- # return(transitions)
 
-sim.output <- as.morpho(data = "todo", tree = tree.ordered, model = "Mk",
+
+# formatting for morpho object
+tip_names <- rownames(state_at_tips)
+tip_sequence = list()
+
+#  create list of simulated traits
+for ( i in 1:length(tip_names)){
+  tip_sequence[[tip_names[i]]] <-state_at_tips[tip_names[i],]
+}
+
+sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
                        time.tree = time.tree.order, continuous_traits= continuous_traits, root.states = keep_root.states )
 
   return(sim.output )
