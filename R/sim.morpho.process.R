@@ -201,7 +201,6 @@ new_state <- sample(states, 1, replace = TRUE, prob = P[,(current_state+1)])
 # the branch the transitions occurred
 if (length(edges) == 1){
   for (p in 1:length(h)){
-    position <- h[p]
     exact_branch_position <- h[p]
     add_t <- c(as.numeric(edges[1]), state_changes[p], as.numeric(exact_branch_position), as.numeric(exact_branch_position))
     transitions <- rbind(transitions, add_t)
@@ -217,11 +216,11 @@ for ( e in 1:length(edges)){
   br_len <- br_len + tree.ordered$edge.length[edges[e]]
 if (position < br_len){
   if (e > 1){
-  exact_branch_position <- h[p] - sum(tree.ordered$edge.length[1:(e-1)])
+  exact_branch_position <- h[p] - sum(tree.ordered$edge.length[edges[1:(e-1)]])
   } else {
     exact_branch_position <- h[p]
   }
-  add_t <- c(edges[e], state_changes[p], exact_branch_position, exact_branch_position)
+  add_t <- c(as.numeric(edges[e]), state_changes[p], as.numeric(exact_branch_position), as.numeric(exact_branch_position))
   transitions <- rbind(transitions, add_t)
   break
 }
