@@ -50,3 +50,4 @@ plot(phy)
 simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 20)
 simulated_morpho
 
+make.evol(phy, char=simulated_morpho$sequences[1])
