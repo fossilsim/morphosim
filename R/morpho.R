@@ -8,7 +8,8 @@
 #' @param node.seq Trait data associated with the internal nodes of the tree
 #'
 #' @export
-morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, node.seq = NULL, continuous_traits = NULL){
+morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
+                   node.seq = NULL, continuous_traits = NULL, root.states = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -27,7 +28,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL, nod
     model = model,
     node.sequences = node.seq,
     time.tree = time.tree,
-    continuous_traits = continuous_traits
+    continuous_traits = continuous_traits,
+    root.states = root.states
   )
 
   # assign class "morpho" to the object
@@ -65,7 +67,8 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL, continuous_traits = NULL) UseMethod("as.morpho")
+as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL,
+                                   continuous_traits = NULL, root.states = NULL) UseMethod("as.morpho")
 
 
 #' @export
