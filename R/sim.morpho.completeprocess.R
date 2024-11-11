@@ -231,14 +231,15 @@ if (position < br_len){
 }
 
 }
-  continuous_traits[[trait]] <- transitions
+  keep_root.states <- rbind(keep_root.states, root.state)
+  continuous_traits[[trait]] <- as.data.frame(transitions)
   rm(root.state)
   rm(current_state)
 }
  # return(transitions)
 
 sim.output <- as.morpho(data = "todo", tree = tree.ordered, model = "Mk",
-                       time.tree = time.tree.order, continuous_traits= continuous_traits )
+                       time.tree = time.tree.order, continuous_traits= continuous_traits, root.states = keep_root.states )
 
   return(sim.output )
 }
