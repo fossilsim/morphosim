@@ -44,13 +44,17 @@ print.morpho <- function(x, max.length = 5, ...){
   # Convert sequences into a data frame
   seq.data <- t(as.data.frame(x$sequences))
 
+  if(ncol(seq.data) > 4){
   print(seq.data[,1:max.length])
+  } else {
+    print(seq.data)
+    }
 
   # Print a summary of the morphological data
   cat("Morphological data for", length(x$sequences), "taxa with",
-      length(x$sequences[[1]]), "traits per taxon and", sort(unique(c(seq.data[,1], seq.data[,2]))),
+      length(x$sequences[[1]]), "traits per taxon and", sort(unique(as.vector(seq.data))),
       "as character states\n")
-      cat("Showing", max.length, "traits here for now\n")
+      cat("Showing maximum of", max.length, "traits here for now\n")
 }
 
 #' @export
