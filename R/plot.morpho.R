@@ -7,11 +7,12 @@ plot.morpho = function(x, tree, show.tree = TRUE,
                      max.age = NULL, show.axis = TRUE,
                      # taxonomy
                      rho = 1,
+                     l = 1,
                      # tree appearance
                      root.edge = TRUE, hide.edge = FALSE, edge.width = 1, show.tip.label = FALSE, align.tip.label = FALSE,
                      # taxa appearance
                      extant.col = 1, taxa.palette = "viridis",
-                     col.axis = "gray35", cex = 1.2, pch = morpho$bp_change, ...) {
+                     col.axis = "gray35", cex = 1.2, pch = NULL, ...) {
   
   # hard coded options for tree appearance
   morpho = x
@@ -27,7 +28,12 @@ plot.morpho = function(x, tree, show.tree = TRUE,
   no.margin = FALSE
   adj = NULL
   srt = 0
-  strata = 1
+  v <- vector() 
+  for ( i in 1:length(morpho$sequences)){
+    v[i] <- morpho$sequences[[i]][[1]]
+  }
+  pch = v
+
   
   if(!show.tree) align.tip.label = TRUE
   
@@ -37,7 +43,7 @@ plot.morpho = function(x, tree, show.tree = TRUE,
   if(!"phylo" %in% class(tree))
     stop("tree must be an object of class \"phylo\"")
   
-  if(!all( as.vector(na.omit(morpho$edge)) %in% tree$edge))
+  if(!all(as.vector(na.omit(morpho$edge)) %in% tree$edge))
     stop("Mismatch between morpho and tree objects")
   
   if(!(rho >= 0 && rho <= 1))
@@ -125,10 +131,7 @@ plot.morpho = function(x, tree, show.tree = TRUE,
   
   use.species.ages = FALSE
   
-  s1 = (ba - offset) / strata # horizon length (= max age of youngest horizon)
-  horizons.max = seq(s1 + offset, ba, length = strata)
-  horizons.min = horizons.max - s1
-  s1 = horizons.max - horizons.min
+  s1 = (ba - offset)
   
     old.par = par("xpd", "mar")
     par(xpd=NA)
@@ -162,7 +165,7 @@ plot.morpho = function(x, tree, show.tree = TRUE,
         cc = cc + 1
         axis.strata = c(axis.strata, x.left)
       
-      x.labs = rev(round(c(offset, horizons.max),2))
+      x.labs = rev(round(c(offset, s1),2))
       labs = x.labs
       
       
@@ -217,9 +220,14 @@ plot.morpho = function(x, tree, show.tree = TRUE,
       }
       text(xx.tmp + lox, yy.tmp + loy, tree$tip.label,adj = adj, font = font, srt = srt, cex = cex, col = tip.color)
     }
+    
     morpho$r = max(xx) - morpho$hmax + offset 
     morpho = na.omit(morpho)
-    points(morpho$r,yy[morpho$edge], cex = cex, pch = pch)
+    x_coord <- xx[as.numeric(morpho$continuous_traits[[l]]$edge)]-morpho$tree$edge.length[as.numeric(morpho$continuous_traits[[l]]$edge)]+as.numeric(morpho$continuous_traits[[l]]$hmin)
+    y_coord <- yy[as.numeric(morpho$continuous_traits[[l]]$edge)]
+    points(x_coord, y_coord, pch = 22, col = "#003069", bg = "#003069"  ,cex = 4)
+    points(x_coord, y_coord,  pch = morpho$continuous_traits[[l]]$state, col = "#fdfdfd", cex = 1.5)
+    
   }
   
   if(!is.na(old.par[1])) par(old.par)
