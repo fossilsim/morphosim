@@ -186,3 +186,100 @@ ggplot(matrix_data_df, aes(Var2, Var1, fill=factor(value))) +
   labs(x="Traits", y="Taxon") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+
+
+###########plotting without ggplot#################
+set.seed(1234)
+phy <- ape::rtree(10)
+plot(phy)
+simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 10)
+simulated_morpho
+x<-simulated_morpho
+
+
+plot.morpho.grid(x, trait.labels=FALSE, tip.labels=TRUE){
+  #tip/taxon label
+
+  tips<-x[[2]][[2]]
+
+  # make empty container
+  char_matrix<-matrix(nrow= length(tips),ncol = length(x[[1]][[1]]))
+  rownames(char_matrix)<-tips
+
+  # add character information to the data frame
+
+  for (i in 1:length(x[[1]])){
+
+    #traits for a given taxon
+
+    traits<-x[[1]][[i]]
+
+    #make sure the values are numeric
+
+    char_matrix[i,]<-as.numeric(traits)}
+
+  matrix_data<-char_matrix
+
+  colors <- c("white", "blue") # White for 0, Blue for 1
+
+  # Create the grid
+  #plot(NULL)
+  image(t(matrix_data[nrow(matrix_data):1, ]),
+        col = colors,
+        axes = FALSE)
+
+  # Add gridlines
+  grid(nx = ncol(matrix_data), ny = nrow(matrix_data), col = "black", lty = 1)
+
+
+
+  #add axis labels
+  if(tip.label){
+    #rows (tip labels)
+  tip_labs <- tips
+
+  axis(2, at=seq(0,1, length=length(tip_labs)),
+       labels=tip_labs, lwd=0, pos=0 cex.axis=1, las=1)
+
+  #columns (traits)
+  if(trait.labels){
+    morph_labels<- seq(1,length(x$sequences[[1]]))
+    axis(3, at=seq(0,1, length=length(morph_labels)),
+         labels=morph_labels, lwd=0, pos=1, cex.axis=0.75)
+  }
+  }
+}
+
+rect(xleft = -0.036,
+     ybottom = -0.056,
+     xright = 1.036,
+     ytop = 1.056,
+     border = "black",
+     lwd = 2) # Adjust `lwd` for line thickness
+
+
+
+
+
+plot(0, xaxt = 'n', yaxt = 'n', bty = 'n', pch = '', ylab = '', xlab = '')# Add text labels for each cell
+num_rows <- nrow(matrix_data)
+num_cols <- ncol(matrix_data)
+
+# Loop through rows and columns to add text
+for (i in 1:num_rows) {
+  for (j in 1:num_cols) {
+    # Compute coordinates for text (reversed rows)
+    x <- j - 0.5
+    y <- num_rows - i + 0.5
+    # Add the text (value of the matrix)
+    text(x, y, labels = matrix_data[i, j], col = "black", cex = 0.8)
+  }
+}
+
+# Add row labels beside the grid
+for (i in 1:num_rows) {
+  # Compute y-coordinate for each label
+  y <- num_rows - i + 0.5
+  # Add the row label to the left of the grid
+  text(-0.5, y, labels = row_labels[i], col = "black", cex = 0.8, adj = 1)
+}
