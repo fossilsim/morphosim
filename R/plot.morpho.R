@@ -2,12 +2,17 @@
 #' @param x an object of class "morpho"
 #' @param tree an object of class "phy
 #' @export 
+#' @examples
+#' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
+#' x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
+#' plot.morpho(x = x, tree = x$tree)
 plot.morpho = function(x, tree, show.tree = TRUE,
                      # age info/options
                      max.age = NULL, show.axis = TRUE,
                      # taxonomy
                      rho = 1,
                      l = 1,
+                     br.rates = 0.1,
                      # tree appearance
                      root.edge = TRUE, hide.edge = FALSE, edge.width = 1, show.tip.label = FALSE, align.tip.label = FALSE,
                      # taxa appearance
@@ -223,7 +228,7 @@ plot.morpho = function(x, tree, show.tree = TRUE,
     
     morpho$r = max(xx) - morpho$hmax + offset 
     morpho = na.omit(morpho)
-    x_coord <- xx[as.numeric(morpho$continuous_traits[[l]]$edge)]-morpho$tree$edge.length[as.numeric(morpho$continuous_traits[[l]]$edge)]+as.numeric(morpho$continuous_traits[[l]]$hmin)
+    x_coord <- xx[as.numeric(morpho$continuous_traits[[l]]$edge)]+(as.numeric(morpho$continuous_traits[[l]]$hmin)*br.rates)
     y_coord <- yy[as.numeric(morpho$continuous_traits[[l]]$edge)]
     points(x_coord, y_coord, pch = 22, col = "#003069", bg = "#003069"  ,cex = 4)
     points(x_coord, y_coord,  pch = morpho$continuous_traits[[l]]$state, col = "#fdfdfd", cex = 1.5)
