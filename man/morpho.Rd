@@ -11,10 +11,20 @@ morpho(
   tree = NULL,
   time.tree = NULL,
   model = NULL,
-  node.seq = NULL
+  node.seq = NULL,
+  continuous_traits = NULL,
+  root.states = NULL
 )
 
-as.morpho(data, tree, time.tree = NULL, model = NULL, node.seq = NULL)
+as.morpho(
+  data,
+  tree,
+  time.tree = NULL,
+  model = NULL,
+  node.seq = NULL,
+  continuous_traits = NULL,
+  root.states = NULL
+)
 
 is.morpho(data)
 }

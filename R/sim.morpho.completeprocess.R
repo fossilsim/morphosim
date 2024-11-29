@@ -1,9 +1,12 @@
-
+#' Simulate data along branches
+#'
+#' This function is to simulate discrete character data along the branches of a tree
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param br.rate clock Rate, currently can only be strict clock (a single rate)
 #' @param k Number of states
 #' @param trait.num The number of traits to simulate
+#' @export
 
 #' @examples
 #'  # simulated tree

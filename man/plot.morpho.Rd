@@ -11,6 +11,8 @@
   max.age = NULL,
   show.axis = TRUE,
   rho = 1,
+  l = 1,
+  br.rates = 0.1,
   root.edge = TRUE,
   hide.edge = FALSE,
   edge.width = 1,
@@ -20,7 +22,7 @@
   taxa.palette = "viridis",
   col.axis = "gray35",
   cex = 1.2,
-  pch = morpho$bp_change,
+  pch = NULL,
   ...
 )
 }
@@ -31,4 +33,9 @@
 }
 \description{
 This function plots your morpho object to the tree
+}
+\examples{
+tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
+x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
+plot.morpho(x = x, tree = x$tree)
 }
