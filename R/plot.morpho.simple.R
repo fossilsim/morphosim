@@ -31,9 +31,6 @@ plot.morpho.simple <- function(data = NULL, trait = NULL, timetree = FALSE, br.r
 
 
 ## are we using a time tree?
-  # if we want to plot
-
-
 if (timetree){
   plot(data$time.tree)
 }  else{
@@ -41,6 +38,8 @@ if (timetree){
 }
 
 
+# this is for sure not the right way to do it but will change asap!!
+require(ape)
 tree_plot_info <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 
 edge_start_x <- tree_plot_info$xx[data$tree$edge[, 1]]
