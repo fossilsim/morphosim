@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim.morpho.completeprocess.R
 \name{sim.morpho.completeprocess}
 \alias{sim.morpho.completeprocess}
-\title{Simulate data along branches}
+\title{Simulate characters along a tree}
 \usage{
 sim.morpho.completeprocess(
   tree = NULL,
@@ -17,14 +17,21 @@ sim.morpho.completeprocess(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
-\item{k}{Number of states}
+\item{k}{Number of trait states.}
 
 \item{trait.num}{The number of traits to simulate}
 
-\item{br.rate}{clock Rate, currently can only be strict clock (a single rate)}
+\item{br.rate}{Clock rates per branch, currently can only be strict clock (a single rate)}
+}
+\value{
+An object of class morpho.
 }
 \description{
-This function is to simulate discrete character data along the branches of a tree
+This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
+either a time tree or a tree with branch lengths in genetic distance. If using a time tree
+branch rates can be specified, either as one values for all branches or as a vector with
+different rates per branch. If no branch rates are specified a default of 1 is applied to
+all branches.
 }
 \examples{
  # simulated tree

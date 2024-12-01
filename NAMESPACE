@@ -3,6 +3,7 @@
 S3method(as.morpho,default)
 S3method(plot,morpho)
 S3method(plot,morpho.grid)
+S3method(plot,morpho.simple)
 S3method(print,morpho)
 S3method(summary,morpho)
 export(as.morpho)

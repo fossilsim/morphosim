@@ -1,11 +1,19 @@
-#' Simulate data along branches
+#' Simulate characters along a tree
 #'
-#' This function is to simulate discrete character data along the branches of a tree
+#' @description
+#' This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
+#' either a time tree or a tree with branch lengths in genetic distance. If using a time tree
+#' branch rates can be specified, either as one values for all branches or as a vector with
+#' different rates per branch. If no branch rates are specified a default of 1 is applied to
+#' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param br.rate clock Rate, currently can only be strict clock (a single rate)
-#' @param k Number of states
+#' @param br.rate Clock rates per branch, currently can only be strict clock (a single rate)
+#' @param k Number of trait states.
 #' @param trait.num The number of traits to simulate
+#'
+#' @return An object of class morpho.
+#'
 #' @export
 
 #' @examples
@@ -23,9 +31,9 @@ sim.morpho.completeprocess <- function(tree = NULL, time.tree= NULL, br.rates = 
 
 
   # check that a tree is provided
-  if (is.null(tree) && is.null(time.tree)) stop(cat("Must provide a tree object"))
-  # check that there are more then two states
-  if (k < 2) stop(cat("Trait data must have more than 1 state"))
+  if (is.null(tree) && is.null(time.tree)) stop("Must provide a tree object")
+  if (k < 2) stop("Trait data must have more than 1 state")
+
 
 
 
@@ -79,9 +87,9 @@ rownames(state_at_tips) <- tree.ordered$tip.label
   # collect what branches have been "done"
   sampled_branches <-  matrix(ncol=2, nrow = 0)
   colnames(sampled_branches) <- c("parent", "child")
-  num_tips <- ape::Ntip(tree.ordered)
 
-for (branches in 1:num_tips){
+
+for (branches in 1:num.tips){
 
 trace_node <- tree.ordered$tip.label[branches]
 tip_path <- find_path_to_tip(tree.ordered, trace_node)
