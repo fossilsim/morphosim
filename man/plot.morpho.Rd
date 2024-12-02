@@ -32,7 +32,7 @@
 \item{tree}{an object of class "phy}
 }
 \description{
-This function plots your morpho object to the tree
+this function plots a tree higlighting the evolutionary morphological change in regards to branch and time.
 }
 \examples{
 tree <- sim.bd.taxa(8,1,1,0.5)[[1]]

@@ -18,5 +18,10 @@
 \item{col}{a string bound by c() containing colors to match the amount of possible character states}
 }
 \description{
-This function plots your morpho object to a character matrix
+This function creates a matrix from your morpho object highliting whic tips a which character state
+}
+\examples{
+#' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
+x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
+plot.morpho.grid(x = x)
 }
