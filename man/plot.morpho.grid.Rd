@@ -5,7 +5,7 @@
 \title{This function plots your morpho object to a character matrix}
 \usage{
 \method{plot}{morpho.grid}(
-  x,
+  morpho,
   xlab = "",
   ylab = "",
   name = "",
@@ -13,7 +13,7 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{"morpho"}.}
+\item{morpho}{An object of class \code{"morpho"}.}
 
 \item{xlab}{A string for the x-axis label (default: "Characters").}
 
@@ -30,5 +30,5 @@ This function creates a matrix from your morpho object highliting whic tips a wh
 \examples{
 tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
 x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
-plot.morpho.grid(x = x)
+plot.morpho.grid(morpho = x)
 }
