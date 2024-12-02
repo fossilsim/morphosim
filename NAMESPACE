@@ -11,5 +11,3 @@ export(is.morpho)
 export(morpho)
 export(sim.morpho)
 export(sim.morpho.completeprocess)
-
-import(ape)

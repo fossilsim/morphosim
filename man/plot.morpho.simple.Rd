@@ -16,6 +16,7 @@
 \item{trait.num}{What trait number you want to visualize}
 }
 \description{
+#' @description
 This function creates a plot showing continuous evolution of discrete traits
 }
 \examples{
