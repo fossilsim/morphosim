@@ -2,11 +2,16 @@
 #' @description
 #' This function creates a matrix from your morpho object highliting whic tips a which character state
 #' @import ggplot2
-#' @param x an object of class "morpho"
-#' @param col a string bound by c() containing colors to match the amount of possible character states
+#' @import reshape2
+#' @param x An object of class \code{"morpho"}.
+#' @param xlab A string for the x-axis label (default: "Characters").
+#' @param ylab A string for the y-axis label (default: "Taxa").
+#' @param name A string for the legend title (default: "Character State").
+#' @param col A character vector of colors. The length must match the number 
+#'   of unique character states in the data.
 #' @export 
 #' @examples
-#' #' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
+#' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
 #' x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
 #' plot.morpho.grid(x = x)
 

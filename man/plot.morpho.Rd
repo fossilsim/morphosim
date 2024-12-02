@@ -30,6 +30,22 @@
 \item{x}{an object of class "morpho"}
 
 \item{tree}{an object of class "phy}
+
+\item{show.tree}{Logical; whether to display the phylogenetic tree (default: TRUE).}
+
+\item{max.age}{Numeric; maximum age for the time axis (default: NULL, inferred from tree).}
+
+\item{br.rates}{Numeric; scaling factor for branch rates (default: 0.1).}
+
+\item{edge.width}{Numeric; width of tree edges (default: 1).}
+
+\item{show.tip.label}{Logical; whether to display tip labels (default: FALSE).}
+
+\item{align.tip.label}{Logical; whether to align tip labels (default: FALSE).}
+
+\item{extant.col}{Character; color for extant taxa points (default: "1").}
+
+\item{taxa.palette}{Character; color palette for taxa (default: "viridis").}
 }
 \description{
 this function plots a tree higlighting the evolutionary morphological change in regards to branch and time.

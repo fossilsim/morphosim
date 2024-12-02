@@ -1,10 +1,20 @@
 #' This function plots your morpho object to the tree
 #' @description
 #' this function plots a tree higlighting the evolutionary morphological change in regards to branch and time.
-#' @import FossilSim
+#' @import ape
+#' @import graphics
+#' @import stats
+#' @importFrom viridisLite viridis
 #' @param x an object of class "morpho"
 #' @param tree an object of class "phy
-#'
+#' @param show.tree Logical; whether to display the phylogenetic tree (default: TRUE).
+#' @param max.age Numeric; maximum age for the time axis (default: NULL, inferred from tree).
+#' @param br.rates Numeric; scaling factor for branch rates (default: 0.1).
+#' @param edge.width Numeric; width of tree edges (default: 1).
+#' @param extant.col Character; color for extant taxa points (default: "1").
+#' @param taxa.palette Character; color palette for taxa (default: "viridis").
+#' @param show.tip.label Logical; whether to display tip labels (default: FALSE).
+#' @param align.tip.label Logical; whether to align tip labels (default: FALSE).
 #' @export
 #' @examples
 #' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
