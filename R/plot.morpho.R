@@ -1,6 +1,7 @@
 #' This function plots your morpho object to the tree
 #' @description
 #' this function plots a tree higlighting the evolutionary morphological change in regards to branch and time.
+#' @import FossilSim
 #' @param x an object of class "morpho"
 #' @param tree an object of class "phy
 #'

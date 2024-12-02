@@ -1,6 +1,7 @@
 #' This function plots your morpho object to a character matrix
 #' @description
 #' This function creates a matrix from your morpho object highliting whic tips a which character state
+#' @import ggplot2
 #' @param x an object of class "morpho"
 #' @param col a string bound by c() containing colors to match the amount of possible character states
 #' @export 
