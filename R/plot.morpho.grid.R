@@ -3,7 +3,7 @@
 #' This function creates a matrix from your morpho object highliting whic tips a which character state
 #' @import ggplot2
 #' @import reshape2
-#' @param morpho An object of class \code{"morpho"}.
+#' @param x An object of class \code{"morpho"}.
 #' @param xlab A string for the x-axis label (default: "Characters").
 #' @param ylab A string for the y-axis label (default: "Taxa").
 #' @param name A string for the legend title (default: "Character State").
@@ -13,10 +13,9 @@
 #' @examples
 #' tree <- sim.bd.taxa(8,1,1,0.5)[[1]]
 #' x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
-#' plot.morpho.grid(morpho = x)
+#' plot.morpho.grid(x = x)
 
-plot.morpho.grid <- function(morpho, xlab = "", ylab = "",name = "" ,  col = c("white", "gray", "lightblue", "pink", "yellow", "green", "orange")){
-  x <- morpho
+plot.morpho.grid <- function(x, xlab = "", ylab = "",name = "" ,  col = c("white", "gray", "lightblue", "pink", "yellow", "green", "orange")){
   #tip/taxon labels
   tips<-x[[2]][[2]]
   
