@@ -15,7 +15,7 @@
 #' x <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 2, num.traits = 5)
 #' plot.morpho.grid(x = x)
 
-plot.morpho.grid <- function(x, xlab = "", ylab = "",name = "" ,  col = c("white", "gray", "lightblue", "pink", "yellow", "green", "orange")){
+plotMorphoGrid <- function(x, xlab = "", ylab = "",name = "" ,  col = c("white", "gray", "lightblue", "pink", "yellow", "green", "orange")){
   #tip/taxon labels
   tips<-x[[2]][[2]]
   
