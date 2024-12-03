@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim.morpho.completeprocess.R
 \name{sim.morpho.completeprocess}
 \alias{sim.morpho.completeprocess}
-\title{Simulate characters along a tree}
+\title{Simulate characters along branches in a tree}
 \usage{
 sim.morpho.completeprocess(
   tree = NULL,

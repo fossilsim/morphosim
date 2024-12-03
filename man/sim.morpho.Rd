@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim.morpho.R
 \name{sim.morpho}
 \alias{sim.morpho}
-\title{This function is to simulate discrete character data at the tips and internal nodes}
+\title{Simulate characters at internal nodes in a tree}
 \usage{
 sim.morpho(
   tree = NULL,
@@ -28,6 +28,19 @@ sim.morpho(
 
 \item{br.rate}{clock Rate, currently can only be strict clock (a single rate)}
 }
+\value{
+An object of class morpho.
+}
 \description{
-This function is to simulate discrete character data at the tips and internal nodes
+This function simulates discrete character data at the internal nodes of a phylogentic tree. It can be used with
+either a time tree or a tree with branch lengths in genetic distance. If using a time tree
+branch rates can be specified, either as one values for all branches or as a vector with
+different rates per branch. If no branch rates are specified a default of 1 is applied to
+all branches.
+}
+\examples{
+phy <- ape::rtree(10)
+plot(phy)
+simulated_morpho <- MorphoSim::sim.morpho(phy, k = 2, trait.num = 20)
+simulated_morpho
 }

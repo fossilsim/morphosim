@@ -90,6 +90,12 @@ for (i in 1:nrow(df)) {
   message("no transitions in this state across taxa")
 }
 
+### to plot tip states beside the branches. Need to play around with the
+### margins a bit
+#tip_states <- lapply(continuous_traits$sequences, `[[`, trait)
+#tip_states <- unlist(tip_states)
+#text(max(tree_plot_info$xx) + 0.25, point_y, labels = unname(tip_states[1]))
+
 }
 
 

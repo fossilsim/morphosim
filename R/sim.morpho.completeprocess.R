@@ -1,4 +1,4 @@
-#' Simulate characters along a tree
+#' Simulate characters along branches in a tree
 #'
 #' @description
 #' This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
