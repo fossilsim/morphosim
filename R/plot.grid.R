@@ -86,7 +86,7 @@ for (i in 1:n.traits) {
 
   }
 }
-
+par(xaxs = "r", yaxs = "r")
 }
 
 
