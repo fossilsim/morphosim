@@ -21,13 +21,20 @@
 #' # plot the character matrix
 #' plotMorphoGridSimple(data = simulated_morpho, num.trait = 1)
 #'
-plotMorphoGridSimple <- function(data = NULL, num.trait = "all"){
+plotMorphoGrid <- function(data = NULL, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
 
   x <- data
+  col.cont <- col
 
 n.taxa <- length(x$tree$tip.label)
 n.traits <- length(x$sequences[[1]])
-tip_labs <- x$tree$tip.label
+ordered_tree <- reorder(x$tree)
+tip_labs <- ordered_tree$tip.label
+
+#ordered_tree <- reorder$tree.tip.labels
+
+#tip_labs <- ordered_tree$tree$tip.labels
+#ordered_tree <- reorder(x$tree)
 
 
 par(xaxs = "i", yaxs = "i")
@@ -40,22 +47,6 @@ plot(x =c(0,1), y =c(0,1),xaxt = 'n', yaxt = 'n',bty = 'n', pch = '',
 # need to divide the plot into the number of traits and taxa
 xx <- 1/n.traits
 yy <- 1/n.taxa
-
-# add border lines
-abline(v=0, col= "grey")
-abline(h=0, col= "grey")
-
-
-## grid up the plot area
-for ( i in 1:n.traits){
-  abline(v = xx*i, col= "grey")
-}
-
-
-for ( j in 1:n.taxa){
-  abline(h = yy*j, col= "grey")
-}
-
 
 ## to get the center of the yy boxes
 center_a <- yy * 0.5
@@ -73,17 +64,49 @@ x_labs <- seq(center_b, center_final, xx )
 axis(3, at=x_labs,labels=1:n.traits,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0.95)
 
+
+
+for (i in 1:n.traits) {
+  for (j in 1:n.taxa) {
+    state <- as.numeric(x$sequences[[j]][i])
+    bg_col <- col.cont[state + 1]
+# Draw a rectangle for each box
+rect(
+  xleft = x_labs[i]-0.1, xright = x_labs[i]+0.9,
+  ybottom = y_labs[j]-0.05, ytop = y_labs[j]+0.95,
+  col = bg_col, border = "black"
+)
+  }
+}
+
+# add border lines
+abline(v=0, col= "grey")
+abline(h=0, col= "grey")
+
+
+## grid up the plot area
+for ( i in 1:n.traits){
+  abline(v = xx*i, col= "grey")
+}
+
+
+for ( j in 1:n.taxa){
+  abline(h = yy*j, col= "grey")
+}
+
+
 ## fill in the boxes with the state
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
-  state <- as.numeric(x$sequences[[j]][i])
-
-    if (i == num.trait || num.trait == "all"){
+    state <- as.numeric(x$sequences[[j]][i])
+    
+    
+    # Add the state text in the box
+    if (i == num.trait || num.trait == "all") {
       text(x_labs[i], y_labs[j], state, cex = 1, col = "black")
     } else {
-      text(x_labs[i], y_labs[j], state, cex = 1, col = "grey")
+      text(x_labs[i], y_labs[j], state, cex = 1, col = "darkgrey")
     }
-
   }
 }
 par(xaxs = "r", yaxs = "r")
