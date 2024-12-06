@@ -72,8 +72,8 @@ for (i in 1:n.traits) {
     bg_col <- col.cont[state + 1]
 # Draw a rectangle for each box
 rect(
-  xleft = x_labs[i]-xx, xright = x_labs[i]+xx,
-  ybottom = y_labs[j]-yy, ytop = y_labs[j]+yy,
+  xleft = x_labs[i]-xx/2, xright = x_labs[i]+xx/2,
+  ybottom = y_labs[j]-yy/2, ytop = y_labs[j]+yy/2,
   col = bg_col, border = "black"
 )
   }
