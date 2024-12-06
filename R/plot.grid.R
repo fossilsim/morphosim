@@ -73,7 +73,7 @@ for (i in 1:n.traits) {
 # Draw a rectangle for each box
 rect(
   xleft = x_labs[i]-0.1, xright = x_labs[i]+0.9,
-  ybottom = y_labs[j]-0.05, ytop = y_labs[j]+0.95,
+  ybottom = y_labs[j]-(0.01*n.taxa), ytop = y_labs[j]+(1-0.01*n.taxa),
   col = bg_col, border = "black"
 )
   }
