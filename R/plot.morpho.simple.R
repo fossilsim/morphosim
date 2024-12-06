@@ -92,8 +92,8 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = 
       points(point_x, point_y, pch = 22, col = "black", bg = col_cont[paint], cex = 4)
       text(point_x, point_y, labels = as.numeric(df$state[i]))
     }
+    points(0.05, yy[root], pch = 22, col = "black", bg = col_cont[as.numeric(data$root.states[trait])+1], cex = 4)
     text(0.05, yy[root], label = as.numeric(data$root.states[trait]))
-    points(0.05, yy[root], pch = 22, col = "black", bg = col_cont[as.numeric(data$root.states[trait])], cex = 4)
     
   } else {
     text(0.05, yy[root], label = as.numeric(data$root.states[trait]))
