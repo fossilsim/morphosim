@@ -19,7 +19,7 @@
 #' simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 10)
 #'
 #' # plot the character matrix
-#' plotMorphoGridSimple(data = simulated_morpho, num.trait = 1)
+#' plotMorphoGrid(data = simulated_morpho, num.trait = 1)
 #'
 plotMorphoGrid <- function(data = NULL, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
 
@@ -99,8 +99,8 @@ for ( j in 1:n.taxa){
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[j]][i])
-    
-    
+
+
     # Add the state text in the box
     if (i == num.trait || num.trait == "all") {
       text(x_labs[i], y_labs[j], state, cex = 1, col = "black")
