@@ -24,7 +24,6 @@
 plotMorphoGrid <- function(data = NULL, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
 
   x <- data
-  col.cont <- col
 
 n.taxa <- length(x$tree$tip.label)
 n.traits <- length(x$sequences[[1]])
@@ -69,7 +68,7 @@ axis(3, at=x_labs,labels=1:n.traits,
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[j]][i])
-    bg_col <- col.cont[state + 1]
+    bg_col <- col[state + 1]
 # Draw a rectangle for each box
 rect(
   xleft = x_labs[i]-xx/2, xright = x_labs[i]+xx/2,
