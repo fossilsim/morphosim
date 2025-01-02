@@ -27,8 +27,7 @@
 #' plot.morpho(data = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2 )
 
 
-plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey") {
-  col_cont <- col
+plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey"){
   ## Are we using a time tree?
   if (timetree) {
     plot(data$time.tree)
@@ -86,10 +85,10 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = 
         point_y <- yy[data$tree[["edge"]][branch, 2]]
       }
       paint <- as.numeric(df$state[i]) + 1
-      points(point_x, point_y, pch = 22, col = "black", bg = col_cont[paint], cex = 4)
+      points(point_x, point_y, pch = 22, col = "black", bg = col[paint], cex = 4)
       text(point_x, point_y, labels = as.numeric(df$state[i]))
     }
-    points(0.05, yy[root], pch = 22, col = "black", bg = col_cont[as.numeric(data$root.states[trait])+1], cex = 4)
+    points(0.05, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
     text(0.05, yy[root], label = as.numeric(data$root.states[trait]))
 
   } else {
