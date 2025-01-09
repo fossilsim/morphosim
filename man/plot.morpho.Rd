@@ -5,22 +5,29 @@
 \title{Plot full evolutionary history}
 \usage{
 \method{plot}{morpho}(
-  data = NULL,
+  x = NULL,
   trait = NULL,
   timetree = FALSE,
   br.rates = NULL,
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"),
-  col.timescale = "darkgrey"
+  col.timescale = "darkgrey",
+  ...
 )
 }
 \arguments{
-\item{data}{A morpho object}
+\item{x}{A morpho object}
 
-\item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE}
+\item{trait}{What trait number you want to visualize}
+
+\item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
 
 \item{br.rates}{Required if you provide a time tree}
 
-\item{trait.num}{What trait number you want to visualize}
+\item{col}{A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated}
+
+\item{col.timescale}{a single color for the timescale, "darkgrey" by standard}
+
+\item{...}{other arguments to be passed to methods, such as graphical parameters}
 }
 \description{
 #' @description
@@ -34,10 +41,12 @@ phy <- ape::rtree(10)
 # simulate characters along the branches of the tree
 continuous_traits <- sim.morpho.completeprocess(phy, k=4, trait.num =12)
 
-plot.morpho(data = continuous_traits, trait = 1, timetree = FALSE)
+plot(x = continuous_traits, trait = 1, timetree = FALSE)
 
 # time tree
 tree <- TreeSim::sim.bd.taxa(8,1,1,0.5)[[1]]
-continuous_traits <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 3, trait.num = 5)
-plot.morpho(data = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2 )
+continuous_traits <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2,
+k = 3, trait.num = 5)
+plot(x = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2,
+col = c("#fdfdfd", "lightgray", "lightblue"), col.timescale = "black")
 }

@@ -18,15 +18,13 @@ sim.morpho(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
+\item{br.rates}{clock Rate, currently can only be strict clock (a single rate)}
+
 \item{k}{Number of states}
 
 \item{trait.num}{The number of traits to simulate}
 
 \item{ancestral}{T/F Whether or not to output information from internal nodes}
-
-\item{data}{Trait data associated with the tips of the tree}
-
-\item{br.rate}{clock Rate, currently can only be strict clock (a single rate)}
 }
 \value{
 An object of class morpho.
@@ -41,6 +39,6 @@ all branches.
 \examples{
 phy <- ape::rtree(10)
 plot(phy)
-simulated_morpho <- MorphoSim::sim.morpho(phy, k = 2, trait.num = 20)
+simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 20)
 simulated_morpho
 }

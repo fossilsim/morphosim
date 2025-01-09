@@ -1,12 +1,15 @@
-#' Mopho object
+#' Morpho object
 #'
-#' Create a morpho.
+#' Create a morpho object.
 #'
 #' @param data Trait data associated with the tips of the tree
-#' @param tree Tree with branches that represent genetic distance associated with the character data.
+#' @param tree Tree with branches that represent distances associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param node.seq Trait data associated with the internal nodes of the tree
-#'
+#' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G) 
+#' @param root.states A vector supplying the root state for each character
+#' @param continuous_traits The bottom 3 traits need to be reviewed
+#' 
 #' @export
 morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
                    node.seq = NULL, continuous_traits = NULL, root.states = NULL){

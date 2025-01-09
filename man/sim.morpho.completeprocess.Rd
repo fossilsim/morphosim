@@ -17,11 +17,11 @@ sim.morpho.completeprocess(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
+\item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate)}
+
 \item{k}{Number of trait states.}
 
 \item{trait.num}{The number of traits to simulate}
-
-\item{br.rate}{Clock rates per branch, currently can only be strict clock (a single rate)}
 }
 \value{
 An object of class morpho.

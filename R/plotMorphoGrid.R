@@ -2,11 +2,12 @@
 #'
 #' @description
 #' This function plots the full morphological matrix assocaited with the character data
-#' at the tips of a tree. Requires a moprho object as input.
+#' at the tips of a tree. Requires a morpho object as input.
 #' @param data A morpho object
 #' @param num.trait default is set to "all" which plots all traits in black font. If you
 #' want to focus on a specific trait set it here, e.g. num.trait = 1 and this trait will
 #' be highlighted
+#' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
 #'
 #' @export
 

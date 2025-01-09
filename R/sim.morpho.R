@@ -6,10 +6,9 @@
 #' branch rates can be specified, either as one values for all branches or as a vector with
 #' different rates per branch. If no branch rates are specified a default of 1 is applied to
 #' all branches.
-#' @param data Trait data associated with the tips of the tree
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param br.rate clock Rate, currently can only be strict clock (a single rate)
+#' @param br.rates clock Rate, currently can only be strict clock (a single rate)
 #' @param k Number of states
 #' @param trait.num The number of traits to simulate
 #' @param ancestral T/F Whether or not to output information from internal nodes
@@ -21,7 +20,7 @@
 #' @examples
 #' phy <- ape::rtree(10)
 #' plot(phy)
-#' simulated_morpho <- MorphoSim::sim.morpho(phy, k = 2, trait.num = 20)
+#' simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 20)
 #' simulated_morpho
 
 

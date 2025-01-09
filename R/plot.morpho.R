@@ -2,12 +2,19 @@
 #'
 #'#' @description
 #' This function creates a plot showing continuous evolution of discrete traits
-#' @param data A morpho object
-#' @param timetree TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE
-#' @param trait.num What trait number you want to visualize
+#' @param x A morpho object
+#' @param timetree TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
+#' @param trait What trait number you want to visualize
 #' @param br.rates Required if you provide a time tree
+#' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
+#' @param col.timescale a single color for the timescale, "darkgrey" by standard
+#' @param ... other arguments to be passed to methods, such as graphical parameters
 #' @import ape
 #' @import FossilSim
+#' @import stats
+#' @import graphics
+#' @importFrom methods is
+#' @import TreeSim
 #' @export
 
 #' @examples
@@ -19,15 +26,18 @@
 #' # simulate characters along the branches of the tree
 #' continuous_traits <- sim.morpho.completeprocess(phy, k=4, trait.num =12)
 #'
-#' plot.morpho(data = continuous_traits, trait = 1, timetree = FALSE)
+#' plot(x = continuous_traits, trait = 1, timetree = FALSE)
 #'
 #' # time tree
 #' tree <- TreeSim::sim.bd.taxa(8,1,1,0.5)[[1]]
-#' continuous_traits <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2, k = 3, trait.num = 5)
-#' plot.morpho(data = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2 )
+#' continuous_traits <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2,
+#' k = 3, trait.num = 5)
+#' plot(x = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2,
+#' col = c("#fdfdfd", "lightgray", "lightblue"), col.timescale = "black")
 
 
-plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey"){
+plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+  data = x
   ## Are we using a time tree?
   if (timetree) {
     plot(data$time.tree)
@@ -35,7 +45,7 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE, br.rates = 
     plot(data$tree)
   }
 
-  if (class(trait) != "numeric") {
+  if (is(class(trait), "numeric") == F) {
     print("Please select a viable integer for 'trait'")
   }
 

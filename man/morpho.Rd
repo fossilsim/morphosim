@@ -4,7 +4,7 @@
 \alias{morpho}
 \alias{as.morpho}
 \alias{is.morpho}
-\title{Mopho object}
+\title{Morpho object}
 \usage{
 morpho(
   data = NULL,
@@ -31,12 +31,18 @@ is.morpho(data)
 \arguments{
 \item{data}{Trait data associated with the tips of the tree}
 
-\item{tree}{Tree with branches that represent genetic distance associated with the character data.}
+\item{tree}{Tree with branches that represent distances associated with the character data.}
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
+\item{model}{Morphological model. (e.g. Mk, Mk+V, Mk+G)}
+
 \item{node.seq}{Trait data associated with the internal nodes of the tree}
+
+\item{continuous_traits}{The bottom 3 traits need to be reviewed}
+
+\item{root.states}{A vector supplying the root state for each character}
 }
 \description{
-Create a morpho.
+Create a morpho object.
 }

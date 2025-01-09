@@ -8,7 +8,7 @@
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param br.rate Clock rates per branch, currently can only be strict clock (a single rate)
+#' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate)
 #' @param k Number of trait states.
 #' @param trait.num The number of traits to simulate
 #'
