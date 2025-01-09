@@ -1,11 +1,10 @@
 Package: MorphoSim
 Type: Package
-Title: What the Package Does (Title Case)
+Title: SIMULATE and VISUALISE DISCRETE CHARACTERS ALONG PHYLOGENETIC TREES
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Laura Mulvey, Tim Brandler, Meghan Gallaspy, Joelle Barido-Sottani, Rachel Warnock
+Maintainer: Laura Mulvey <lauramulvey479@gmail.com>
+Description: Simulate morphological characters along branches of phylogenetic trees.    It can be used either along distance or time trees using user specific rates of change. The package also contains functions to visualise these processes along trees and in matrices.
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.2
