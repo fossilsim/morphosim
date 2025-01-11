@@ -18,8 +18,6 @@ traits <- sim.morpho(phy, k=4, trait.num =12)
 ```
 
 
-
-
 To simulate the continuous evolution of characters along the branches
 
 ```
