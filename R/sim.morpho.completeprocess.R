@@ -182,7 +182,7 @@ if (length(associated_edge_length)  == 0){
 
   #}
 }
-# get the rate of change acorss the matrix
+# get the rate of change across the matrix
 
 }
 current_rate <- Q[(current_state+ 1),(current_state+1)] * -1
