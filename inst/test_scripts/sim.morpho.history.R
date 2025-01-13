@@ -105,16 +105,25 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
     ## cureently calculates the probability of a single transition. I think.
     # given x amout of time what state at the end. Does not allow for multiple changes.
     # is that wrong?
-    # TODO: 1. calulcate the number of changes according to a poissoin process
+    # TODO: 1. calculate the number of changes according to a poissoin process
     #       2. what are those changes?
     #       3. where along the branch are they found
     #       4. ensure that the design will allow for asymmetric transitions
-    current_rate <- Q[(parent[i]+ 1),(parent[i]+1)] * -1
-    rand = rpois(1, blength*current_rate)
+
+    # best way to specify these?
+    if (Qmat == "Equal"){}
+    else if (Qmat == "F81"){}
+
+
+    current_rate <- Q[(parent_state+ 1),(parent_state+1)] * -1
+
+    # rate needs to change for an asymmetric - current rate at which there is any
+    # transition
+    rand = rpois(1, bl[i]*current_rate)
     h = runif(rand, min = 0, max = bl[i])
     h <- sort(h)
 
-# now we need to calulcate what those transitions are
+# now we need to calculate what those transitions are
     P  <- ape::matexpo(Q * bl[i])
 
     # avoid numerical problems for larger P and small bl
