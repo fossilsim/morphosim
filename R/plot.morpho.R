@@ -45,16 +45,16 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
     plot(data$tree)
   }
 
-  if (is(class(trait), "numeric") == F) {
-    print("Please select a viable integer for 'trait'")
-  }
+  #if (is(class(trait), "numeric") == F) {
+  #  stop("Please select a viable integer for 'trait'")
+  #}
 
   if (trait >= length(data$sequences[[1]])) {
     print("Your selected character does not exist, please choose a lower integer")
   }
 
 
-  # This is for sure not the right way to do it but will change asap!!
+  # This is for sure not the right way to do it but will change
   tree_plot_info <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 
   edge_start_x <- tree_plot_info$xx[data$tree$edge[, 1]]
