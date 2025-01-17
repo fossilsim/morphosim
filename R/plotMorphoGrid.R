@@ -73,8 +73,11 @@ x_labs <- seq(center_b, center_final, xx )
 axis(3, at=x_labs,labels=1:n.traits,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0.95)
 
-
-
+if(!is.null(x$ACRV_rate)){
+axis(1, at=x_labs,labels=x$ACRV_rate,
+     col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0)
+  mtext('Rate Category', side=1, line=1, at=-0.07, cex = 0.7, font = 6)
+}
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[tip_labs[j]]][i])
