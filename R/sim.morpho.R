@@ -8,6 +8,7 @@
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
+#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"
 #' @param br.rates clock Rate, currently can only be strict clock (a single rate)
 #' @param k Number of states
 #' @param trait.num The number of traits to simulate
@@ -24,8 +25,10 @@
 #' simulated_morpho
 
 
-sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
-                       k = 2, trait.num = 2, ancestral = FALSE){
+sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,
+                       k = 2, trait.num = 2, ancestral = FALSE, alpha.gamma = 1, ncats.gamma = 4){
+
+
 
   # check that a tree is provided
   if (is.null(tree) && is.null(time.tree)) stop(cat("Must provide a tree object"))
@@ -87,17 +90,35 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, br.rates = NULL,
   # edge lengths
   bl <- tree.ordered$edge.length
 
+
+  ### Among character rate variation
+ if(!is.null(ACRV)){
+if (ACRV == "gamma"){
+ gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
+}
+  else if(ACRV == "lognormal"){
+
+  }
+ }
+
+
+ # gamma.rate <- gammaCats[sample(1:NCAT, 1)]
+
+
   # loop through all branches
   for (i in seq_along(bl)){
 
     from <- parent[i]
     to <- child[i]
 
-    # generate a matrix of probabilities
-    #P <- getP(tl[i], eig, rate)[[1]]
+
     # probability of change along each branch
-    #P  <- lapply(bl[i], function(l) ape::matexpo(Q[[1]] * l))
+    #if (ACRV == "gamma"){
+   #  Q <- Q * gamma.rate
+    # P  <- ape::matexpo(Q * bl[i])
+   # } else {
     P  <- ape::matexpo(Q * bl[i])
+   # }
 
     # avoid numerical problems for larger P and small bl
     if (any(P < 0)) P[P < 0] <- 0

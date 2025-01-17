@@ -20,3 +20,15 @@ symmetric.Q.matrix <- function(K) {
   # Return the generated transition matrix
   return(Q)
 }
+
+
+
+## this is taken directly from phangorn.
+get_gamma_rates <- function(alpha, k) {
+  if (k == 1) return(1)
+  # Compute quantiles to divide the gamma distribution into k categories
+  quants <- qgamma((1:(k - 1)) / k, shape = alpha, rate = alpha)
+  diff(c(0, pgamma(quants * alpha, alpha + 1), 1)) * k
+}
+
+

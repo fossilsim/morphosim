@@ -7,6 +7,7 @@
 #' different rates per branch. If no branch rates are specified a default of 1 is applied to
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
+#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate)
 #' @param k Number of trait states.
@@ -26,8 +27,8 @@
 #'
 
 
-sim.morpho.history <- function(tree = NULL, time.tree= NULL, br.rates = NULL, ancestral = FALSE,
-                                       k = 2, trait.num = 2){
+sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL, ancestral = FALSE,
+                                       k = 2, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
 
 
   # check that a tree is provided
@@ -80,6 +81,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, br.rates = NULL, an
   rownames(state_at_tips) <- tree.ordered$tip.label
   state_at_nodes <- matrix(nrow = tree$Nnode, ncol = trait.num)
   rownames(state_at_nodes) <- nodes
+  ACRV_rate <- matrix(ncol = trait.num, nrow = 1)
 
   # identify the root
   root<- as.integer(parent[!match(parent, child, 0)][1])
@@ -89,9 +91,34 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, br.rates = NULL, an
   # edge lengths
   bl <- tree.ordered$edge.length
 
+  ### Among character rate variation
+  if(!is.null(ACRV)){
+    if (ACRV == "gamma"){
+      gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
+    }
+    else if(ACRV == "lognormal"){
+
+    }
+  }
+
 
 
   for (tr in 1:trait.num){
+
+    ### Among character rate variation
+    if(!is.null(ACRV)){
+      if (ACRV == "gamma"){
+        trait_rate <- gamma_rates[sample(1:ncats.gamma, 1)]
+        Q <- Q * trait_rate
+        ACRV_rate[tr] <- trait_rate
+
+      }
+      else if(ACRV == "lognormal"){
+
+      }
+    }
+
+
   # container for the transitions
   transitions <- matrix(ncol = 3, nrow= 0)
   colnames(transitions) <- c("edge", "state", "hmin")
@@ -179,10 +206,12 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, br.rates = NULL, an
     node_sequence <- NULL
   }
 
+ if(is.null(ACRV)){
+    ACRV_rate <- NULL}
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
                           time.tree = time.tree.order, continuous_traits= continuous_traits,
-                          root.states = root.state, node.seq = node_sequence )
+                          root.states = root.state, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
 
   return(sim.output )
 

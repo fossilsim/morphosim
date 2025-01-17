@@ -6,13 +6,13 @@
 #' @param tree Tree with branches that represent distances associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param node.seq Trait data associated with the internal nodes of the tree
-#' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G) 
+#' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G)
 #' @param root.states A vector supplying the root state for each character
 #' @param continuous_traits The bottom 3 traits need to be reviewed
-#' 
+#'
 #' @export
 morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
-                   node.seq = NULL, continuous_traits = NULL, root.states = NULL){
+                   node.seq = NULL, continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -32,7 +32,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
     node.sequences = node.seq,
     time.tree = time.tree,
     continuous_traits = continuous_traits,
-    root.states = root.states
+    root.states = root.states,
+    ACRV_rate =   ACRV_rate
   )
 
   # assign class "morpho" to the object
@@ -75,7 +76,7 @@ summary.morpho <- function(object, max.length = 5, ...){
 #' @export
 #' @rdname morpho
 as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL,
-                                   continuous_traits = NULL, root.states = NULL) UseMethod("as.morpho")
+                                   continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL) UseMethod("as.morpho")
 
 
 #' @export

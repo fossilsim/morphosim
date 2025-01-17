@@ -7,16 +7,21 @@
 sim.morpho(
   tree = NULL,
   time.tree = NULL,
+  ACRV = NULL,
   br.rates = NULL,
   k = 2,
   trait.num = 2,
-  ancestral = FALSE
+  ancestral = FALSE,
+  alpha.gamma = 1,
+  ncats.gamma = 4
 )
 }
 \arguments{
 \item{tree}{Tree with branches that represent genetic distance associated with the character data.}
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
+
+\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"}
 
 \item{br.rates}{clock Rate, currently can only be strict clock (a single rate)}
 
