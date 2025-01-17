@@ -77,7 +77,7 @@ axis(3, at=x_labs,labels=1:n.traits,
 
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
-    state <- as.numeric(x$sequences[[j]][i])
+    state <- as.numeric(x$sequences[[tip_labs[j]]][i])
     bg_col <- col[state + 1]
 # Draw a rectangle for each box
 rect(
@@ -107,7 +107,7 @@ for ( j in 1:n.taxa){
 ## fill in the boxes with the state
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
-    state <- as.numeric(x$sequences[[j]][i])
+    state <- as.numeric(x$sequences[[tip_labs[j]]][i])
 
 
     # Add the state text in the box
