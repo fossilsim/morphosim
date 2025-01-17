@@ -6,6 +6,7 @@
 \usage{
 plotMorphoGrid(
   data = NULL,
+  timetree = FALSE,
   num.trait = "all",
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")
 )

@@ -22,14 +22,23 @@
 #' # plot the character matrix
 #' plotMorphoGrid(data = simulated_morpho, num.trait = 1)
 #'
-plotMorphoGrid <- function(data = NULL, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
+plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
 
   x <- data
 
 n.taxa <- length(x$tree$tip.label)
 n.traits <- length(x$sequences[[1]])
 ordered_tree <- reorder(x$tree)
-tip_labs <- ordered_tree$tip.label
+
+## Are we using a time tree?
+if (timetree) {
+  tree_string <-  write.tree(x$time.tree)
+  tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
+} else {
+  tree_string <-  write.tree(x$tree)
+  tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
+}
+
 
 #ordered_tree <- reorder$tree.tip.labels
 

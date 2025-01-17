@@ -216,7 +216,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     ACRV_rate <- NULL}
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
-                          time.tree = time.tree.order, continuous_traits= continuous_traits,
+                          time.tree = time.tree, continuous_traits= continuous_traits,
                           root.states = root.state, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
 
   return(sim.output )
