@@ -35,12 +35,12 @@
 
 
 sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                                       k = 2, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
+                                       k = 2, partition = 1, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
 
 
   # check that a tree is provided
-  if (is.null(tree) && is.null(time.tree)) stop("Must provide a tree object")
-  if (k < 2) stop("Trait data must have more than 1 state")
+  #if (is.null(tree) && is.null(time.tree)) stop("Must provide a tree object")
+  #if (k < 2) stop("Trait data must have more than 1 state")
 
 
   ## if provided with time tree, need to transform branches in genetic distance
@@ -56,12 +56,6 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
   }
 
-   ### for a symmetric Q matrix
-  Q <- symmetric.Q.matrix(k)
-  #trait.num <- trait.num
-
-  states <- as.character(c(0:(k-1)))
-
   # reorder branches in the phylogeny
   #tree.ordered <- ape::reorder.phylo(tree, "postorder")
   tree.ordered <- reorder(tree)
@@ -71,9 +65,12 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     time.tree.order <- reorder(time.tree)
   } else {time.tree.order = NULL}
 
+  tr.num <- 1
   edge <- tree.ordered$edge
   num.nodes <- max(edge)
   num.tips <- ape::Ntip(tree.ordered)
+  rs <- c()
+
 
   # define the node labels
   parent <- as.integer(edge[, 1])
@@ -93,14 +90,11 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
   # identify the root
   root<- as.integer(parent[!match(parent, child, 0)][1])
 
-  # simulate the root state using symmetric Q-matrix
-  root.state <- sample(states, trait.num, replace = TRUE, prob = rep(1/k, k)) #later prob would need to take into account for bf
-  state_at_nodes[as.character(root),] <- as.numeric(root.state)
 
-  # edge lengths
-  bl <- tree.ordered$edge.length
+
 
   ### Among character rate variation
+  # eventually may need to put into the state function if partitions are not linked
   if(!is.null(ACRV)){
     if (ACRV == "gamma"){
       gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
@@ -110,9 +104,32 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
   }
 
-   for (tr in 1:trait.num){
+  ## start the partition loop
+   for (part in 1:length(partition)){
+   part.trait.num <- partition[part]
+
+  ##start loop for number of different states
+  # for (stat in 1:length(k))
+  ### for a symmetric Q matrix
+  part_k <- k[part]
+  Q <- symmetric.Q.matrix(part_k)
+  states <- as.character(c(0:(part_k -1)))
+
+
+  # edge lengths
+  bl <- tree.ordered$edge.length
+
+
+   for (tr in 1:part.trait.num){
     # message(tr)
     repeat {
+
+     # simulate the root state using symmetric Q-matrix
+      root.state <- sample(states, 1, replace = TRUE, prob = rep(1/part_k , part_k)) #later prob would need to take into account for bf
+      state_at_nodes[as.character(root),tr.num] <- as.numeric(root.state)
+
+
+
       #message("conditions not met repreat")
     ### Among character rate variation
     if(!is.null(ACRV)){
@@ -136,7 +153,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     from <- parent[i]
     to <- child[i]
 
-      current_state <- as.numeric(unname(state_at_nodes[as.character(from), tr]))
+      current_state <- as.numeric(unname(state_at_nodes[as.character(from), tr.num]))
 
     # best way to specify these?
    # if (Qmat == "Equal"){}
@@ -177,22 +194,26 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
 }
 
-    if (to %in% tips) state_at_tips[tree$tip.label[to],tr] <- current_state
-    if (to %in% nodes) state_at_nodes[as.character(to),tr] <- current_state
+    if (to %in% tips) state_at_tips[tree$tip.label[to],tr.num] <- current_state
+    if (to %in% nodes) state_at_nodes[as.character(to),tr.num] <- current_state
 }
 
    if (!variable ){
        break
    }
 
-    if (length(unique(state_at_tips[,tr])) > 1 & length(unique(state_at_nodes[,tr])) > 1 ){
+    if (length(unique(state_at_tips[,tr.num])) > 1 & length(unique(state_at_nodes[,tr.num])) > 1 ){
      break
     }
     }
 
-     if (!is.null(ACRV)) ACRV_rate[tr] <- which(gamma_rates == trait_rate)
-      continuous_traits[[tr]] <- as.data.frame(transitions)
-  }
+     if (!is.null(ACRV)) ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
+      continuous_traits[[tr.num]] <- as.data.frame(transitions)
+      tr.num <- tr.num + 1
+      rs <- rbind(rs, root.state)
+   }
+
+   }
 
   ## create morpho object
   # formatting for morpho object
@@ -223,7 +244,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
                           time.tree = time.tree, continuous_traits= continuous_traits,
-                          root.states = root.state, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
+                          root.states = rs, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
 
   return(sim.output )
 

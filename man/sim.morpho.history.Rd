@@ -12,6 +12,7 @@ sim.morpho.history(
   variable = FALSE,
   ancestral = FALSE,
   k = 2,
+  partition = 1,
   trait.num = 2,
   alpha.gamma = 1,
   ncats.gamma = 4
@@ -45,10 +46,15 @@ different rates per branch. If no branch rates are specified a default of 1 is a
 all branches.
 }
 \examples{
- # simulated tree
- phy <- ape::rtree(10)
+# simulated tree
+phy <- ape::rtree(10)
 
- # simulate characters along the branches of the tree
- transition_history <-  sim.morpho.history(tree = phy, k = 3, trait.num = 4, ancestral = TRUE)
-
+# simulate characters along the branches of the tree
+transition_history <-  sim.morpho.history(tree = phy,
+                                         k = 3,
+                                         trait.num = 30,
+                                         ancestral = TRUE,
+                                         ACRV = "gamma",
+                                         variable = FALSE,
+                                         ncats.gamma = 4)
 }
