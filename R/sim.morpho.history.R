@@ -8,6 +8,7 @@
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
 #' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"
+#' @param variable Simulate only varying characters. The default here is set to FALSE
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate)
 #' @param k Number of trait states.
@@ -27,7 +28,7 @@
 #'
 
 
-sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL, ancestral = FALSE,
+sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
                                        k = 2, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
 
 
@@ -51,7 +52,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
 
    ### for a symmetric Q matrix
   Q <- symmetric.Q.matrix(k)
-  trait.num <- trait.num
+  #trait.num <- trait.num
 
   states <- as.character(c(0:(k-1)))
 
@@ -88,6 +89,8 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
 
   # simulate the root state using symmetric Q-matrix
   root.state <- sample(states, trait.num, replace = TRUE, prob = rep(1/k, k)) #later prob would need to take into account for bf
+  state_at_nodes[as.character(root),] <- as.numeric(root.state)
+
   # edge lengths
   bl <- tree.ordered$edge.length
 
@@ -101,25 +104,24 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
   }
 
-
-
-  for (tr in 1:trait.num){
-
+   for (tr in 1:trait.num){
+    # message(tr)
+    repeat {
+      #message("conditions not met repreat")
     ### Among character rate variation
     if(!is.null(ACRV)){
       if (ACRV == "gamma"){
         trait_rate <- gamma_rates[sample(1:ncats.gamma, 1)]
-        Q <- Q * trait_rate
-        ACRV_rate[tr] <- trait_rate
-
+        Q_r <- Q * trait_rate
       }
       else if(ACRV == "lognormal"){
 
       }
+    } else {
+      Q_r <- Q
     }
 
-
-  # container for the transitions
+      # container for the transitions
   transitions <- matrix(ncol = 3, nrow= 0)
   colnames(transitions) <- c("edge", "state", "hmin")
   # loop through all branches
@@ -128,15 +130,14 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     from <- parent[i]
     to <- child[i]
 
-    if (from == root) current_state <- as.numeric(root.state[tr])
-    else current_state <- state_at_nodes[as.character(from), tr]
+      current_state <- as.numeric(unname(state_at_nodes[as.character(from), tr]))
 
     # best way to specify these?
    # if (Qmat == "Equal"){}
    # else if (Qmat == "F81"){}
 
     # calculate the rate of any transition occurring
-    current_rate <- Q[(current_state+ 1),(current_state+1)] * -1
+    current_rate <- Q_r[(current_state+ 1),(current_state+1)] * -1
 
     # how many transitions
     rand = rpois(1, bl[i]*current_rate)
@@ -147,12 +148,12 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     h <- sort(h)
 
     # now we need to calculate what those transitions are
-    P  <- ape::matexpo(Q * bl[i])
+    P  <- ape::matexpo(Q_r * bl[i])
 
     # avoid numerical problems for larger P and small bl
     if (any(P < 0)) P[P < 0] <- 0
     # calculated the number of changes there for we need to ensure that a new state is sampled.
-    state_changes <- c()
+     state_changes <- c()
     new_state <- current_state
     for (r in 1:rand){
       while(as.numeric(new_state == current_state) ){
@@ -163,7 +164,6 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
 
     }
 
-
     for (q in 1:rand){
       add_t <- c(i, state_changes[q], h[q])
       transitions <- rbind(transitions, as.numeric(add_t))
@@ -171,17 +171,23 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
 }
 
+    if (to %in% tips) state_at_tips[tree$tip.label[to],tr] <- current_state
+    if (to %in% nodes) state_at_nodes[as.character(to),tr] <- current_state
+}
 
-  if (to %in% tips) state_at_tips[tree$tip.label[to],tr] <- current_state
-  if (to %in% nodes) state_at_nodes[as.character(to),tr] <- current_state
+   if (!variable ){
+       break
+   }
 
+    if (length(unique(state_at_tips[,tr])) > 1 & length(unique(state_at_nodes[,tr])) > 1 ){
+     break
+    }
+    }
 
+     if (!is.null(ACRV)) ACRV_rate[tr] <- trait_rate
+      continuous_traits[[tr]] <- as.data.frame(transitions)
   }
 
-  continuous_traits[[tr]] <- as.data.frame(transitions)
-  }
-
-  state_at_nodes[as.character(root),] <- root.state
   ## create morpho object
   # formatting for morpho object
   tip_names <- rownames(state_at_tips)

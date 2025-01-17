@@ -9,6 +9,7 @@ sim.morpho.history(
   time.tree = NULL,
   ACRV = NULL,
   br.rates = NULL,
+  variable = FALSE,
   ancestral = FALSE,
   k = 2,
   trait.num = 2,
@@ -24,6 +25,8 @@ sim.morpho.history(
 \item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"}
 
 \item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate)}
+
+\item{variable}{Simulate only varying characters. The default here is set to FALSE}
 
 \item{ancestral}{Return the states at all ancestral nodes. Default set to false}
 
