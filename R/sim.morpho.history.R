@@ -20,12 +20,18 @@
 #' @export
 
 #' @examples
-#'  # simulated tree
-#'  phy <- ape::rtree(10)
+#'# simulated tree
+#' phy <- ape::rtree(10)
 #'
-#'  # simulate characters along the branches of the tree
-#'  transition_history <-  sim.morpho.history(tree = phy, k = 3, trait.num = 4, ancestral = TRUE)
-#'
+#'# simulate characters along the branches of the tree
+#'transition_history <-  sim.morpho.history(tree = phy,
+#'                                          k = 3,
+#'                                          trait.num = 30,
+#'                                          ancestral = TRUE,
+#'                                          ACRV = "gamma",
+#'                                          variable = FALSE,
+#'                                          ncats.gamma = 4)
+
 
 
 sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
@@ -184,7 +190,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     }
     }
 
-     if (!is.null(ACRV)) ACRV_rate[tr] <- trait_rate
+     if (!is.null(ACRV)) ACRV_rate[tr] <- which(gamma_rates == trait_rate)
       continuous_traits[[tr]] <- as.data.frame(transitions)
   }
 
