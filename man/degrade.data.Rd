@@ -2,7 +2,7 @@
 % Please edit documentation in R/degrade.data.R
 \name{degrade.data}
 \alias{degrade.data}
-\title{Degrade morphological data}
+\title{Remove morphological character data}
 \usage{
 degrade.data(data = NULL, method = NULL, percentage = NULL)
 }

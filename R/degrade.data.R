@@ -1,4 +1,4 @@
-#' Degrade morphological data
+#' Remove morphological character data
 #'
 #' @description
 #' This function removes characters from a morphological matrix simulated using morphosim
