@@ -35,7 +35,7 @@
 
 
 sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                                       k = 2, partition = 1, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
+                                       k = 2, partition = NULL, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
 
 
   # check that a tree is provided
@@ -91,7 +91,10 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
   root<- as.integer(parent[!match(parent, child, 0)][1])
 
 
+  ## current loop is a bit weird and depends on there being partitions.
+  ## if traits set using one partition need to set partition <- trait.num
 
+  if(is.null(partition)) partition <- trait.num
 
   ### Among character rate variation
   # eventually may need to put into the state function if partitions are not linked
@@ -242,7 +245,15 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
  if(is.null(ACRV)){
     ACRV_rate <- NULL}
 
-  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = "Mk",
+  # define model used
+  if (isTRUE(variable)) {
+    var <- "V"
+  } else {
+    var <- NULL
+  }
+  model <- paste0("Mk", ACRV , var, "_Part:", partition, "states:", k)
+
+  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = model,
                           time.tree = time.tree, continuous_traits= continuous_traits,
                           root.states = rs, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
 

@@ -75,19 +75,46 @@ for ( i in 1:remove){
 
      }
       }
-     }
+  }
+
+
+
+  if(method == "partition"){
+
+    start_col <- 1
+    for ( j in 1:length(data$model)){
+
+
+    traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1", data[["model"]][j]))
+    remove <- round((traits_per_partition* taxa.num)* (percentage[j]/100), 0)
+    total_cells <- traits_per_partition*taxa.num
+
+    all_combinations <- expand.grid(Row = 1:taxa.num, Column =  start_col:(start_col + traits_per_partition -1))
+    random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+
+
+    for ( i in 1:remove){
+      x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+
+
+  }
+    start_col <- start_col + traits_per_partition
+
+  }
+
+
+  }
 
   taxa <- rownames(x)
   for ( i in 1:length(taxa)){
     data$sequences[[taxa[i]]] <- x[taxa[i],]
 
   }
-
   return(data)
 
+
+
 }
-
-
 
 
 
