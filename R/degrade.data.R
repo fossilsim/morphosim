@@ -10,6 +10,7 @@
 #' @param percentage This specifies how much data to remove. The number of percentages supplied varies depending on the
 #' method chosen. For random the user must supply 1 percentage, and for all other methods must supply 1 percentage
 #' per category.
+#' @param char Specify what traits you want to degrade data from
 #'
 #' @return An object of class morpho.
 #'
@@ -33,9 +34,15 @@
 #'
 #' # remove data based on the rate it was simulated under
 #' degraded <- degrade.data(data = transition_history, method = "rate", percentage = c(0,0,20,100))
+#'
+#' # remove specific characters from specfic traits
+#'   degraded <- degrade.data(data = transition_history, method = "character", percentage = 100, traits = c(1,2,5))
+#'
+#' # remove data based on the partition
+#' degraded <- degrade.data(data = transition_history, method = "partition", percentage = c(100, 0, 100))
 
 
-degrade.data <- function(data = NULL, method = NULL, percentage = NULL){
+degrade.data <- function(data = NULL, method = NULL, percentage = NULL, traits = NULL){
 
   x <- t(as.data.frame(data$sequences))
   trait.num  <- length(x[1,])
@@ -101,6 +108,23 @@ for ( i in 1:remove){
     start_col <- start_col + traits_per_partition
 
   }
+
+
+  }
+
+
+  if ( method == "character"){
+
+    remove <- round((length(traits)* taxa.num)* (percentage/100), 0)
+    total_cells <- length(traits)*taxa.num
+
+    all_combinations <- expand.grid(Row = 1:taxa.num, Column = traits)
+    random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+    for ( i in 1:remove){
+      x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+
+
+    }
 
 
   }

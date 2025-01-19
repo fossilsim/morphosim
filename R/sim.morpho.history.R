@@ -7,13 +7,14 @@
 #' different rates per branch. If no branch rates are specified a default of 1 is applied to
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
-#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"
-#' @param variable Simulate only varying characters. The default here is set to FALSE
+#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal".
+#' @param variable Simulate only varying characters. The default here is set to FALSE.
 #' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate)
+#' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate).
 #' @param k Number of trait states.
-#' @param trait.num The number of traits to simulate
-#' @param ancestral Return the states at all ancestral nodes. Default set to false
+#' @param trait.num The number of traits to simulate.
+#' @param ancestral Return the states at all ancestral nodes. Default set to FALSE.
+#' @param define_gamma_rates You can specify the gamma rate categories you want to use for the simulation.
 #'
 #' @return An object of class morpho.
 #'
@@ -25,17 +26,19 @@
 #'
 #'# simulate characters along the branches of the tree
 #'transition_history <-  sim.morpho.history(tree = phy,
-#'                                          k = 3,
-#'                                          trait.num = 30,
+#'                                          k = c(2,3,4),
+#'                                          trait.num = 20,
 #'                                          ancestral = TRUE,
+#'                                          partition = c(10,5,5),
 #'                                          ACRV = "gamma",
-#'                                          variable = FALSE,
+#'                                          variable = TRUE,
 #'                                          ncats.gamma = 4)
 
 
 
 sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                                       k = 2, partition = NULL, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4){
+                                       k = 2, partition = NULL, trait.num = 2,
+                               alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL){
 
 
   # check that a tree is provided
@@ -100,7 +103,11 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
   # eventually may need to put into the state function if partitions are not linked
   if(!is.null(ACRV)){
     if (ACRV == "gamma"){
+      if (!is.null(define_gamma_rates)){
+        gamma_rates <- define_gamma_rates
+      } else {
       gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
+      }
     }
     else if(ACRV == "lognormal"){
 
@@ -245,6 +252,10 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
  if(is.null(ACRV)){
     ACRV_rate <- NULL}
 
+  if(!exists("gamma_rates")){
+    gamma_rates <- NULL
+  }
+
   # define model used
   if (isTRUE(variable)) {
     var <- "V"
@@ -255,7 +266,8 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = model,
                           time.tree = time.tree, continuous_traits= continuous_traits,
-                          root.states = rs, node.seq = node_sequence,  ACRV_rate =  ACRV_rate  )
+                          root.states = rs, node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
+                          gamma_rates = gamma_rates  )
 
   return(sim.output )
 

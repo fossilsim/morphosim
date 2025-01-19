@@ -12,7 +12,8 @@
 #'
 #' @export
 morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
-                   node.seq = NULL, continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL){
+                   node.seq = NULL, continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL,
+                   gamma_rates = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -33,7 +34,8 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
     time.tree = time.tree,
     continuous_traits = continuous_traits,
     root.states = root.states,
-    ACRV_rate =   ACRV_rate
+    ACRV_rate =   ACRV_rate,
+    gamma_rates = gamma_rates
   )
 
   # assign class "morpho" to the object
@@ -76,7 +78,7 @@ summary.morpho <- function(object, max.length = 5, ...){
 #' @export
 #' @rdname morpho
 as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL,
-                                   continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL) UseMethod("as.morpho")
+                                   continuous_traits = NULL, root.states = NULL, ACRV_rate = NULL, gamma_rates = NULL) UseMethod("as.morpho")
 
 
 #' @export

@@ -4,7 +4,7 @@
 \alias{degrade.data}
 \title{Remove morphological character data}
 \usage{
-degrade.data(data = NULL, method = NULL, percentage = NULL)
+degrade.data(data = NULL, method = NULL, percentage = NULL, traits = NULL)
 }
 \arguments{
 \item{data}{A morpho object with sequence data}
@@ -17,6 +17,8 @@ and "character" where the user can specify particular characters to degrade the 
 \item{percentage}{This specifies how much data to remove. The number of percentages supplied varies depending on the
 method chosen. For random the user must supply 1 percentage, and for all other methods must supply 1 percentage
 per category.}
+
+\item{char}{Specify what traits you want to degrade data from}
 }
 \value{
 An object of class morpho.
@@ -42,4 +44,10 @@ degraded <- degrade.data(data = transition_history, method = "random", percentag
 
 # remove data based on the rate it was simulated under
 degraded <- degrade.data(data = transition_history, method = "rate", percentage = c(0,0,20,100))
+
+# remove specific characters from specfic traits
+  degraded <- degrade.data(data = transition_history, method = "character", percentage = 100, traits = c(1,2,5))
+
+# remove data based on the partition
+degraded <- degrade.data(data = transition_history, method = "partition", percentage = c(100, 0, 100))
 }

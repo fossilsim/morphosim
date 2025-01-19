@@ -12,10 +12,11 @@ sim.morpho.history(
   variable = FALSE,
   ancestral = FALSE,
   k = 2,
-  partition = 1,
+  partition = NULL,
   trait.num = 2,
   alpha.gamma = 1,
-  ncats.gamma = 4
+  ncats.gamma = 4,
+  define_gamma_rates = NULL
 )
 }
 \arguments{
@@ -23,17 +24,19 @@ sim.morpho.history(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
-\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"}
+\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal".}
 
-\item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate)}
+\item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate).}
 
-\item{variable}{Simulate only varying characters. The default here is set to FALSE}
+\item{variable}{Simulate only varying characters. The default here is set to FALSE.}
 
-\item{ancestral}{Return the states at all ancestral nodes. Default set to false}
+\item{ancestral}{Return the states at all ancestral nodes. Default set to FALSE.}
 
 \item{k}{Number of trait states.}
 
-\item{trait.num}{The number of traits to simulate}
+\item{trait.num}{The number of traits to simulate.}
+
+\item{define_gamma_rates}{You can specify the gamma rate categories you want to use for the simulation.}
 }
 \value{
 An object of class morpho.
@@ -51,10 +54,11 @@ phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
 transition_history <-  sim.morpho.history(tree = phy,
-                                         k = 3,
-                                         trait.num = 30,
+                                         k = c(2,3,4),
+                                         trait.num = 20,
                                          ancestral = TRUE,
+                                         partition = c(10,5,5),
                                          ACRV = "gamma",
-                                         variable = FALSE,
+                                         variable = TRUE,
                                          ncats.gamma = 4)
 }

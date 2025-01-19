@@ -14,7 +14,8 @@ morpho(
   node.seq = NULL,
   continuous_traits = NULL,
   root.states = NULL,
-  ACRV_rate = NULL
+  ACRV_rate = NULL,
+  gamma_rates = NULL
 )
 
 as.morpho(
@@ -25,7 +26,8 @@ as.morpho(
   node.seq = NULL,
   continuous_traits = NULL,
   root.states = NULL,
-  ACRV_rate = NULL
+  ACRV_rate = NULL,
+  gamma_rates = NULL
 )
 
 is.morpho(data)
