@@ -54,7 +54,7 @@ all branches.
 phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
-transition_history <-  sim.morpho.history(tree = phy,
+transition_history <-  sim.morpho.history_gibbs(tree = phy,
                                          k = c(2,3,4),
                                          trait.num = 20,
                                          ancestral = TRUE,
@@ -62,4 +62,26 @@ transition_history <-  sim.morpho.history(tree = phy,
                                          ACRV = "gamma",
                                          variable = TRUE,
                                          ncats.gamma = 4)
+
+
+# To simulate ordered characters:
+# First define a Q-matrix. The following is for ordered characters where transitions can only occur
+# between states 0 and 1 and 1 and 2
+
+ord_Q <- matrix(c(
+-0.5, 0.5, 0.0,
+0.3333333, -0.6666667, 0.3333333,
+0.0, 0.5, -0.5
+), nrow = 3, byrow = TRUE)
+
+# This Q matrix can be then used to simualte character data.
+
+transition_history_2 <-  sim.morpho.history_gibbs(tree = phy,
+                                                  k = 3,
+                                                  trait.num = 20,
+                                                  ancestral = TRUE,
+                                                  ACRV = "gamma",
+                                                  variable = TRUE,
+                                                  ncats.gamma = 4,
+                                                  define_Q = ord_Q)
 }
