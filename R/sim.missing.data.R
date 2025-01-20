@@ -3,13 +3,11 @@
 #' @description
 #' This function removes characters from a morphological matrix simulated using morphosim
 #' @param data A morpho object with sequence data
-#' @param method This specifies under what criteria data should be removed. Methods include "random" which randomly removes
-#' characters across the entire matrix, "partition" which allows different partitions (that were used to simualte the data)
-#' to loose varying amounts of characters, "rates" which removes characters depening on the rate the were simulated under,
-#' and "character" where the user can specify particular characters to degrade the data.
-#' @param percentage This specifies how much data to remove. The number of percentages supplied varies depending on the
-#' method chosen. For random the user must supply 1 percentage, and for all other methods must supply 1 percentage
-#' per category.
+#' @param method Under what criteria data should be removed. Methods include "random" which randomly removes
+#' characters across the entire matrix, "partition" which allows different partitions (that were used to simulate the data)
+#' to loose varying amounts of characters, "rates" which removes characters based on the rate the were simulated under,
+#' and "trait" where the user can specify particular traits to remove data.
+#' @param probability The probability of missing data to simulate.
 #' @param char Specify what traits you want to degrade data from
 #'
 #' @return An object of class morpho.
@@ -29,20 +27,19 @@
 #'                                          variable = FALSE)
 #'
 #' # randomly remove data
-#' degraded <- degrade.data(data = transition_history, method = "random", percentage = 10)
-#'
+#' missing.data <- sim.missing.data(data = transition_history, method = "random", probability = 1)
 #'
 #' # remove data based on the rate it was simulated under
-#' degraded <- degrade.data(data = transition_history, method = "rate", percentage = c(0,0,20,100))
+#' missing.data <- sim.missing.data(data = transition_history, method = "rate", probability = c(0,0,0.2,1))
 #'
-#' # remove specific characters from specfic traits
-#'   degraded <- degrade.data(data = transition_history, method = "character", percentage = 100, traits = c(1,2,5))
+#' # remove specific characters from specific traits
+#' missing.data <- sim.missing.data(data = transition_history, method = "trait", probability = 1, traits = c(1,2,5))
 #'
 #' # remove data based on the partition
-#' degraded <- degrade.data(data = transition_history, method = "partition", percentage = c(100, 0, 100))
+#' missing.data <- sim.missing.data(data = transition_history, method = "partition", probability = c(1, 0, 1))
 
 
-degrade.data <- function(data = NULL, method = NULL, percentage = NULL, traits = NULL){
+sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, traits = NULL){
 
   x <- t(as.data.frame(data$sequences))
   trait.num  <- length(x[1,])
@@ -51,7 +48,7 @@ degrade.data <- function(data = NULL, method = NULL, percentage = NULL, traits =
 if (method == "random"){
 
 
-remove <- round((trait.num* taxa.num)* (percentage/100), 0)
+remove <- round((trait.num* taxa.num)* probability, 0)
 total_cells <- taxa.num*trait.num
 all_combinations <- expand.grid(Row = 1:taxa.num, Column = 1:trait.num)
 random_cells<- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
@@ -70,7 +67,7 @@ for ( i in 1:remove){
 
    for ( j in 1:max(rates[1,])){
      traits_per_rate <- which(rates == j)
-     remove <- round((length(traits_per_rate)* taxa.num)* (percentage[j]/100), 0)
+     remove <- round((length(traits_per_rate)* taxa.num)* probability[j], 0)
      total_cells <- length(traits_per_rate)*taxa.num
 
      all_combinations <- expand.grid(Row = 1:taxa.num, Column =  traits_per_rate)
@@ -93,7 +90,7 @@ for ( i in 1:remove){
 
 
     traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1", data[["model"]][j]))
-    remove <- round((traits_per_partition* taxa.num)* (percentage[j]/100), 0)
+    remove <- round((traits_per_partition* taxa.num)* probability[j], 0)
     total_cells <- traits_per_partition*taxa.num
 
     all_combinations <- expand.grid(Row = 1:taxa.num, Column =  start_col:(start_col + traits_per_partition -1))
@@ -113,9 +110,9 @@ for ( i in 1:remove){
   }
 
 
-  if ( method == "character"){
+  if ( method == "trait"){
 
-    remove <- round((length(traits)* taxa.num)* (percentage/100), 0)
+    remove <- round((length(traits)* taxa.num)* probability, 0)
     total_cells <- length(traits)*taxa.num
 
     all_combinations <- expand.grid(Row = 1:taxa.num, Column = traits)
