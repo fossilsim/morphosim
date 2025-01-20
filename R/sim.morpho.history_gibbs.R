@@ -36,9 +36,9 @@
 
 
 
-sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                                       k = 2, partition = NULL, trait.num = 2, alpha.gamma = 1, ncats.gamma = 4,
-                               define_gamma_rates = NULL, define_Q = NULL){
+sim.morpho.history_gibbs <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
+                               k = 2, partition = NULL, trait.num = 2,
+                               alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL, define_Q = NULL){
 
 
   # check that a tree is provided
@@ -106,7 +106,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
       if (!is.null(define_gamma_rates)){
         gamma_rates <- define_gamma_rates
       } else {
-      gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
+        gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
       }
     }
     else if(ACRV == "lognormal"){
@@ -115,121 +115,120 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
   }
 
   ## start the partition loop
-   for (part in 1:length(partition)){
-   part.trait.num <- partition[part]
+  for (part in 1:length(partition)){
+    part.trait.num <- partition[part]
 
-  ##start loop for number of different states
-  # for (stat in 1:length(k))
-  ### for a symmetric Q matrix
-  part_k <- k[part]
+    ##start loop for number of different states
+    # for (stat in 1:length(k))
+    ### for a symmetric Q matrix
+    part_k <- k[part]
 
-  if (is.null(define_Q)){
-  Q <- symmetric.Q.matrix(part_k)
-  } else {Q <- define_Q}
-
-
-  states <- as.character(c(0:(part_k -1)))
-
-
-  # edge lengths
-  bl <- tree.ordered$edge.length
-
-
-   for (tr in 1:part.trait.num){
-    # message(tr)
-    repeat {
-
-     # simulate the root state using symmetric Q-matrix
-      root.state <- sample(states, 1, replace = TRUE, prob = rep(1/part_k , part_k)) #later prob would need to take into account for bf
-      state_at_nodes[as.character(root),tr.num] <- as.numeric(root.state)
+    if (is.null(define_Q)){
+      Q <- symmetric.Q.matrix(part_k)
+    } else {Q <- define_Q}
 
 
 
-      #message("conditions not met repreat")
-    ### Among character rate variation
-    if(!is.null(ACRV)){
-      if (ACRV == "gamma"){
-        trait_rate <- gamma_rates[sample(1:ncats.gamma, 1)]
-        Q_r <- Q * trait_rate
+    states <- as.character(c(0:(part_k -1)))
+
+
+    # edge lengths
+    bl <- tree.ordered$edge.length
+
+
+    for (tr in 1:part.trait.num){
+      # message(tr)
+      repeat {
+
+        # simulate the root state using symmetric Q-matrix
+        root.state <- sample(states, 1, replace = TRUE, prob = rep(1/part_k , part_k)) #later prob would need to take into account for bf
+        state_at_nodes[as.character(root),tr.num] <- as.numeric(root.state)
+
+
+
+        #message("conditions not met repreat")
+        ### Among character rate variation
+        if(!is.null(ACRV)){
+          if (ACRV == "gamma"){
+            trait_rate <- gamma_rates[sample(1:ncats.gamma, 1)]
+            Q_r <- Q * trait_rate
+          }
+          else if(ACRV == "lognormal"){
+
+          }
+        } else {
+          Q_r <- Q
+        }
+
+
+
+        # container for the transitions
+        transitions <- matrix(ncol = 3, nrow= 0)
+        colnames(transitions) <- c("edge", "state", "hmin")
+        # loop through all branches
+        for (i in seq_along(bl)){
+
+          total_wait <- 0
+          from <- parent[i]
+          to <- child[i]
+
+          current_state <- as.numeric(unname(state_at_nodes[as.character(from), tr.num]))
+
+          # Time tracking
+          time_remaining <- bl[i]
+
+
+          while (time_remaining > 0) {
+            # Get the rates for the current state
+            rates <- Q_r[current_state+1, ]
+            rates[current_state+1] <- 0 # No transition to the same state
+
+             # calculate the rate of any transition occurring
+            total_rate <- -Q_r[current_state+1, current_state+1]
+            waiting_time <- rexp(1, rate = total_rate)
+
+            # Transition to a new state
+            time_remaining <- time_remaining - waiting_time
+            if (time_remaining <= 0) {
+              break
+            }
+
+            # Transition to a new state
+            #time_remaining <- time_remaining - waiting_time
+            next_state <- sample(states, 1, prob = rates / total_rate)
+            #states <- c(states, next_state)
+            current_state <- as.numeric(next_state)
+
+
+            add_t <- c(i, next_state, waiting_time + total_wait)
+            transitions <- rbind(transitions, as.numeric(add_t))
+
+            total_wait <- total_wait + waiting_time
+
+          }
+
+
+
+          if (to %in% tips) state_at_tips[tree$tip.label[to],tr.num] <- current_state
+          if (to %in% nodes) state_at_nodes[as.character(to),tr.num] <- current_state
+        }
+
+        if (!variable ){
+          break
+        }
+
+        if (length(unique(state_at_tips[,tr.num])) > 1 & length(unique(state_at_nodes[,tr.num])) > 1 ){
+          break
+        }
       }
-      else if(ACRV == "lognormal"){
 
-      }
-    } else {
-      Q_r <- Q
-    }
-
-
-      # container for the transitions
-  transitions <- matrix(ncol = 3, nrow= 0)
-  colnames(transitions) <- c("edge", "state", "hmin")
-  # loop through all branches
-  for (i in seq_along(bl)){
-
-    from <- parent[i]
-    to <- child[i]
-
-      current_state <- as.numeric(unname(state_at_nodes[as.character(from), tr.num]))
-
-    # best way to specify these?
-   # if (Qmat == "Equal"){}
-   # else if (Qmat == "F81"){}
-
-    # calculate the rate of any transition occurring
-    current_rate <- Q_r[(current_state+ 1),(current_state+1)] * -1
-
-    # how many transitions
-    rand = rpois(1, bl[i]*current_rate)
-
-    # if there are any trnaisitons along this branch
-    if (rand > 0 ){
-    h = runif(rand, min = 0, max = bl[i])
-    h <- sort(h)
-
-    # now we need to calculate what those transitions are
-    P  <- ape::matexpo(Q_r * bl[i])
-
-    # avoid numerical problems for larger P and small bl
-    if (any(P < 0)) P[P < 0] <- 0
-    # calculated the number of changes there for we need to ensure that a new state is sampled.
-     state_changes <- c()
-    new_state <- current_state
-    for (r in 1:rand){
-      while(as.numeric(new_state == current_state) ){
-        new_state <- sample(states, 1, replace = TRUE, prob = P[,(current_state+1)])
-      }
-      state_changes <- rbind(state_changes, new_state)
-      current_state <- as.numeric(new_state)
-
-    }
-
-    for (q in 1:rand){
-      add_t <- c(i, state_changes[q], h[q])
-      transitions <- rbind(transitions, as.numeric(add_t))
-
-    }
-}
-
-    if (to %in% tips) state_at_tips[tree$tip.label[to],tr.num] <- current_state
-    if (to %in% nodes) state_at_nodes[as.character(to),tr.num] <- current_state
-}
-
-   if (!variable ){
-       break
-   }
-
-    if (length(unique(state_at_tips[,tr.num])) > 1 & length(unique(state_at_nodes[,tr.num])) > 1 ){
-     break
-    }
-    }
-
-     if (!is.null(ACRV)) ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
+      if (!is.null(ACRV)) ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
       continuous_traits[[tr.num]] <- as.data.frame(transitions)
       tr.num <- tr.num + 1
       rs <- rbind(rs, root.state)
-   }
+    }
 
-   }
+  }
 
   ## create morpho object
   # formatting for morpho object
@@ -255,7 +254,7 @@ sim.morpho.history <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rat
     node_sequence <- NULL
   }
 
- if(is.null(ACRV)){
+  if(is.null(ACRV)){
     ACRV_rate <- NULL}
 
   if(!exists("gamma_rates")){
