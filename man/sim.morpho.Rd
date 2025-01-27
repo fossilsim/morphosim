@@ -2,18 +2,22 @@
 % Please edit documentation in R/sim.morpho.R
 \name{sim.morpho}
 \alias{sim.morpho}
-\title{Simulate characters at internal nodes in a tree}
+\title{Simulate characters along branches in a tree}
 \usage{
 sim.morpho(
   tree = NULL,
   time.tree = NULL,
   ACRV = NULL,
   br.rates = NULL,
-  k = 2,
-  trait.num = 2,
+  variable = FALSE,
   ancestral = FALSE,
+  k = 2,
+  partition = NULL,
+  trait.num = 2,
   alpha.gamma = 1,
-  ncats.gamma = 4
+  ncats.gamma = 4,
+  define_gamma_rates = NULL,
+  define_Q = NULL
 )
 }
 \arguments{
@@ -21,29 +25,63 @@ sim.morpho(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
-\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal"}
+\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal".}
 
-\item{br.rates}{clock Rate, currently can only be strict clock (a single rate)}
+\item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate).}
 
-\item{k}{Number of states}
+\item{variable}{Simulate only varying characters. The default here is set to FALSE.}
 
-\item{trait.num}{The number of traits to simulate}
+\item{ancestral}{Return the states at all ancestral nodes. Default set to FALSE.}
 
-\item{ancestral}{T/F Whether or not to output information from internal nodes}
+\item{k}{Number of trait states.}
+
+\item{trait.num}{The number of traits to simulate.}
+
+\item{define_gamma_rates}{You can specify the gamma rate categories you want to use for the simulation.}
 }
 \value{
 An object of class morpho.
 }
 \description{
-This function simulates discrete character data at the internal nodes of a phylogentic tree. It can be used with
+This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
 either a time tree or a tree with branch lengths in genetic distance. If using a time tree
 branch rates can be specified, either as one values for all branches or as a vector with
 different rates per branch. If no branch rates are specified a default of 1 is applied to
 all branches.
 }
 \examples{
+# simulated tree
 phy <- ape::rtree(10)
-plot(phy)
-simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 20)
-simulated_morpho
+
+# simulate characters along the branches of the tree
+transition_history <-  sim.morpho(tree = phy,
+                                         k = c(2,3,4),
+                                         trait.num = 20,
+                                         ancestral = TRUE,
+                                         partition = c(10,5,5),
+                                         ACRV = "gamma",
+                                         variable = TRUE,
+                                         ncats.gamma = 4)
+
+
+# To simulate ordered characters:
+# First define a Q-matrix. The following is for ordered characters where transitions can only occur
+# between states 0 and 1 and 1 and 2
+
+ord_Q <- matrix(c(
+-0.5, 0.5, 0.0,
+0.3333333, -0.6666667, 0.3333333,
+0.0, 0.5, -0.5
+), nrow = 3, byrow = TRUE)
+
+# This Q matrix can be then used to simualte character data.
+
+transition_history_2 <-  sim.morpho(tree = phy,
+                                    k = 3,
+                                    trait.num = 20,
+                                    ancestral = TRUE,
+                                    ACRV = "gamma",
+                                    variable = TRUE,
+                                    ncats.gamma = 4,
+                                   define_Q = ord_Q)
 }

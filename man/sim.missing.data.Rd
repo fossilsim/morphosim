@@ -29,7 +29,7 @@ This function removes characters from a morphological matrix simulated using mor
 phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
-transition_history <-  sim.morpho.history(tree = phy,
+transition_history <-  sim.morpho(tree = phy,
                                          k = 3,
                                          trait.num = 30,
                                          ancestral = TRUE,

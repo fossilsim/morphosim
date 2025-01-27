@@ -34,19 +34,32 @@
 This function creates a plot showing continuous evolution of discrete traits
 }
 \examples{
-#set.seed(123)
 # Non-time tree
 phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
-continuous_traits <- sim.morpho.completeprocess(phy, k=4, trait.num =12)
+transition_history <-  sim.morpho(tree = phy,
+                                  k = c(2,3,4),
+                                   trait.num = 20,
+                                  ancestral = TRUE,
+                                  partition = c(10,5,5),
+                                 ACRV = "gamma",
+                                 variable = TRUE,
+                                  ncats.gamma = 4)
 
-plot(x = continuous_traits, trait = 1, timetree = FALSE)
+plot(x = transition_history, trait = 1, timetree = FALSE)
 
 # time tree
 tree <- TreeSim::sim.bd.taxa(8,1,1,0.5)[[1]]
-continuous_traits <- sim.morpho.completeprocess(time.tree = tree, br.rates = 0.2,
-k = 3, trait.num = 5)
-plot(x = continuous_traits, trait = 1, timetree = TRUE, br.rates = 0.2,
-col = c("#fdfdfd", "lightgray", "lightblue"), col.timescale = "black")
+transition_history <-  sim.morpho(time.tree = t,
+                                  br.rates = 0.1,
+                                  k = 3,
+                                  trait.num = 20,
+                                  ancestral = TRUE,
+                                  partition = c(10,5,5),
+                                  ACRV = "gamma",
+                                  variable = TRUE,
+                                  ncats.gamma = 4)
+
+plot.morpho(transition_history, timetree = TRUE, trait = 14, br.rates = 0.1)
 }

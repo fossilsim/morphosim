@@ -12,7 +12,7 @@ morpho(
   time.tree = NULL,
   model = NULL,
   node.seq = NULL,
-  continuous_traits = NULL,
+  transition_history = NULL,
   root.states = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
@@ -24,7 +24,7 @@ as.morpho(
   time.tree = NULL,
   model = NULL,
   node.seq = NULL,
-  continuous_traits = NULL,
+  transition_history = NULL,
   root.states = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
@@ -43,7 +43,7 @@ is.morpho(data)
 
 \item{node.seq}{Trait data associated with the internal nodes of the tree}
 
-\item{continuous_traits}{The bottom 3 traits need to be reviewed}
+\item{transition_history}{The constant character transitions along the branches}
 
 \item{root.states}{A vector supplying the root state for each character}
 }
