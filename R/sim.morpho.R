@@ -15,6 +15,10 @@
 #' @param trait.num The number of traits to simulate.
 #' @param ancestral Return the states at all ancestral nodes. Default set to FALSE.
 #' @param define_gamma_rates You can specify the gamma rate categories you want to use for the simulation.
+#' @param partition Specify the number of traits per partition
+#' @param alpha.gamma The value of alpha, i.e., the shape parameter, used to draw the rates from
+#' @param ncats.gamma The number of rate categories
+#' @param define_Q Provide a Q matrix for simulation
 #'
 #' @return An object of class morpho.
 #'

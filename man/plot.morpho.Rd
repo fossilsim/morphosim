@@ -49,17 +49,4 @@ transition_history <-  sim.morpho(tree = phy,
 
 plot(x = transition_history, trait = 1, timetree = FALSE)
 
-# time tree
-tree <- TreeSim::sim.bd.taxa(8,1,1,0.5)[[1]]
-transition_history <-  sim.morpho(time.tree = t,
-                                  br.rates = 0.1,
-                                  k = 3,
-                                  trait.num = 20,
-                                  ancestral = TRUE,
-                                  partition = c(10,5,5),
-                                  ACRV = "gamma",
-                                  variable = TRUE,
-                                  ncats.gamma = 4)
-
-plot.morpho(transition_history, timetree = TRUE, trait = 14, br.rates = 0.1)
 }

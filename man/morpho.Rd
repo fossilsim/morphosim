@@ -46,6 +46,10 @@ is.morpho(data)
 \item{transition_history}{The constant character transitions along the branches}
 
 \item{root.states}{A vector supplying the root state for each character}
+
+\item{ACRV_rate}{The rate category each trait was simulated under}
+
+\item{gamma_rates}{The gamma rate for each rate category}
 }
 \description{
 Create a morpho object.

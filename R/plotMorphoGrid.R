@@ -8,6 +8,7 @@
 #' want to focus on a specific trait set it here, e.g. num.trait = 1 and this trait will
 #' be highlighted
 #' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
+#' @param timetree  TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
 #'
 #' @export
 

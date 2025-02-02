@@ -14,6 +14,8 @@ plotMorphoGrid(
 \arguments{
 \item{data}{A morpho object}
 
+\item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
+
 \item{num.trait}{default is set to "all" which plots all traits in black font. If you
 want to focus on a specific trait set it here, e.g. num.trait = 1 and this trait will
 be highlighted}

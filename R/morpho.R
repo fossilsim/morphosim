@@ -9,6 +9,8 @@
 #' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G)
 #' @param root.states A vector supplying the root state for each character
 #' @param transition_history The constant character transitions along the branches
+#' @param ACRV_rate The rate category each trait was simulated under
+#' @param gamma_rates The gamma rate for each rate category
 #'
 #' @export
 morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,

@@ -8,7 +8,7 @@
 #' to loose varying amounts of characters, "rates" which removes characters based on the rate the were simulated under,
 #' and "trait" where the user can specify particular traits to remove data.
 #' @param probability The probability of missing data to simulate.
-#' @param char Specify what traits you want to degrade data from
+#' @param traits When method = trait, used to specify which trait you want to remove data from
 #'
 #' @return An object of class morpho.
 #'
@@ -27,16 +27,25 @@
 #'                                          variable = FALSE)
 #'
 #' # randomly remove data
-#' missing.data <- sim.missing.data(data = transition_history, method = "random", probability = 1)
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                   method = "random",
+#'                                   probability = 1)
 #'
 #' # remove data based on the rate it was simulated under
-#' missing.data <- sim.missing.data(data = transition_history, method = "rate", probability = c(0,0,0.2,1))
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                         method = "rate",
+#'                                         probability = c(0,0,0.2,1))
 #'
 #' # remove specific characters from specific traits
-#' missing.data <- sim.missing.data(data = transition_history, method = "trait", probability = 1, traits = c(1,2,5))
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                  method = "trait",
+#'                                  probability = 1,
+#'                                  traits = c(1,2,5))
 #'
 #' # remove data based on the partition
-#' missing.data <- sim.missing.data(data = transition_history, method = "partition", probability = c(1, 0, 1))
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                  method = "partition",
+#'                                  probability = c(1, 0, 1))
 
 
 sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, traits = NULL){

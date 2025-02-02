@@ -16,7 +16,7 @@ and "trait" where the user can specify particular traits to remove data.}
 
 \item{probability}{The probability of missing data to simulate.}
 
-\item{char}{Specify what traits you want to degrade data from}
+\item{traits}{When method = trait, used to specify which trait you want to remove data from}
 }
 \value{
 An object of class morpho.
@@ -37,14 +37,23 @@ transition_history <-  sim.morpho(tree = phy,
                                          variable = FALSE)
 
 # randomly remove data
-missing.data <- sim.missing.data(data = transition_history, method = "random", probability = 1)
+missing.data <- sim.missing.data(data = transition_history,
+                                  method = "random",
+                                  probability = 1)
 
 # remove data based on the rate it was simulated under
-missing.data <- sim.missing.data(data = transition_history, method = "rate", probability = c(0,0,0.2,1))
+missing.data <- sim.missing.data(data = transition_history,
+                                        method = "rate",
+                                        probability = c(0,0,0.2,1))
 
 # remove specific characters from specific traits
-missing.data <- sim.missing.data(data = transition_history, method = "trait", probability = 1, traits = c(1,2,5))
+missing.data <- sim.missing.data(data = transition_history,
+                                 method = "trait",
+                                 probability = 1,
+                                 traits = c(1,2,5))
 
 # remove data based on the partition
-missing.data <- sim.missing.data(data = transition_history, method = "partition", probability = c(1, 0, 1))
+missing.data <- sim.missing.data(data = transition_history,
+                                 method = "partition",
+                                 probability = c(1, 0, 1))
 }

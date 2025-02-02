@@ -35,9 +35,17 @@ sim.morpho(
 
 \item{k}{Number of trait states.}
 
+\item{partition}{Specify the number of traits per partition}
+
 \item{trait.num}{The number of traits to simulate.}
 
+\item{alpha.gamma}{The value of alpha, i.e., the shape parameter, used to draw the rates from}
+
+\item{ncats.gamma}{The number of rate categories}
+
 \item{define_gamma_rates}{You can specify the gamma rate categories you want to use for the simulation.}
+
+\item{define_Q}{Provide a Q matrix for simulation}
 }
 \value{
 An object of class morpho.

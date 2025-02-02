@@ -34,20 +34,6 @@
 #'
 #' plot(x = transition_history, trait = 1, timetree = FALSE)
 #'
-#' # time tree
-#' tree <- TreeSim::sim.bd.taxa(8,1,1,0.5)[[1]]
-#' transition_history <-  sim.morpho(time.tree = t,
-#'                                   br.rates = 0.1,
-#'                                   k = 3,
-#'                                   trait.num = 20,
-#'                                   ancestral = TRUE,
-#'                                   partition = c(10,5,5),
-#'                                   ACRV = "gamma",
-#'                                   variable = TRUE,
-#'                                   ncats.gamma = 4)
-#'
-#'plot.morpho(transition_history, timetree = TRUE, trait = 14, br.rates = 0.1)
-
 
 plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
   data = x
@@ -115,9 +101,9 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
     text(0, yy[root], label = as.numeric(data$root.states[trait]))
 
   } else {
-    text(0, yy[root], label = as.numeric(data$root.states[trait]))
     points(0, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
-    message("No transitions in this state across taxa")
+    text(0, yy[root], label = as.numeric(data$root.states[trait]))
+   # message("No transitions in this state across taxa")
   }
 
   # Add a timescale below the plot
