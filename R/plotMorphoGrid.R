@@ -27,6 +27,17 @@ plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col
 
   x <- data
 
+  ## check has missing data
+
+  if (class(x$sequences[[1]][1]) ==  "character"){
+    x$sequences <- lapply(x$sequences, function(x) {
+      # Replace "?" with NA first
+      x[x == "?"] <- NA
+      # Convert to numeric
+      as.numeric(x)
+    })
+  }
+
 n.taxa <- length(x$tree$tip.label)
 n.traits <- length(x$sequences[[1]])
 ordered_tree <- reorder(x$tree)
@@ -83,6 +94,7 @@ for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[tip_labs[j]]][i])
     bg_col <- col[state + 1]
+    if (is.na(state)) bg_col = "grey67"
 # Draw a rectangle for each box
 rect(
   xleft = x_labs[i]-xx/2, xright = x_labs[i]+xx/2,
@@ -112,7 +124,7 @@ for ( j in 1:n.taxa){
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[tip_labs[j]]][i])
-
+    if (is.na(state)) state = "?"
 
     # Add the state text in the box
     if (i == num.trait || num.trait == "all") {
