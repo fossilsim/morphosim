@@ -50,11 +50,18 @@
 
 sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, traits = NULL){
 
+  if(is.null(method)) stop("Please specifiy which method you would like to use")
+
+  if(is.null(data) ||!inherits(data, "morpho")){
+    stop("Please provide a morphosim object use to simulate the missing data")
+  }
+
   x <- t(as.data.frame(data$sequences))
   trait.num  <- length(x[1,])
   taxa.num <-   length(x[,1])
 
 if (method == "random"){
+
 
 
 remove <- round((trait.num* taxa.num)* probability, 0)
