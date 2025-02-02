@@ -94,7 +94,7 @@ for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric(x$sequences[[tip_labs[j]]][i])
     bg_col <- col[state + 1]
-    if (is.na(state)) bg_col = "grey100"
+    if (is.na(state)) bg_col = "red"
 # Draw a rectangle for each box
 rect(
   xleft = x_labs[i]-xx/2, xright = x_labs[i]+xx/2,
