@@ -17,6 +17,6 @@ phy <- ape::rtree(10)
 traits <- sim.morpho(phy, k=4, trait.num =12)
 ```
 
-For a general introduction see [here](https://github.com/fossilsim/morphosim/blob/main/intro.html)
+For a general introduction see [here](https://github.com/fossilsim/morphosim/docs/intro.html)
 
 
