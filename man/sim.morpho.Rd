@@ -12,7 +12,7 @@ sim.morpho(
   variable = FALSE,
   ancestral = FALSE,
   k = 2,
-  partition = 1,
+  partition = NULL,
   trait.num = NULL,
   alpha.gamma = 1,
   ncats.gamma = 4,

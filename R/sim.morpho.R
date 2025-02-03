@@ -64,7 +64,7 @@
 
 
 sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                               k = 2, partition = 1, trait.num = NULL,
+                               k = 2, partition = NULL, trait.num = NULL,
                                alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL, define_Q = NULL){
 
 
@@ -78,7 +78,10 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   if(!is.null(ACRV) && ACRV != "gamma") stop("Rate variation can only be modeled using a gamma distribution" )
 
-  if(length(k) != length(partition)) stop("The number of characters states provided much match the number partitions to simulate")
+  #if(length(k) != length(partition)) stop("The number of characters states provided much match the number partitions to simulate")
+
+  #if(length(partition == 1) && partition != 0 &&  sum(partition) != trait.num) stop("The total number characters in partition and trait.num must match")
+
 
   ## if provided with time tree, need to transform branches in genetic distance
   ## rates can be a single value or a vector for each branch
