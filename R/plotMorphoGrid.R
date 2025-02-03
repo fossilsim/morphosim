@@ -29,7 +29,7 @@ plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col
 
   ## check has missing data
 
-  if (class(x$sequences[[1]][1]) ==  "character"){
+  if (inherits(x$sequences[[1]][1], "character")){
     x$sequences <- lapply(x$sequences, function(x) {
       # Replace "?" with NA first
       x[x == "?"] <- NA
@@ -134,7 +134,7 @@ for (i in 1:n.traits) {
     }
   }
 }
-par(xaxs = "r", yaxs = "r")
+par(mar = c(5,4,4,2) + 0.1)
 }
 
 

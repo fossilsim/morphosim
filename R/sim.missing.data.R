@@ -20,8 +20,9 @@
 #'
 #'# simulate characters along the branches of the tree
 #'transition_history <-  sim.morpho(tree = phy,
-#'                                          k = 3,
+#'                                          k = c(2,3,4,5),
 #'                                          trait.num = 30,
+#'                                          partition = c(10,10,5,5),
 #'                                          ancestral = TRUE,
 #'                                          ACRV = "gamma",
 #'                                          variable = FALSE)
@@ -29,7 +30,7 @@
 #' # randomly remove data
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                   method = "random",
-#'                                   probability = 1)
+#'                                   probability = 0.5)
 #'
 #' # remove data based on the rate it was simulated under
 #' missing.data <- sim.missing.data(data = transition_history,
@@ -45,15 +46,15 @@
 #' # remove data based on the partition
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                  method = "partition",
-#'                                  probability = c(1, 0, 1))
+#'                                  probability = c(0.7, 0, 1, 0.5))
 
 
 sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, traits = NULL){
 
-  if(is.null(method)) stop("Please specify which method you would like to use")
+  if(is.null(method)) stop("You must specify which method you would like to use")
 
   if(is.null(data) ||!inherits(data, "morpho")){
-    stop("Please provide a morphosim object to simulate the missing data")
+    stop("Provide a morphosim object to simulate the missing data")
   }
 
   x <- t(as.data.frame(data$sequences))
@@ -62,7 +63,7 @@ sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, tra
 
 if (method == "random"){
 
-
+if (length(probability) > 1) stop ("Provide 1 probability to apply across the entire matrix")
 
 remove <- round((trait.num* taxa.num)* probability, 0)
 total_cells <- taxa.num*trait.num
@@ -79,7 +80,10 @@ for ( i in 1:remove){
 
 
   if( method == "rate"){
+
    rates <-  data$ACRV_rate
+
+   if (length(probability) != length(unique(rates[1,]))) stop("Vector of probabilities does not match the number of rate categories")
 
    for ( j in 1:max(rates[1,])){
      traits_per_rate <- which(rates == j)
@@ -100,6 +104,8 @@ for ( i in 1:remove){
 
 
   if(method == "partition"){
+
+    if (length(probability) != length(data$model)) stop("Vector of probabilities does not match the number of partitions")
 
     start_col <- 1
     for ( j in 1:length(data$model)){
@@ -127,6 +133,8 @@ for ( i in 1:remove){
 
 
   if ( method == "trait"){
+
+    if (length(probability) > 1) stop ("Provide 1 probability to apply across all traits")
 
     remove <- round((length(traits)* taxa.num)* probability, 0)
     total_cells <- length(traits)*taxa.num

@@ -30,8 +30,9 @@ phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
 transition_history <-  sim.morpho(tree = phy,
-                                         k = 3,
+                                         k = c(2,3,4,5),
                                          trait.num = 30,
+                                         partition = c(10,10,5,5),
                                          ancestral = TRUE,
                                          ACRV = "gamma",
                                          variable = FALSE)
@@ -39,7 +40,7 @@ transition_history <-  sim.morpho(tree = phy,
 # randomly remove data
 missing.data <- sim.missing.data(data = transition_history,
                                   method = "random",
-                                  probability = 1)
+                                  probability = 0.5)
 
 # remove data based on the rate it was simulated under
 missing.data <- sim.missing.data(data = transition_history,
@@ -55,5 +56,5 @@ missing.data <- sim.missing.data(data = transition_history,
 # remove data based on the partition
 missing.data <- sim.missing.data(data = transition_history,
                                  method = "partition",
-                                 probability = c(1, 0, 1))
+                                 probability = c(0.7, 0, 1, 0.5))
 }

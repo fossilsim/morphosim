@@ -12,8 +12,8 @@ sim.morpho(
   variable = FALSE,
   ancestral = FALSE,
   k = 2,
-  partition = NULL,
-  trait.num = 2,
+  partition = 1,
+  trait.num = NULL,
   alpha.gamma = 1,
   ncats.gamma = 4,
   define_gamma_rates = NULL,
@@ -25,7 +25,7 @@ sim.morpho(
 
 \item{time.tree}{Tree with branches that represent time associated with the character data.}
 
-\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal".}
+\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply argument "gamma".}
 
 \item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate).}
 
@@ -52,9 +52,9 @@ An object of class morpho.
 }
 \description{
 This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
-either a time tree or a tree with branch lengths in genetic distance. If using a time tree
+either a time tree or a tree with branch lengths in evolutionary distance. If using a time tree
 branch rates can be specified, either as one values for all branches or as a vector with
-different rates per branch. If no branch rates are specified a default of 1 is applied to
+different rates per branch. If no branch rates are specified a default of 0.1 is applied to
 all branches.
 }
 \examples{

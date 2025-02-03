@@ -2,20 +2,21 @@
 #'
 #' @description
 #' This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
-#' either a time tree or a tree with branch lengths in genetic distance. If using a time tree
+#' either a time tree or a tree with branch lengths in evolutionary distance. If using a time tree
 #' branch rates can be specified, either as one values for all branches or as a vector with
-#' different rates per branch. If no branch rates are specified a default of 1 is applied to
+#' different rates per branch. If no branch rates are specified a default of 0.1 is applied to
 #' all branches.
 #' @param tree Tree with branches that represent genetic distance associated with the character data.
-#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply arguments "gamma" or "lognormal".
-#' @param variable Simulate only varying characters. The default here is set to FALSE.
 #' @param time.tree Tree with branches that represent time associated with the character data.
 #' @param br.rates Clock rates per branch, currently can only be strict clock (a single rate).
 #' @param k Number of trait states.
 #' @param trait.num The number of traits to simulate.
-#' @param ancestral Return the states at all ancestral nodes. Default set to FALSE.
-#' @param define_gamma_rates You can specify the gamma rate categories you want to use for the simulation.
 #' @param partition Specify the number of traits per partition
+#' @param ACRV Allow for among character rate variation. The default here is set to NULL. Can supply argument "gamma".
+#' @param variable Simulate only varying characters. The default here is set to FALSE.
+#' @param ancestral Return the states at all ancestral nodes. Default set to FALSE.
+#' @param partition Specify the number of traits per partition
+#' @param define_gamma_rates You can specify the gamma rate categories you want to use for the simulation.
 #' @param alpha.gamma The value of alpha, i.e., the shape parameter, used to draw the rates from
 #' @param ncats.gamma The number of rate categories
 #' @param define_Q Provide a Q matrix for simulation
@@ -63,14 +64,21 @@
 
 
 sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                               k = 2, partition = NULL, trait.num = 2,
+                               k = 2, partition = 1, trait.num = NULL,
                                alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL, define_Q = NULL){
 
 
-  # check that a tree is provided
-  #if (is.null(tree) && is.null(time.tree)) stop("Must provide a tree object")
-  #if (k < 2) stop("Trait data must have more than 1 state")
+  if (is.null(tree) && is.null(time.tree)) stop ("Must provide a tree object")
 
+  if (any(k <2)) stop("Need to simulate at least 2 states")
+
+  if (is.null(trait.num)) stop ("Specify the total number of traits to partition")
+
+  if (!is.null(define_Q) && sum(round(rowSums(define_Q), 6)) != 0 ) stop("Incorrect Q matrix specified. Rows must sum to zero.")
+
+  if(!is.null(ACRV) && ACRV != "gamma") stop("Rate variation can only be modeled using a gamma distribution" )
+
+  if(length(k) != length(partition)) stop("The number of characters states provided much match the number partitions to simulate")
 
   ## if provided with time tree, need to transform branches in genetic distance
   ## rates can be a single value or a vector for each branch
@@ -85,8 +93,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     }
   }
 
-  # reorder branches in the phylogeny
-  #tree.ordered <- ape::reorder.phylo(tree, "postorder")
+
   tree.ordered <- reorder(tree)
 
   ##reorder the nodes on the time tree to match the format of the genetic distance tree
