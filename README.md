@@ -2,7 +2,7 @@
 
 R package for simulating discrete character data along rooted phylogenies. 
 
-The latest version (when made public) can be installed in R using the following commands
+The latest version  can be installed in R using the following commands
 
     library(devtools)
     install_github("fossilsim/morphosim")
@@ -22,7 +22,9 @@ To simulate the continuous evolution of characters along the branches
 
 ```
 # simulate characters along the branches of the tree
-traits <- sim.morpho.completeprocess(phy, k=4, trait.num =12)
+traits <- sim.morpho.(phy, k=4, trait.num =12)
 ```
+
+For a general introduction see [here](https://fossilsim/morphosim/intro.html)
 
 
