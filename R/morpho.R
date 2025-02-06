@@ -2,20 +2,21 @@
 #'
 #' Create a morpho object.
 #'
-#' @param data Trait data associated with the tips of the tree
+#' @param data Morphological data associated with the tips of the tree
 #' @param tree Tree with branches that represent distances associated with the character data.
 #' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param node.seq Trait data associated with the internal nodes of the tree
+#' @param node.seq Morphological data associated with the internal nodes of the tree
 #' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G)
 #' @param root.states A vector supplying the root state for each character
+#' @param fossil_sequence Morphological data associated with the fossils on the tree
 #' @param transition_history The constant character transitions along the branches
 #' @param ACRV_rate The rate category each trait was simulated under
 #' @param gamma_rates The gamma rate for each rate category
 #'
 #' @export
 morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
-                   node.seq = NULL, transition_history = NULL, root.states = NULL, ACRV_rate = NULL,
-                   gamma_rates = NULL){
+                   node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
+                   ACRV_rate = NULL, gamma_rates = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -36,6 +37,7 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
     time.tree = time.tree,
     transition_history = transition_history,
     root.states = root.states,
+    fossil_sequence = fossil_sequence,
     ACRV_rate =   ACRV_rate,
     gamma_rates = gamma_rates
   )
@@ -80,7 +82,7 @@ summary.morpho <- function(object, max.length = 5, ...){
 #' @export
 #' @rdname morpho
 as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL,
-                                   transition_history = NULL, root.states = NULL, ACRV_rate = NULL, gamma_rates = NULL) UseMethod("as.morpho")
+                                   transition_history = NULL, root.states = NULL, fossil_sequence = NULL, ACRV_rate = NULL, gamma_rates = NULL) UseMethod("as.morpho")
 
 
 #' @export

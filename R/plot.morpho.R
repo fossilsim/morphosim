@@ -39,9 +39,9 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
   data = x
   ## Are we using a time tree?
   if (timetree) {
-    plot(data$time.tree)
+    plot(data$time.tree, root.edge = F)
   } else {
-    plot(data$tree)
+    plot(data$tree, root.edge = F)
   }
 
   #if (is(class(trait), "numeric") == F) {

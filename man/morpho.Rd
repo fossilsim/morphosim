@@ -14,6 +14,7 @@ morpho(
   node.seq = NULL,
   transition_history = NULL,
   root.states = NULL,
+  fossil_sequence = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
 )
@@ -26,6 +27,7 @@ as.morpho(
   node.seq = NULL,
   transition_history = NULL,
   root.states = NULL,
+  fossil_sequence = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
 )
@@ -33,7 +35,7 @@ as.morpho(
 is.morpho(data)
 }
 \arguments{
-\item{data}{Trait data associated with the tips of the tree}
+\item{data}{Morphological data associated with the tips of the tree}
 
 \item{tree}{Tree with branches that represent distances associated with the character data.}
 
@@ -41,11 +43,13 @@ is.morpho(data)
 
 \item{model}{Morphological model. (e.g. Mk, Mk+V, Mk+G)}
 
-\item{node.seq}{Trait data associated with the internal nodes of the tree}
+\item{node.seq}{Morphological data associated with the internal nodes of the tree}
 
 \item{transition_history}{The constant character transitions along the branches}
 
 \item{root.states}{A vector supplying the root state for each character}
+
+\item{fossil_sequence}{Morphological data associated with the fossils on the tree}
 
 \item{ACRV_rate}{The rate category each trait was simulated under}
 

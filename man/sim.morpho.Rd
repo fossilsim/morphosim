@@ -14,6 +14,7 @@ sim.morpho(
   k = 2,
   partition = NULL,
   trait.num = NULL,
+  fossil = NULL,
   alpha.gamma = 1,
   ncats.gamma = 4,
   define_gamma_rates = NULL,
@@ -38,6 +39,8 @@ sim.morpho(
 \item{partition}{Specify the number of traits per partition}
 
 \item{trait.num}{The number of traits to simulate.}
+
+\item{fossil}{Provide a fossil object (from FossilSim) to simulate morphological characters for}
 
 \item{alpha.gamma}{The value of alpha, i.e., the shape parameter, used to draw the rates from}
 

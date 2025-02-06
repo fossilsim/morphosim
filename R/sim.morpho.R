@@ -16,6 +16,7 @@
 #' @param variable Simulate only varying characters. The default here is set to FALSE.
 #' @param ancestral Return the states at all ancestral nodes. Default set to FALSE.
 #' @param partition Specify the number of traits per partition
+#' @param fossil Provide a fossil object (from FossilSim) to simulate morphological characters for
 #' @param define_gamma_rates You can specify the gamma rate categories you want to use for the simulation.
 #' @param alpha.gamma The value of alpha, i.e., the shape parameter, used to draw the rates from
 #' @param ncats.gamma The number of rate categories
@@ -64,25 +65,31 @@
 
 
 sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                               k = 2, partition = NULL, trait.num = NULL,
+                               k = 2, partition = NULL, trait.num = NULL, fossil = NULL,
                                alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL, define_Q = NULL){
 
 
-  if (is.null(tree) && is.null(time.tree)) stop ("Must provide a tree object")
+  if (is.null(tree) && is.null(time.tree))
+    stop ("Must provide a tree object")
 
   if (any(k <2)) stop("Need to simulate at least 2 states")
 
   if (is.null(trait.num)) stop ("Specify the total number of traits to partition")
 
-  if (!is.null(define_Q) && sum(round(rowSums(define_Q), 6)) != 0 ) stop("Incorrect Q matrix specified. Rows must sum to zero.")
+  if (!is.null(define_Q) && sum(round(rowSums(define_Q), 6)) != 0 )
+    stop("Incorrect Q matrix specified. Rows must sum to zero.")
 
-  if(!is.null(ACRV) && ACRV != "gamma") stop("Rate variation can only be modeled using a gamma distribution" )
+  if(!is.null(ACRV) && ACRV != "gamma")
+    stop("Rate variation can only be modeled using a gamma distribution" )
 
-  if(is.null(partition) && length(k) != 1) stop("Data being simulated under 1 partition, supply 1 character state for k")
+  if(is.null(partition) && length(k) != 1)
+    stop("Data being simulated under 1 partition, supply 1 character state for k")
 
-  if(!is.null(partition) && length(k) != length(partition)) stop("The number of characters states provided much match the number partitions to simulate")
+  if(!is.null(partition) && length(k) != length(partition))
+    stop("The number of characters states provided much match the number partitions to simulate")
 
-  if(!is.null(partition) &&  sum(partition) != trait.num) stop("The total number characters in partition and trait.num must match")
+  if(!is.null(partition) &&  sum(partition) != trait.num)
+    stop("The total number characters in partition and trait.num must match")
 
 
   ## if provided with time tree, need to transform branches in genetic distance
@@ -268,6 +275,78 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   }
 
+
+  ### fossil object
+
+  if(!is.null(fossil)){
+
+    f.morpho <- fossil
+    f.morpho$ape.branch <-NA
+    f.morpho$specimen <- NA
+    f.morpho$specimen <- seq(1,length(f.morpho$sp))
+
+    state_at_fossils <- matrix(nrow = length(f.morpho$sp), ncol = trait.num)
+    rownames(state_at_fossils) <- f.morpho$specimen
+
+
+    for ( i in 1:length(f.morpho$edge)){
+      child <-  f.morpho$edge[i]
+      f.morpho$ape.branch[i] <- which(tree.ordered$edge[,2] == child)
+    }
+
+
+
+    for ( tr.num in 1:trait.num){
+
+      ##go through each fossil for trait n
+      for (spec in 1:length(f.morpho$specimen)){
+
+        branch <- f.morpho$ape.branch[[spec]]
+        parent <- tree.ordered$edge[branch,1]
+        current_state <- state_at_nodes[[which(rownames(state_at_nodes) == parent),tr.num]]
+
+        ## does this branch have any changes?
+
+        if (!(f.morpho$ape.branch[spec]  %in% transition_history[[tr.num]][[1]])){
+          state_at_fossils[spec,tr.num] <- current_state
+        } else {
+
+          position_fossil <- f.morpho$hmin[spec]  * br.rates
+        changes <- which(transition_history[[tr.num]][[1]] == f.morpho$ape.branch[spec])
+        changes_along_edge <- transition_history[[tr.num]][changes,]
+
+        ## remove changes after fossil occurance
+        later <- which(changes_along_edge[,3] > position_fossil)
+        changes_along_edge <- changes_along_edge[-later,]
+
+
+        if ( length(changes_along_edge[,1]) == 0) {
+          state_at_fossils[spec,tr.num] <- current_state
+        } else {
+          tran <- which(changes_along_edge$hmin == max(changes_along_edge$hmin))
+          state_at_fossils[spec,tr.num] <- changes_along_edge[tran,2]
+        }
+
+      }
+      }
+    }
+
+    ## create morpho object
+    # formatting for morpho object
+    fossil_names <- f.morpho$specimen
+    fossil_sequence = list()
+
+    #  create list of simulated traits
+    for ( i in 1:length(fossil_names)){
+      fossil_sequence[[fossil_names[i]]] <- state_at_fossils[fossil_names[i],]
+    }
+
+
+  }
+
+
+
+
   ## create morpho object
   # formatting for morpho object
   tip_names <- rownames(state_at_tips)
@@ -292,12 +371,16 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     node_sequence <- NULL
   }
 
+
+  if(is.null(fossil)) fossil_sequence <- NULL
+
   if(is.null(ACRV)){
     ACRV_rate <- NULL}
 
   if(!exists("gamma_rates")){
     gamma_rates <- NULL
   }
+
 
   # define model used
   if (isTRUE(variable)) {
@@ -309,7 +392,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = model,
                           time.tree = time.tree, transition_history = transition_history,
-                          root.states = rs, node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
+                          root.states = rs, fossil_sequence = fossil_sequence ,node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
                           gamma_rates = gamma_rates  )
 
   return(sim.output )
