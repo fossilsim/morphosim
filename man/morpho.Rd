@@ -15,6 +15,7 @@ morpho(
   transition_history = NULL,
   root.states = NULL,
   fossil_sequence = NULL,
+  fossil = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
 )
@@ -28,6 +29,7 @@ as.morpho(
   transition_history = NULL,
   root.states = NULL,
   fossil_sequence = NULL,
+  fossil = NULL,
   ACRV_rate = NULL,
   gamma_rates = NULL
 )
@@ -50,6 +52,8 @@ is.morpho(data)
 \item{root.states}{A vector supplying the root state for each character}
 
 \item{fossil_sequence}{Morphological data associated with the fossils on the tree}
+
+\item{fossil}{Fossil object used to simulate data}
 
 \item{ACRV_rate}{The rate category each trait was simulated under}
 

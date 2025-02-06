@@ -9,6 +9,7 @@
   trait = NULL,
   timetree = FALSE,
   br.rates = NULL,
+  fossil = FALSE,
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"),
   col.timescale = "darkgrey",
   ...
@@ -22,6 +23,8 @@
 \item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
 
 \item{br.rates}{Required if you provide a time tree}
+
+\item{fossil}{Do you want to plot the fossil along the tree. Default set to FALSE}
 
 \item{col}{A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated}
 

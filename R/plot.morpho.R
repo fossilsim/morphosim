@@ -5,6 +5,7 @@
 #' @param x A morpho object
 #' @param timetree TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
 #' @param trait What trait number you want to visualize
+#' @param fossil Do you want to plot the fossil along the tree. Default set to FALSE
 #' @param br.rates Required if you provide a time tree
 #' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
 #' @param col.timescale a single color for the timescale, "darkgrey" by standard
@@ -35,13 +36,15 @@
 #' plot(x = transition_history, trait = 1, timetree = FALSE)
 #'
 
-plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
-  data = x
+plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL,
+                        fossil = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+
+  data <- x
   ## Are we using a time tree?
   if (timetree) {
-    plot(data$time.tree, root.edge = F)
+    plot(data$time.tree)
   } else {
-    plot(data$tree, root.edge = F)
+    plot(data$tree)
   }
 
   #if (is(class(trait), "numeric") == F) {
@@ -105,6 +108,25 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
     text(0, yy[root], label = as.numeric(data$root.states[trait]))
    # message("No transitions in this state across taxa")
   }
+
+  ## add fossils
+  if(fossil){
+    for (fsl in 1:length(data$fossil$sp)){
+      branch <- data$fossil$ape.branch[fsl]
+
+      actual_position <- as.numeric(data$fossil$hmax[fsl])
+      position <- actual_position / data$time.tree$edge.length[branch] * br.rates
+
+      # Calculate the point's coordinates along the branch
+      point_x <- edge_start_x[branch] + position * (edge_end_x[branch] - edge_start_x[branch])
+      point_y <- yy[data$time.tree[["edge"]][branch, 2]]
+
+      points(point_x, point_y, pch = 18, col = "black", cex = 1)
+
+    }
+  }
+
+
 
   # Add a timescale below the plot
 

@@ -372,7 +372,10 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   }
 
 
-  if(is.null(fossil)) fossil_sequence <- NULL
+  if(is.null(fossil)) {
+    fossil_sequence <- NULL
+    f.morpho <- NULL
+  }
 
   if(is.null(ACRV)){
     ACRV_rate <- NULL}
@@ -392,8 +395,8 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = model,
                           time.tree = time.tree, transition_history = transition_history,
-                          root.states = rs, fossil_sequence = fossil_sequence ,node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
-                          gamma_rates = gamma_rates  )
+                          root.states = rs, fossil_sequence = fossil_sequence, fossil = f.morpho, node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
+                          gamma_rates = gamma_rates)
 
   return(sim.output )
 
