@@ -137,8 +137,18 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
   # Add a timescale below the plot
 
 if (timetree) {
-  axis_labels <- c(tree.age,0)
-  axis(1, at = c(0, tree.age), labels = round(axis_labels, 2), line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
+
+  if(root.edge){
+    axis_labels <- c((tree.age + data$time.tree$root.edge),0)
+    axis(1, at = c(0, (tree.age + data$time.tree$root.edge)), labels = round(axis_labels, 2),
+                     line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
+  } else {
+    axis_labels <- c(tree.age,0)
+    axis(1, at = c(0, tree.age), labels = round(axis_labels, 2),
+         line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
+    }
+
+
   mtext("Time before present", side = 1, line = 2.5, cex = 1.3, col = col.timescale)
 }
 }
