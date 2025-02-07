@@ -7,6 +7,7 @@
 #' @param trait What trait number you want to visualize
 #' @param fossil Do you want to plot the fossil along the tree. Default set to FALSE
 #' @param br.rates Required if you provide a time tree
+#' @param root.edge If TRUE plot the root edge. Default = FALSE
 #' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
 #' @param col.timescale a single color for the timescale, "darkgrey" by standard
 #' @param ... other arguments to be passed to methods, such as graphical parameters
@@ -37,26 +38,20 @@
 #'
 
 plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL,
-                        fossil = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+                        fossil = FALSE, root.edge = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
   data <- x
   ## Are we using a time tree?
   if (timetree) {
-    plot(data$time.tree)
+    if(root.edge){
+    plot(data$time.tree, root.edge = T)
+    } else { plot(data$time.tree, root.edge = F)}
   } else {
     plot(data$tree)
   }
 
-  #if (is(class(trait), "numeric") == F) {
-  #  stop("Please select a viable integer for 'trait'")
-  #}
 
-  if (trait >= length(data$sequences[[1]])) {
-    print("Your selected character does not exist, please choose a lower integer")
-  }
-
-
-  # This is for sure not the right way to do it but will change
+   # get the plot information
   tree_plot_info <- get("last_plot.phylo", envir = .PlotPhyloEnv)
 
   edge_start_x <- tree_plot_info$xx[data$tree$edge[, 1]]
@@ -72,7 +67,7 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
   root <- as.integer(parent[!match(parent, child, 0)][1])
 
 
-  ## Which trait?
+  if(!is.null(trait)){
   df <- data$transition_history[trait][[1]]
 
   if (nrow(df) > 0) {
@@ -108,17 +103,25 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
     text(0, yy[root], label = as.numeric(data$root.states[trait]))
    # message("No transitions in this state across taxa")
   }
-
+  }
   ## add fossils
   if(fossil){
+
+    tree.age <- max(ape::node.depth.edgelength(data$time.tree))
+    #root.age <- tree.age - data$time.tree$root.edge
     for (fsl in 1:length(data$fossil$sp)){
       branch <- data$fossil$ape.branch[fsl]
 
-      actual_position <- as.numeric(data$fossil$hmax[fsl])
-      position <- actual_position / data$time.tree$edge.length[branch] * br.rates
-
+      #how far along the tree is the fossil
+      time <- as.numeric(data$fossil$hmax[fsl])
+      if (root.edge){
+      actual_position <- tree.age - time + data$time.tree$root.edge
+      } else{
+        actual_position <- tree.age - time
+      }
+      position <- actual_position / data$time.tree$edge.length[branch]
       # Calculate the point's coordinates along the branch
-      point_x <- edge_start_x[branch] + position * (edge_end_x[branch] - edge_start_x[branch])
+      point_x <-  position * (edge_end_x[branch] - edge_start_x[branch])
       point_y <- yy[data$time.tree[["edge"]][branch, 2]]
 
       points(point_x, point_y, pch = 18, col = "black", cex = 1)
@@ -128,11 +131,12 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
 
 
 
+
+
+
   # Add a timescale below the plot
 
 if (timetree) {
-  tree.age <- max(ape::node.depth.edgelength(data$time.tree))
-
   axis_labels <- c(tree.age,0)
   axis(1, at = c(0, tree.age), labels = round(axis_labels, 2), line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
   mtext("Time before present", side = 1, line = 2.5, cex = 1.3, col = col.timescale)

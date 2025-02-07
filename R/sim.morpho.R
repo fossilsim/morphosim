@@ -344,9 +344,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   }
 
-
-
-
   ## create morpho object
   # formatting for morpho object
   tip_names <- rownames(state_at_tips)
