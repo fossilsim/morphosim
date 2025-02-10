@@ -70,6 +70,15 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
   if(!is.null(trait)){
   df <- data$transition_history[trait][[1]]
 
+
+  if(root.edge){
+    points(data$time.tree$root.edge, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
+    text(data$time.tree$root.edge, yy[root], label = as.numeric(data$root.states[trait]))
+  }else{
+  points(0, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
+  text(0, yy[root], label = as.numeric(data$root.states[trait]))}
+
+
   if (nrow(df) > 0) {
     # Loop over the dataframe to add points
     for (i in 1:nrow(df)) {
@@ -95,15 +104,12 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
       points(point_x, point_y, pch = 22, col = "black", bg = col[paint], cex = 4)
       text(point_x, point_y, labels = as.numeric(df$state[i]))
     }
-    points(0, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
-    text(0, yy[root], label = as.numeric(data$root.states[trait]))
 
-  } else {
-    points(0, yy[root], pch = 22, col = "black", bg = col[as.numeric(data$root.states[trait])+1], cex = 4)
-    text(0, yy[root], label = as.numeric(data$root.states[trait]))
+  }
+
    # message("No transitions in this state across taxa")
   }
-  }
+
   ## add fossils
   if(fossil){
 

@@ -307,11 +307,12 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
         ## does this branch have any changes?
 
+        tree.age <- max(ape::node.depth.edgelength(tree.ordered))
         if (!(f.morpho$ape.branch[spec]  %in% transition_history[[tr.num]][[1]])){
           state_at_fossils[spec,tr.num] <- current_state
         } else {
-
-          position_fossil <- f.morpho$hmin[spec]  * br.rates
+          time_position_fossil <-  tree.age -   f.morpho$hmin[spec]
+          position_fossil <- time_position_fossil * br.rates
         changes <- which(transition_history[[tr.num]][[1]] == f.morpho$ape.branch[spec])
         changes_along_edge <- transition_history[[tr.num]][changes,]
 
