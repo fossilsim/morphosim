@@ -93,7 +93,7 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
       }
 
       # Calculate the point's coordinates along the branch
-      point_x <- edge_start_x[branch] + position * (edge_end_x[branch] - edge_start_x[branch])
+      point_x <- edge_start_x[branch] + position #* (edge_end_x[branch] - edge_start_x[branch])
 
       if (timetree) {
         point_y <- yy[data$time.tree[["edge"]][branch, 2]]

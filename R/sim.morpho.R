@@ -286,7 +286,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     f.morpho$specimen <- seq(1,length(f.morpho$sp))
 
     state_at_fossils <- matrix(nrow = length(f.morpho$sp), ncol = trait.num)
-    rownames(state_at_fossils) <- f.morpho$specimen
+    rownames(state_at_fossils) <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
 
 
     for ( i in 1:length(f.morpho$edge)){
@@ -295,7 +295,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     }
 
 
-
+    tree.age <- max(ape::node.depth.edgelength(data$time.tree))
     for ( tr.num in 1:trait.num){
 
       ##go through each fossil for trait n
@@ -307,18 +307,18 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
         ## does this branch have any changes?
 
-        tree.age <- max(ape::node.depth.edgelength(tree.ordered))
         if (!(f.morpho$ape.branch[spec]  %in% transition_history[[tr.num]][[1]])){
           state_at_fossils[spec,tr.num] <- current_state
         } else {
           time_position_fossil <-  tree.age -   f.morpho$hmin[spec]
           position_fossil <- time_position_fossil * br.rates
-        changes <- which(transition_history[[tr.num]][[1]] == f.morpho$ape.branch[spec])
-        changes_along_edge <- transition_history[[tr.num]][changes,]
+          changes <- which(transition_history[[tr.num]][[1]] == f.morpho$ape.branch[spec])
+          changes_along_edge <- transition_history[[tr.num]][changes,]
 
         ## remove changes after fossil occurance
         later <- which(changes_along_edge[,3] > position_fossil)
-        changes_along_edge <- changes_along_edge[-later,]
+
+        if (!length(later)== 0) changes_along_edge <- changes_along_edge[-later,]
 
 
         if ( length(changes_along_edge[,1]) == 0) {
