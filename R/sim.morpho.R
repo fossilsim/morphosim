@@ -283,7 +283,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     f.morpho$specimen <- seq(1,length(f.morpho$sp))
 
     state_at_fossils <- matrix(nrow = length(f.morpho$sp), ncol = trait.num)
-    rownames(state_at_fossils) <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
+    rownames(state_at_fossils) <- f.morpho$specimen
 
 
     for ( i in 1:length(f.morpho$edge)){
@@ -331,9 +331,9 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
     ## create morpho object
     # formatting for morpho object
-    fossil_names <- f.morpho$specimen
+    fossil_names <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
     fossil_sequence = list()
-
+    rownames(state_at_fossils) <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
     #  create list of simulated traits
     for ( i in 1:length(fossil_names)){
       fossil_sequence[[fossil_names[i]]] <- state_at_fossils[fossil_names[i],]
