@@ -251,9 +251,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
             total_wait <- total_wait + waiting_time
 
           }
-
-
-
           if (to %in% tips) state_at_tips[tree$tip.label[to],tr.num] <- current_state
           if (to %in% nodes) state_at_nodes[as.character(to),tr.num] <- current_state
         }

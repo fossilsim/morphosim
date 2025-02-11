@@ -107,10 +107,11 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
 
   }
 
-   # message("No transitions in this state across taxa")
-  }
 
+  }
+  ################
   ## add fossils
+  ###############
   if(fossil){
 
     tree.age <- max(ape::node.depth.edgelength(data$time.tree))
@@ -134,11 +135,6 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
 
     }
   }
-
-
-
-
-
 
   # Add a timescale below the plot
 
