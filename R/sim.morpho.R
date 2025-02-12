@@ -113,6 +113,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     time.tree.order <- reorder(time.tree)
   } else {time.tree.order = NULL}
 
+  # counter for trait number
   tr.num <- 1
   edge <- tree.ordered$edge
   num.nodes <- max(edge)
@@ -221,9 +222,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
           # Time tracking
           time_remaining <- bl[i]
-
-
-          while (time_remaining > 0) {
+            while (time_remaining > 0) {
             # Get the rates for the current state
             rates <- Q_r[current_state+1, ]
             rates[current_state+1] <- 0 # No transition to the same state
@@ -292,7 +291,8 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     }
 
 
-    tree.age <- max(ape::node.depth.edgelength(data$time.tree))
+    tree.age <- max(ape::node.depth.edgelength(time.tree))
+
     for ( tr.num in 1:trait.num){
 
       ##go through each fossil for trait n
@@ -307,15 +307,19 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
         if (!(f.morpho$ape.branch[spec]  %in% transition_history[[tr.num]][[1]])){
           state_at_fossils[spec,tr.num] <- current_state
         } else {
-          time_position_fossil <-  tree.age -   f.morpho$hmin[spec]
-          position_fossil <- time_position_fossil * br.rates
+          time_position_fossil <-  tree.age -   f.morpho$hmin[spec] + time.tree$root.edge
           changes <- which(transition_history[[tr.num]][[1]] == f.morpho$ape.branch[spec])
           changes_along_edge <- transition_history[[tr.num]][changes,]
 
-        ## remove changes after fossil occurance
-        later <- which(changes_along_edge[,3] > position_fossil)
+          ## get the age of the partent node
+          node_age <- ape::node.depth.edgelength(time.tree)[time.tree$edge[branch,1]]
+          # get the time of change
+          changes_along_edge$time <- (changes_along_edge[,3] / br.rates) +  node_age + time.tree$root.edge
 
-        if (!length(later)== 0) changes_along_edge <- changes_along_edge[-later,]
+
+        ## remove changes after fossil occurance
+        later <- which(changes_along_edge[,4] > time_position_fossil)
+         if (!length(later)== 0) changes_along_edge <- changes_along_edge[-later,]
 
 
         if ( length(changes_along_edge[,1]) == 0) {
