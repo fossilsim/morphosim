@@ -14,7 +14,7 @@ To simulate traits at internal nodes
 ```
 phy <- ape::rtree(10)
 # simulate characters at internal nodes of the tree
-traits <- sim.morpho(phy, k=4, trait.num =12)
+traits <- sim.morpho(phy, k = 4, trait.num = 12)
 ```
 
 For a general introduction see [here](https://github.com/fossilsim/morphosim/blob/main/intro.html)
