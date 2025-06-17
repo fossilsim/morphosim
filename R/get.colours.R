@@ -16,10 +16,6 @@ get_colours<- function(data){
   reconTreeTips <- gsub("_1$", "", tps[matches])
 
 
-
-  # which tips are not in the reconstructred tree
-  setdiff(data$tree$tip.label, reconTreeTips)
-
   b.colours <- numeric(length(data$tree$edge.length))
 
 
@@ -38,23 +34,39 @@ get_colours<- function(data){
 
 
   # now go through what is left to determine if there are fossils along the branch
-   # this needs to be updated to change the colour along the branch
+   # this needs to be updated to change the color along the branch
   remaining.branches <-which(b.colours == 0)
-
+  rem <- c()
+  r.cols <- list(NA, NA)
   for (rb in 1:length(remaining.branches)){
 
     if(any(data$fossil$ape.branch == remaining.branches[rb])){
+
       Nt <- data$tree$edge[remaining.branches[rb],][2]
       branch.path <- ape::nodepath(data$tree, from = Nt, to = ape::Ntip(data$tree) + 1)
 
       for (b in 1:length(branch.path)){
         b.colours[which(data$tree$edge[,2] == branch.path[b] )] = "black"
+        if (branch.path[b] <= ape::Ntip(data$tree)) rem <- rbind(rem, remaining.branches[rb])
+
       }
 
     }
 
   }
 
+  remaining.branches <-which(b.colours == 0)
+  for (rb in 1:length(remaining.branches)){
+
+    if(any(data$fossil$ape.branch == remaining.branches[rb])){
+
+      rem <- rbind(rem, remaining.branches[rb])
+    }
+  }
+
+
   b.colours[b.colours == "0"] <- "grey"
-  return(b.colours)
+  r.cols[[1]] <- b.colours
+  r.cols[[2]] <- rem
+  return(r.cols)
 }

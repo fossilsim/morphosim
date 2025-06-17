@@ -51,14 +51,14 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
   } else {
     plot(data$tree)
   }
-  } else if(reconstructed == TRUE){
-    b.colours <- get_colours(data)
+  } else {
+    b.cols <- get_colours(data)
     if (timetree) {
       if(root.edge){
-      plot(data$time.tree, root.edge = T, edge.color = b.colours)
-    } else { plot(data$time.tree, root.edge = F, edge.color = b.colours)}
+      plot(data$time.tree, root.edge = T, edge.color = b.cols[[1]])
+    } else { plot(data$time.tree, root.edge = F, edge.color = b.cols[[1]])}
   } else {
-    plot(data$tree, edge.color = b.colours)
+    plot(data$tree, edge.color = b.cols[[1]])
   }
   }
 
@@ -118,6 +118,48 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
 
 
   }
+
+  ################
+  ## colour branches
+  ###############
+  if(reconstructed){
+
+    if (length(b.cols) == 2){
+
+    for (p in 1:length(b.cols[[2]]) ){
+      q <-  which(data$fossil$ape.branch == b.cols[[2]][p])
+      if (length(q) > 1)  {
+        fossil_pos <- data$fossil$hmin[which(data$fossil$hmin == min(data$fossil$hmin[q]))]
+      } else {
+        fossil_pos <- data$fossil$hmin[q]
+      }
+
+      ## add lines
+
+      tree.age <- max(ape::node.depth.edgelength(data$time.tree))
+      #root.age <- tree.age - data$time.tree$root.edge
+
+      branch <- data$fossil$ape.branch[q]
+
+      #how far along the tree is the fossil
+      time <- fossil_pos
+      if (root.edge){
+        actual_position <- tree.age - time + data$time.tree$root.edge
+      } else{
+        actual_position <- tree.age - time
+      }
+      position <- actual_position / data$time.tree$edge.length[branch]
+      # Calculate the point's coordinates along the branch
+      point_x <-  position * (edge_end_x[branch] - edge_start_x[branch])
+
+      y_vals <- yy[data$time.tree[["edge"]][b.cols[[2]][p], 2]]
+      #segments(edge_start_x[b.cols[[2]][p]], y_vals, point_x, y_vals, col = "black")
+      segments(point_x, y_vals, edge_end_x[b.cols[[2]][p]], y_vals, col = "grey")
+
+    }
+  }
+}
+
   ################
   ## add fossils
   ###############
@@ -131,7 +173,7 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
       #how far along the tree is the fossil
       time <- as.numeric(data$fossil$hmax[fsl])
       if (root.edge){
-      actual_position <- tree.age - time + data$time.tree$root.edge
+        actual_position <- tree.age - time + data$time.tree$root.edge
       } else{
         actual_position <- tree.age - time
       }
@@ -144,6 +186,8 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
 
     }
   }
+
+
 
   # Add a timescale below the plot
 
