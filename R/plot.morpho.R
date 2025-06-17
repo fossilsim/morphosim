@@ -8,6 +8,7 @@
 #' @param fossil Do you want to plot the fossil along the tree. Default set to FALSE
 #' @param br.rates Required if you provide a time tree
 #' @param root.edge If TRUE plot the root edge. Default = FALSE
+#' @param reconstructed Plot the reconstructed tree. Default = FALSE
 #' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
 #' @param col.timescale a single color for the timescale, "darkgrey" by standard
 #' @param ... other arguments to be passed to methods, such as graphical parameters
@@ -38,16 +39,27 @@
 #'
 
 plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NULL,
-                        fossil = FALSE, root.edge = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+                        fossil = FALSE, reconstructed = FALSE, root.edge = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
   data <- x
   ## Are we using a time tree?
+  if(reconstructed == FALSE){
   if (timetree) {
     if(root.edge){
     plot(data$time.tree, root.edge = T)
     } else { plot(data$time.tree, root.edge = F)}
   } else {
     plot(data$tree)
+  }
+  } else if(reconstructed == TRUE){
+    b.colours <- get_colours(data)
+    if (timetree) {
+      if(root.edge){
+      plot(data$time.tree, root.edge = T, edge.color = b.colours)
+    } else { plot(data$time.tree, root.edge = F, edge.color = b.colours)}
+  } else {
+    plot(data$tree, edge.color = b.colours)
+  }
   }
 
 
