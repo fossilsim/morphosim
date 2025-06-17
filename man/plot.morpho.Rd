@@ -10,6 +10,7 @@
   timetree = FALSE,
   br.rates = NULL,
   fossil = FALSE,
+  reconstructed = FALSE,
   root.edge = FALSE,
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"),
   col.timescale = "darkgrey",
@@ -26,6 +27,8 @@
 \item{br.rates}{Required if you provide a time tree}
 
 \item{fossil}{Do you want to plot the fossil along the tree. Default set to FALSE}
+
+\item{reconstructed}{Plot the reconstructed tree. Default = FALSE}
 
 \item{root.edge}{If TRUE plot the root edge. Default = FALSE}
 

@@ -15,23 +15,23 @@ get_colours<- function(data){
   # Step 2: Extract and clean elements that match
   reconTreeTips <- gsub("_1$", "", tps[matches])
 
-  transition_history$tree$tip.label
+
 
   # which tips are not in the reconstructred tree
-  setdiff(transition_history$tree$tip.label, reconTreeTips)
+  setdiff(data$tree$tip.label, reconTreeTips)
 
-  b.colours <- numeric(length(t$edge.length))
+  b.colours <- numeric(length(data$tree$edge.length))
 
 
   # Go through all the tips to determine are the in the reconstructed tree
-  for ( Nt in 1:ape::Ntip(t)){
+  for ( Nt in 1:ape::Ntip(data$tree)){
 
 
-    if (any(t$tip.label[Nt] == reconTreeTips)) {
-      branch.path <- ape::nodepath(t, from = Nt, to = ape::Ntip(t) + 1)
+    if (any(data$tree$tip.label[Nt] == reconTreeTips)) {
+      branch.path <- ape::nodepath(data$tree, from = Nt, to = ape::Ntip(data$tree) + 1)
 
       for (b in 1:length(branch.path)){
-        b.colours[which(t$edge[,2] == branch.path[b] )] = "black"
+        b.colours[which(data$tree$edge[,2] == branch.path[b] )] = "black"
       }
     }
   }
@@ -43,12 +43,12 @@ get_colours<- function(data){
 
   for (rb in 1:length(remaining.branches)){
 
-    if(any(transition_history$fossil$ape.branch == remaining.branches[rb])){
-      Nt <- t$edge[remaining.branches[rb],][2]
-      branch.path <- ape::nodepath(t, from = Nt, to = ape::Ntip(t) + 1)
+    if(any(data$fossil$ape.branch == remaining.branches[rb])){
+      Nt <- data$tree$edge[remaining.branches[rb],][2]
+      branch.path <- ape::nodepath(data$tree, from = Nt, to = ape::Ntip(data$tree) + 1)
 
       for (b in 1:length(branch.path)){
-        b.colours[which(t$edge[,2] == branch.path[b] )] = "black"
+        b.colours[which(data$tree$edge[,2] == branch.path[b] )] = "black"
       }
 
     }
