@@ -182,8 +182,12 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
       point_x <-  position * (edge_end_x[branch] - edge_start_x[branch])
       point_y <- yy[data$time.tree[["edge"]][branch, 2]]
 
-      points(point_x, point_y, pch = 18, col = "black", cex = 1)
+      if (data$fossil$hmax[fsl] == 0){
+      points(point_x, point_y, pch = 16, col = "forestgreen", cex = 0.5)
+      } else {
+        points(point_x, point_y, pch = 18, col = "black", cex = 1)
 
+      }
     }
   }
 
