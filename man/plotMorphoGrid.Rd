@@ -8,7 +8,7 @@ plotMorphoGrid(
   data = NULL,
   timetree = FALSE,
   num.trait = "all",
-  col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")
+  col = c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")
 )
 }
 \arguments{

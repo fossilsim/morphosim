@@ -9,22 +9,28 @@ sim.missing.data(
   seq = NULL,
   method = NULL,
   probability = NULL,
-  traits = NULL
+  traits = NULL,
+  taxa = NULL
 )
 }
 \arguments{
 \item{data}{A morpho object with sequence data}
 
-\item{seq}{Specify which sequence you want to use ("tips", "nodes", "SA")}
+\item{seq}{Specify which sequence data you want to use ("tips", "nodes", "SA")}
 
-\item{method}{Under what criteria data should be removed. Methods include "random" which randomly removes
-characters across the entire matrix, "partition" which allows different partitions (that were used to simulate the data)
-to loose varying amounts of characters, "rates" which removes characters based on the rate the were simulated under,
-and "trait" where the user can specify particular traits to remove data.}
+\item{method}{Specify the method/variable controlling the removal of data. There are 5 options available. "Random",
+"Partition", "Rate", "Trait", and "Taxa". Random removes characters at random across the entire matrix according
+to a single probability. Partition allows you to specify different probabilities of being removed for each partition.
+The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
+allows you to specify different probabilities of being removed for each rate category. The number of probabilities
+provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
+for specific traits. Taxa llows you to specify a probability for specific taxa.}
 
 \item{probability}{The probability of missing data to simulate.}
 
-\item{traits}{When method = trait, used to specify which trait you want to remove data from}
+\item{traits}{When method = trait, used to specify which trait/s you want to remove data from}
+
+\item{taxa}{When method = taxa, used to specify which taxon/taxa you want to remove data from}
 }
 \value{
 An object of class morpho.
@@ -33,17 +39,6 @@ An object of class morpho.
 This function removes characters from a morphological matrix simulated using morphosim
 }
 \examples{
-# simulated tree
-phy <- ape::rtree(10)
-
-# simulate characters along the branches of the tree
-transition_history <-  sim.morpho(tree = phy,
-                                         k = c(2,3,4,5),
-                                         trait.num = 30,
-                                         partition = c(10,10,5,5),
-                                         ancestral = TRUE,
-                                         ACRV = "gamma",
-                                         variable = FALSE)
 
 # randomly remove data
 missing.data <- sim.missing.data(data = transition_history,
@@ -51,22 +46,31 @@ missing.data <- sim.missing.data(data = transition_history,
                                   seq = "tips",
                                   probability = 0.5)
 
-# remove data based on the rate it was simulated under
-missing.data <- sim.missing.data(data = transition_history,
-                                        method = "rate",
-                                        seq = "tips",
-                                        probability = c(0,0,0.2,1))
-
-# remove specific characters from specific traits
-missing.data <- sim.missing.data(data = transition_history,
-                                 method = "trait",
-                                 seq = "tips",
-                                 probability = 1,
-                                 traits = c(1,2,5))
 
 # remove data based on the partition
 missing.data <- sim.missing.data(data = transition_history,
                                  method = "partition",
                                  seq = "tips",
                                  probability = c(0.7, 0, 1, 0.5))
+
+# remove data based on the rate it was simulated under
+missing.data <- sim.missing.data(data = transition_history,
+                                        method = "rate",
+                                        seq = "tips",
+                                        probability = c(0,0,0.2,1))
+
+# remove  characters from specific traits
+missing.data <- sim.missing.data(data = transition_history,
+                                 method = "trait",
+                                 seq = "tips",
+                                 probability = 1,
+                                 traits = c(1,2,5))
+
+# remove  characters from specific taxa
+missing.data <- sim.missing.data(data = transition_history,
+                                 method = "taxa",
+                                 seq = "tips",
+                                 probability = 1,
+                                 traits = c(1,3,6))
+
 }
