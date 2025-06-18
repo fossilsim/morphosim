@@ -99,10 +99,10 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
     if(is.null(br.rates)){
       print("No branch rate provide, using default of 0.1 for all branches")
-      tree$edge.length <- time.tree$edge.length * 0.1
-    } else {
-      tree$edge.length <- time.tree$edge.length * br.rates
+      br.rates <- 0.1
     }
+      tree$edge.length <- time.tree$edge.length * br.rates
+
   }
 
 
@@ -333,9 +333,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
       }
     }
 
-    ## create morpho object
-    seq <- list(NA,NA,NA)
-    names(seq) <- c("tips","nodes", "SA")
+
 
     # formatting for morpho object
     fossil_names <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
@@ -350,7 +348,10 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   }
 
   ## create morpho object
-  # formatting for morpho object
+
+  seq <- list(NA,NA,NA)
+  names(seq) <- c("tips","nodes", "SA")
+
 
   tip_names <- rownames(state_at_tips)
   tip_sequence = list()
@@ -399,12 +400,23 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   } else {
     var <- NULL
   }
-  model <- paste0("Mk", ACRV , var, "_Part:", partition, "states:", k)
+  model_components <- paste0("Mk", ACRV , var, "_Part:", partition, "states:", k)
 
-  sim.output <- as.morpho(data = seq, tree = tree.ordered, model = model,
-                          time.tree = time.tree, transition_history = transition_history,
-                          root.states = rs,  fossil = f.morpho,   ACRV_rate =  ACRV_rate,
-                          gamma_rates = gamma_rates)
+  trees <- list(NA, NA, NA)
+  names(trees) <- c("EvolTree", "TimeTree", "BrRates")
+  trees[["EvolTree"]] <-  tree.ordered
+  trees[["TimeTree"]] <- time.tree
+  trees[["BrRates"]] <- br.rates
+
+  model <- list(NA,NA,NA)
+  names(model) <- c("Specified", "RateVar", "RateVarTrait")
+  model[["Specified"]] <- model_components
+  model[["RateVar"]] <- gamma_rates
+  model[["RateVarTrait"]] <- ACRV_rate
+
+  sim.output <- as.morpho(data = seq, trees = trees, model = model,
+                           transition_history = transition_history,
+                          root.states = rs,  fossil = f.morpho)
 
   return(sim.output )
 

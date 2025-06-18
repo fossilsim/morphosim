@@ -4,10 +4,18 @@
 \alias{sim.missing.data}
 \title{Remove morphological character data}
 \usage{
-sim.missing.data(data = NULL, method = NULL, probability = NULL, traits = NULL)
+sim.missing.data(
+  data = NULL,
+  seq = NULL,
+  method = NULL,
+  probability = NULL,
+  traits = NULL
+)
 }
 \arguments{
 \item{data}{A morpho object with sequence data}
+
+\item{seq}{Specify which sequence you want to use ("tips", "nodes", "SA")}
 
 \item{method}{Under what criteria data should be removed. Methods include "random" which randomly removes
 characters across the entire matrix, "partition" which allows different partitions (that were used to simulate the data)
@@ -40,21 +48,25 @@ transition_history <-  sim.morpho(tree = phy,
 # randomly remove data
 missing.data <- sim.missing.data(data = transition_history,
                                   method = "random",
+                                  seq = "tips",
                                   probability = 0.5)
 
 # remove data based on the rate it was simulated under
 missing.data <- sim.missing.data(data = transition_history,
                                         method = "rate",
+                                        seq = "tips",
                                         probability = c(0,0,0.2,1))
 
 # remove specific characters from specific traits
 missing.data <- sim.missing.data(data = transition_history,
                                  method = "trait",
+                                 seq = "tips",
                                  probability = 1,
                                  traits = c(1,2,5))
 
 # remove data based on the partition
 missing.data <- sim.missing.data(data = transition_history,
                                  method = "partition",
+                                 seq = "tips",
                                  probability = c(0.7, 0, 1, 0.5))
 }

@@ -7,7 +7,7 @@
 
 reconstruct.tree<- function(data){
 
-  recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$tree)
+  recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$trees$TimeTree)
   tps <- unname(recon$tree$tip.label)
 
   matches <- grepl("_1$", tps )
@@ -16,18 +16,18 @@ reconstruct.tree<- function(data){
   reconTreeTips <- gsub("_1$", "", tps[matches])
 
 
-  b.colours <- numeric(length(data$tree$edge.length))
+  b.colours <- numeric(length(data$trees$TimeTree$edge.length))
 
 
   # Go through all the tips to determine are the in the reconstructed tree
-  for ( Nt in 1:ape::Ntip(data$tree)){
+  for ( Nt in 1:ape::Ntip(data$trees$TimeTree)){
 
 
-    if (any(data$tree$tip.label[Nt] == reconTreeTips)) {
-      branch.path <- ape::nodepath(data$tree, from = Nt, to = ape::Ntip(data$tree) + 1)
+    if (any(data$trees$TimeTree$tip.label[Nt] == reconTreeTips)) {
+      branch.path <- ape::nodepath(data$trees$TimeTree, from = Nt, to = ape::Ntip(data$trees$TimeTree) + 1)
 
       for (b in 1:length(branch.path)){
-        b.colours[which(data$tree$edge[,2] == branch.path[b] )] = "black"
+        b.colours[which(data$trees$TimeTree$edge[,2] == branch.path[b] )] = "black"
       }
     }
   }
@@ -42,12 +42,12 @@ reconstruct.tree<- function(data){
 
     if(any(data$fossil$ape.branch == remaining.branches[rb])){
 
-      Nt <- data$tree$edge[remaining.branches[rb],][2]
-      branch.path <- ape::nodepath(data$tree, from = Nt, to = ape::Ntip(data$tree) + 1)
+      Nt <- data$trees$TimeTree$edge[remaining.branches[rb],][2]
+      branch.path <- ape::nodepath(data$trees$TimeTree, from = Nt, to = ape::Ntip(data$trees$TimeTree) + 1)
 
       for (b in 1:length(branch.path)){
-        b.colours[which(data$tree$edge[,2] == branch.path[b] )] = "black"
-        if (branch.path[b] <= ape::Ntip(data$tree)) rem <- rbind(rem, remaining.branches[rb])
+        b.colours[which(data$trees$TimeTree$edge[,2] == branch.path[b] )] = "black"
+        if (branch.path[b] <= ape::Ntip(data$trees$TimeTree)) rem <- rbind(rem, remaining.branches[rb])
 
       }
 

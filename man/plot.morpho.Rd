@@ -5,10 +5,9 @@
 \title{Plot full evolutionary history}
 \usage{
 \method{plot}{morpho}(
-  x = NULL,
+  data = NULL,
   trait = NULL,
   timetree = FALSE,
-  br.rates = NULL,
   fossil = FALSE,
   reconstructed = FALSE,
   root.edge = FALSE,
@@ -18,13 +17,9 @@
 )
 }
 \arguments{
-\item{x}{A morpho object}
-
 \item{trait}{What trait number you want to visualize}
 
 \item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
-
-\item{br.rates}{Required if you provide a time tree}
 
 \item{fossil}{Do you want to plot the fossil along the tree. Default set to FALSE}
 
@@ -37,6 +32,10 @@
 \item{col.timescale}{a single color for the timescale, "darkgrey" by standard}
 
 \item{...}{other arguments to be passed to methods, such as graphical parameters}
+
+\item{x}{A morpho object}
+
+\item{br.rates}{Required if you provide a time tree}
 }
 \description{
 #' @description

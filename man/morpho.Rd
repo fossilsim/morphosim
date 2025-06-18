@@ -8,56 +8,42 @@
 \usage{
 morpho(
   data = NULL,
-  tree = NULL,
-  time.tree = NULL,
+  trees = NULL,
   model = NULL,
-  node.seq = NULL,
   transition_history = NULL,
   root.states = NULL,
-  fossil_sequence = NULL,
-  fossil = NULL,
-  ACRV_rate = NULL,
-  gamma_rates = NULL
+  fossil = NULL
 )
 
 as.morpho(
   data,
-  tree,
-  time.tree = NULL,
+  trees,
   model = NULL,
-  node.seq = NULL,
   transition_history = NULL,
   root.states = NULL,
-  fossil_sequence = NULL,
-  fossil = NULL,
-  ACRV_rate = NULL,
-  gamma_rates = NULL
+  fossil = NULL
 )
 
 is.morpho(data)
 }
 \arguments{
-\item{data}{Morphological data associated with the tips of the tree}
+\item{trees}{A list containing the trees and branch lengths used for the simulation. EvolTree contains a
+phylogenetic tree with branch lengths representing evolutionary distance. TimeTree (if present)
+contains the same tree with branch lengths in unit of time. BrRates can either be a single value, when
+simulating under a strict colck, or a vector of values representing the rate/branch}
 
-\item{tree}{Tree with branches that represent distances associated with the character data.}
-
-\item{time.tree}{Tree with branches that represent time associated with the character data.}
-
-\item{model}{Morphological model. (e.g. Mk, Mk+V, Mk+G)}
-
-\item{node.seq}{Morphological data associated with the internal nodes of the tree}
+\item{model}{A list containing all model attributes. Model specifies the components specified to simulate under.
+RateVar containes the realtive values drawn from the specified distribution. RateVarTrait species the rate used
+to simualte each trait}
 
 \item{transition_history}{The constant character transitions along the branches}
 
 \item{root.states}{A vector supplying the root state for each character}
 
-\item{fossil_sequence}{Morphological data associated with the fossils on the tree}
-
 \item{fossil}{Fossil object used to simulate data}
 
-\item{ACRV_rate}{The rate category each trait was simulated under}
-
-\item{gamma_rates}{The gamma rate for each rate category}
+\item{sequences}{A list containing all of the sequences simulated. This can contain sequences for taxa
+at the tips or the tree, along the nodes, and if present, for sampled ancestors (SA)}
 }
 \description{
 Create a morpho object.

@@ -2,26 +2,27 @@
 #'
 #' Create a morpho object.
 #'
-#' @param data Morphological data associated with the tips of the tree
-#' @param tree Tree with branches that represent distances associated with the character data.
-#' @param time.tree Tree with branches that represent time associated with the character data.
-#' @param node.seq Morphological data associated with the internal nodes of the tree
-#' @param model Morphological model. (e.g. Mk, Mk+V, Mk+G)
+#' @param sequences A list containing all of the sequences simulated. This can contain sequences for taxa
+#' at the tips or the tree, along the nodes, and if present, for sampled ancestors (SA)
+#' @param trees A list containing the trees and branch lengths used for the simulation. EvolTree contains a
+#' phylogenetic tree with branch lengths representing evolutionary distance. TimeTree (if present)
+#' contains the same tree with branch lengths in unit of time. BrRates can either be a single value, when
+#' simulating under a strict colck, or a vector of values representing the rate/branch
+#' @param model A list containing all model attributes. Model specifies the components specified to simulate under.
+#' RateVar containes the realtive values drawn from the specified distribution. RateVarTrait species the rate used
+#' to simualte each trait
 #' @param root.states A vector supplying the root state for each character
-#' @param fossil_sequence Morphological data associated with the fossils on the tree
 #' @param fossil Fossil object used to simulate data
 #' @param transition_history The constant character transitions along the branches
-#' @param ACRV_rate The rate category each trait was simulated under
-#' @param gamma_rates The gamma rate for each rate category
 #'
 #' @export
 #morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
           #         node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
           #         fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
 
-  morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
+  morpho <- function(data = NULL, trees = NULL, model = NULL,
                      transition_history = NULL, root.states = NULL,
-                     fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
+                     fossil = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -36,14 +37,11 @@
   # Create a list to store sequences, tree, and model
   morpho.list <- list(
     sequences = data,
-    tree = tree,
+    trees = trees,
     model = model,
-    time.tree = time.tree,
     transition_history = transition_history,
     root.states = root.states,
-    fossil = fossil,
-    ACRV_rate =   ACRV_rate,
-    gamma_rates = gamma_rates
+    fossil = fossil
   )
 
   # assign class "morpho" to the object
@@ -85,9 +83,9 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL,
+as.morpho <- as.morpho <- function(data, trees, model = NULL,
                                    transition_history = NULL, root.states = NULL,
-                                   fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL) UseMethod("as.morpho")
+                                   fossil = NULL) UseMethod("as.morpho")
 
 
 #' @export

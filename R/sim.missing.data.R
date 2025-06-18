@@ -3,6 +3,7 @@
 #' @description
 #' This function removes characters from a morphological matrix simulated using morphosim
 #' @param data A morpho object with sequence data
+#' @param seq Specify which sequence you want to use ("tips", "nodes", "SA")
 #' @param method Under what criteria data should be removed. Methods include "random" which randomly removes
 #' characters across the entire matrix, "partition" which allows different partitions (that were used to simulate the data)
 #' to loose varying amounts of characters, "rates" which removes characters based on the rate the were simulated under,
@@ -30,26 +31,30 @@
 #' # randomly remove data
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                   method = "random",
+#'                                   seq = "tips",
 #'                                   probability = 0.5)
 #'
 #' # remove data based on the rate it was simulated under
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                         method = "rate",
+#'                                         seq = "tips",
 #'                                         probability = c(0,0,0.2,1))
 #'
 #' # remove specific characters from specific traits
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                  method = "trait",
+#'                                  seq = "tips",
 #'                                  probability = 1,
 #'                                  traits = c(1,2,5))
 #'
 #' # remove data based on the partition
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                  method = "partition",
+#'                                  seq = "tips",
 #'                                  probability = c(0.7, 0, 1, 0.5))
 
 
-sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, traits = NULL){
+sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability = NULL, traits = NULL){
 
   if(is.null(method)) stop("You must specify which method you would like to use")
 
@@ -57,7 +62,7 @@ sim.missing.data <- function(data = NULL, method = NULL, probability = NULL, tra
     stop("Provide a morphosim object to simulate the missing data")
   }
 
-  x <- t(as.data.frame(data$sequences))
+  x <- t(as.data.frame(data$sequences[[seq]]))
   trait.num  <- length(x[1,])
   taxa.num <-   length(x[,1])
 
@@ -81,7 +86,7 @@ for ( i in 1:remove){
 
   if( method == "rate"){
 
-   rates <-  data$ACRV_rate
+   rates <-  data$model$RateVarTrait
 
    if (length(probability) != length(unique(rates[1,]))) stop("Vector of probabilities does not match the number of rate categories")
 
@@ -152,7 +157,7 @@ for ( i in 1:remove){
 
   taxa <- rownames(x)
   for ( i in 1:length(taxa)){
-    data$sequences[[taxa[i]]] <- x[taxa[i],]
+    data$sequences[[seq]][[taxa[i]]] <- x[taxa[i],]
 
   }
   return(data)
