@@ -3,30 +3,23 @@
 #' @description
 #' This function removes characters from a morphological matrix simulated using morphosim
 #' @param data A morpho object with sequence data
-#' @param seq Specify which sequence you want to use ("tips", "nodes", "SA")
-#' @param method Under what criteria data should be removed. Methods include "random" which randomly removes
-#' characters across the entire matrix, "partition" which allows different partitions (that were used to simulate the data)
-#' to loose varying amounts of characters, "rates" which removes characters based on the rate the were simulated under,
-#' and "trait" where the user can specify particular traits to remove data.
+#' @param seq Specify which sequence data you want to use ("tips", "nodes", "SA")
+#' @param method Specify the method/variable controlling the removal of data. There are 5 options available. "Random",
+#' "Partition", "Rate", "Trait", and "Taxa". Random removes characters at random across the entire matrix according
+#' to a single probability. Partition allows you to specify different probabilities of being removed for each partition.
+#' The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
+#' allows you to specify different probabilities of being removed for each rate category. The number of probabilities
+#' provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
+#'for specific traits. Taxa llows you to specify a probability for specific taxa.
 #' @param probability The probability of missing data to simulate.
-#' @param traits When method = trait, used to specify which trait you want to remove data from
+#' @param traits When method = trait, used to specify which trait/s you want to remove data from
+#' @param taxa When method = taxa, used to specify which taxon/taxa you want to remove data from
 #'
 #' @return An object of class morpho.
 #'
 #' @export
 
 #' @examples
-#'# simulated tree
-#' phy <- ape::rtree(10)
-#'
-#'# simulate characters along the branches of the tree
-#'transition_history <-  sim.morpho(tree = phy,
-#'                                          k = c(2,3,4,5),
-#'                                          trait.num = 30,
-#'                                          partition = c(10,10,5,5),
-#'                                          ancestral = TRUE,
-#'                                          ACRV = "gamma",
-#'                                          variable = FALSE)
 #'
 #' # randomly remove data
 #' missing.data <- sim.missing.data(data = transition_history,
@@ -34,27 +27,38 @@
 #'                                   seq = "tips",
 #'                                   probability = 0.5)
 #'
-#' # remove data based on the rate it was simulated under
-#' missing.data <- sim.missing.data(data = transition_history,
-#'                                         method = "rate",
-#'                                         seq = "tips",
-#'                                         probability = c(0,0,0.2,1))
-#'
-#' # remove specific characters from specific traits
-#' missing.data <- sim.missing.data(data = transition_history,
-#'                                  method = "trait",
-#'                                  seq = "tips",
-#'                                  probability = 1,
-#'                                  traits = c(1,2,5))
 #'
 #' # remove data based on the partition
 #' missing.data <- sim.missing.data(data = transition_history,
 #'                                  method = "partition",
 #'                                  seq = "tips",
 #'                                  probability = c(0.7, 0, 1, 0.5))
+#'
+#' # remove data based on the rate it was simulated under
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                         method = "rate",
+#'                                         seq = "tips",
+#'                                         probability = c(0,0,0.2,1))
+#'
+#' # remove  characters from specific traits
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                  method = "trait",
+#'                                  seq = "tips",
+#'                                  probability = 1,
+#'                                  traits = c(1,2,5))
+#'
+#' # remove  characters from specific taxa
+#' missing.data <- sim.missing.data(data = transition_history,
+#'                                  method = "taxa",
+#'                                  seq = "tips",
+#'                                  probability = 1,
+#'                                  traits = c(1,3,6))
+#'
 
 
-sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability = NULL, traits = NULL){
+
+sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability = NULL,
+                             traits = NULL, taxa = NULL){
 
   if(is.null(method)) stop("You must specify which method you would like to use")
 
@@ -155,9 +159,32 @@ for ( i in 1:remove){
 
   }
 
-  taxa <- rownames(x)
-  for ( i in 1:length(taxa)){
-    data$sequences[[seq]][[taxa[i]]] <- x[taxa[i],]
+
+  if ( method == "taxa"){
+
+    if (length(probability) > 1) stop ("Provide 1 probability to apply across all traits")
+
+    remove <- round((length(taxa)* trait.num)* probability, 0)
+    total_cells <- length(taxa)* trait.num
+
+    all_combinations <- expand.grid(Column = 1:trait.num,  Row = taxa)
+
+    random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+    for ( i in 1:remove){
+      x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+
+
+    }
+
+
+  }
+
+
+
+
+  tax <- rownames(x)
+  for ( i in 1:length(tax)){
+    data$sequences[[seq]][[tax[i]]] <- x[tax[i],]
 
   }
   return(data)

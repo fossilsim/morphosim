@@ -23,20 +23,19 @@
 #' # plot the character matrix
 #' plotMorphoGrid(data = simulated_morpho, num.trait = 1)
 #'
-plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
+plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col =  c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")){
 
 
 
   ## check has missing data
 
-  if (inherits( data$sequences$tips[[1]][1], "character")){
-   data$sequences$tips <- lapply( data$sequences$tips, function(x) {
-      # Replace "?" with NA first
-      data[data == "?"] <- NA
-      # Convert to numeric
-      as.numeric(data)
+  if (inherits(data$sequences$tips[[1]][1], "character")) {
+    data$sequences$tips <- lapply(data$sequences$tips, function(x) {
+      x[x == "?"] <- NA        # Replace "?" with NA
+      as.numeric(x)            # Convert character vector to numeric
     })
   }
+
 
 n.taxa <- length(data$trees$EvolTree$tip.label)
 n.traits <- length( data$sequences$tips[[1]])
@@ -81,8 +80,8 @@ x_labs <- seq(center_b, center_final, xx )
 axis(3, at=x_labs,labels=1:n.traits,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0.95)
 
-if(!is.null(data$model$RateVar)){
-axis(1, at=x_labs,labels=data$model$RateVar,
+if(!is.null(data$model$RateVarTrait)){
+axis(1, at=x_labs,labels=data$model$RateVarTrait,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0)
   mtext('Rate Category', side=1, line=1, at=-0.07, cex = 0.7, font = 6)
 }
@@ -90,7 +89,7 @@ for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
     state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
     bg_col <- col[state + 1]
-    if (is.na(state)) bg_col = "#F5F5F5"
+    if (is.na(state)) bg_col = "lightgrey"
 # Draw a rectangle for each box
 rect(
   xleft = x_labs[i]-xx/2, xright = x_labs[i]+xx/2,
