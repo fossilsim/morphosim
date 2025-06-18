@@ -25,29 +25,29 @@
 #'
 plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col =  c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange")){
 
-  x <- data
+
 
   ## check has missing data
 
-  if (inherits(x$sequences[[1]][1], "character")){
-    x$sequences <- lapply(x$sequences, function(x) {
+  if (inherits( data$sequences$tips[[1]][1], "character")){
+   data$sequences$tips <- lapply( data$sequences$tips, function(x) {
       # Replace "?" with NA first
-      x[x == "?"] <- NA
+      data[data == "?"] <- NA
       # Convert to numeric
-      as.numeric(x)
+      as.numeric(data)
     })
   }
 
-n.taxa <- length(x$tree$tip.label)
-n.traits <- length(x$sequences[[1]])
-ordered_tree <- reorder(x$tree)
+n.taxa <- length(data$tree$tip.label)
+n.traits <- length( data$sequences$tips[[1]])
+ordered_tree <- reorder(data$tree)
 
 ## Are we using a time tree?
 if (timetree) {
-  tree_string <-  write.tree(x$time.tree)
+  tree_string <-  write.tree(data$time.tree)
   tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
 } else {
-  tree_string <-  write.tree(x$tree)
+  tree_string <-  write.tree(data$tree)
   tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
 }
 
@@ -85,14 +85,14 @@ x_labs <- seq(center_b, center_final, xx )
 axis(3, at=x_labs,labels=1:n.traits,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0.95)
 
-if(!is.null(x$ACRV_rate)){
-axis(1, at=x_labs,labels=x$ACRV_rate,
+if(!is.null(data$ACRV_rate)){
+axis(1, at=x_labs,labels=data$ACRV_rate,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0)
   mtext('Rate Category', side=1, line=1, at=-0.07, cex = 0.7, font = 6)
 }
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
-    state <- as.numeric(x$sequences[[tip_labs[j]]][i])
+    state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
     bg_col <- col[state + 1]
     if (is.na(state)) bg_col = "#F5F5F5"
 # Draw a rectangle for each box
@@ -123,7 +123,7 @@ for ( j in 1:n.taxa){
 ## fill in the boxes with the state
 for (i in 1:n.traits) {
   for (j in 1:n.taxa) {
-    state <- as.numeric(x$sequences[[tip_labs[j]]][i])
+    state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
     if (is.na(state)) state = "?"
 
     # Add the state text in the box

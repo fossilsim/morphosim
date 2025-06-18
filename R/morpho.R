@@ -16,8 +16,8 @@
 #'
 #' @export
 #morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
-                   node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
-                   fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
+          #         node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
+          #         fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
 
   morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
                      transition_history = NULL, root.states = NULL,
@@ -100,3 +100,4 @@ as.morpho.default <- function(data, ...) {
 is.morpho <- function(data) {
   inherits(data, "morpho")
 }
+
