@@ -334,6 +334,9 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     }
 
     ## create morpho object
+    seq <- list(NA,NA,NA)
+    names(seq) <- c("tips","nodes", "SA")
+
     # formatting for morpho object
     fossil_names <- paste0(f.morpho$specimen,"_", f.morpho$ape.branch)
     fossil_sequence = list()
@@ -348,6 +351,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   ## create morpho object
   # formatting for morpho object
+
   tip_names <- rownames(state_at_tips)
   tip_sequence = list()
 
@@ -355,6 +359,8 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   for ( i in 1:length(tip_names)){
     tip_sequence[[tip_names[i]]] <-state_at_tips[tip_names[i],]
   }
+
+  seq[["tips"]] <- tip_sequence
 
 
   if (ancestral){
@@ -370,11 +376,14 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     node_sequence <- NULL
   }
 
+  seq[["nodes"]] <- node_sequence
 
   if(is.null(fossil)) {
     fossil_sequence <- NULL
     f.morpho <- NULL
   }
+
+  seq[["SA"]] <- fossil_sequence
 
   if(is.null(ACRV)){
     ACRV_rate <- NULL}
@@ -392,9 +401,9 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   }
   model <- paste0("Mk", ACRV , var, "_Part:", partition, "states:", k)
 
-  sim.output <- as.morpho(data = tip_sequence, tree = tree.ordered, model = model,
+  sim.output <- as.morpho(data = seq, tree = tree.ordered, model = model,
                           time.tree = time.tree, transition_history = transition_history,
-                          root.states = rs, fossil_sequence = fossil_sequence, fossil = f.morpho, node.seq = node_sequence,  ACRV_rate =  ACRV_rate,
+                          root.states = rs,  fossil = f.morpho,   ACRV_rate =  ACRV_rate,
                           gamma_rates = gamma_rates)
 
   return(sim.output )

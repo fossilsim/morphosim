@@ -15,9 +15,13 @@
 #' @param gamma_rates The gamma rate for each rate category
 #'
 #' @export
-morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
+#morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
                    node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
                    fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
+
+  morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
+                     transition_history = NULL, root.states = NULL,
+                     fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
 
   # check the number of sequences match the number of tips in the tree
   #if (length(data) != length(tree$tip.label)) {
@@ -34,11 +38,9 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
     sequences = data,
     tree = tree,
     model = model,
-    node.sequences = node.seq,
     time.tree = time.tree,
     transition_history = transition_history,
     root.states = root.states,
-    fossil_sequence = fossil_sequence,
     fossil = fossil,
     ACRV_rate =   ACRV_rate,
     gamma_rates = gamma_rates
@@ -54,7 +56,7 @@ morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
 print.morpho <- function(x, max.length = 5, ...){
 
   # Convert sequences into a data frame
-  seq.data <- t(as.data.frame(x$sequences))
+  seq.data <- t(as.data.frame(x$sequences$tips))
 
   if(ncol(seq.data) > 4){
   print(seq.data[,1:max.length])
@@ -63,8 +65,8 @@ print.morpho <- function(x, max.length = 5, ...){
     }
 
   # Print a summary of the morphological data
-  cat("Morphological data for", length(x$sequences), "taxa with",
-      length(x$sequences[[1]]), "traits per taxon and", sort(unique(as.vector(seq.data))),
+  cat("Morphological data for", length(x$sequences$tips), "taxa with",
+      length(x$sequences$tips[[1]]), "traits per taxon and", sort(unique(as.vector(seq.data))),
       "as character states\n")
       cat("Showing maximum of", max.length, "traits here for now\n")
 }
@@ -83,8 +85,8 @@ summary.morpho <- function(object, max.length = 5, ...){
 
 #' @export
 #' @rdname morpho
-as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL, node.seq = NULL,
-                                   transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
+as.morpho <- as.morpho <- function(data, tree, time.tree = NULL, model = NULL,
+                                   transition_history = NULL, root.states = NULL,
                                    fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL) UseMethod("as.morpho")
 
 

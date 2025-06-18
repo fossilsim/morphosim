@@ -52,7 +52,7 @@ plot.morpho <- function(x = NULL, trait = NULL, timetree = FALSE, br.rates = NUL
     plot(data$tree)
   }
   } else {
-    b.cols <- get_colours(data)
+    b.cols <- reconstruct.tree(data)
     if (timetree) {
       if(root.edge){
       plot(data$time.tree, root.edge = T, edge.color = b.cols[[1]])

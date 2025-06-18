@@ -3,7 +3,7 @@ ProjectId: b1b70b73-07ef-456d-adb8-c1484a3cdf5c
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
-AlwaysSaveHistory: Default
+AlwaysSaveHistory: No
 
 EnableCodeIndexing: Yes
 UseSpacesForTab: Yes
@@ -19,3 +19,4 @@ StripTrailingWhitespace: Yes
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
+DisableExecuteRprofile: Yes

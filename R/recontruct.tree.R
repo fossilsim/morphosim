@@ -5,7 +5,7 @@
 #' @import ape
 #' @import FossilSim
 
-get_colours<- function(data){
+reconstruct.tree<- function(data){
 
   recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$tree)
   tps <- unname(recon$tree$tip.label)
