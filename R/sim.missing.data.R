@@ -10,7 +10,7 @@
 #' The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
 #' allows you to specify different probabilities of being removed for each rate category. The number of probabilities
 #' provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
-#'for specific traits. Taxa llows you to specify a probability for specific taxa.
+#'for specific traits. Taxa allows you to specify a probability for specific taxa.
 #' @param probability The probability of missing data to simulate.
 #' @param traits When method = trait, used to specify which trait/s you want to remove data from
 #' @param taxa When method = taxa, used to specify which taxon/taxa you want to remove data from
@@ -72,7 +72,8 @@ sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability
 
 if (method == "random"){
 
-if (length(probability) > 1) stop ("Provide 1 probability to apply across the entire matrix")
+if (length(probability) > 1)
+  stop ("Provide 1 probability to apply across the entire matrix")
 
 remove <- round((trait.num* taxa.num)* probability, 0)
 total_cells <- taxa.num*trait.num
@@ -92,15 +93,19 @@ for ( i in 1:remove){
 
    rates <-  data$model$RateVarTrait
 
-   if (length(probability) != length(unique(rates[1,]))) stop("Vector of probabilities does not match the number of rate categories")
+   if (length(probability) != length(unique(rates[1,])))
+     stop("Vector of probabilities does not match the
+          number of rate categories")
 
    for ( j in 1:max(rates[1,])){
      traits_per_rate <- which(rates == j)
      remove <- round((length(traits_per_rate)* taxa.num)* probability[j], 0)
      total_cells <- length(traits_per_rate)*taxa.num
 
-     all_combinations <- expand.grid(Row = 1:taxa.num, Column =  traits_per_rate)
-     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+     all_combinations <- expand.grid(Row = 1:taxa.num,
+                                     Column =  traits_per_rate)
+     random_cells <- all_combinations[sample(1:total_cells,
+                                             remove, replace = FALSE), ]
 
 
      for ( i in 1:remove){
@@ -114,55 +119,50 @@ for ( i in 1:remove){
 
   if(method == "partition"){
 
-    if (length(probability) != length(data$model)) stop("Vector of probabilities does not match the number of partitions")
+    if (length(probability) != length(data$model))
+      stop("Vector of probabilities does not match the number of partitions")
 
     start_col <- 1
     for ( j in 1:length(data$model)){
 
 
-    traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1", data[["model"]][j]))
+    traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1",
+                                            data[["model"]][j]))
     remove <- round((traits_per_partition* taxa.num)* probability[j], 0)
     total_cells <- traits_per_partition*taxa.num
 
-    all_combinations <- expand.grid(Row = 1:taxa.num, Column =  start_col:(start_col + traits_per_partition -1))
+    all_combinations <- expand.grid(Row = 1:taxa.num,
+                                    Column =  start_col:(start_col + traits_per_partition -1))
     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
 
 
     for ( i in 1:remove){
       x[random_cells$Row[i], random_cells$Column[i]] <- "?"
-
-
-  }
+     }
     start_col <- start_col + traits_per_partition
-
-  }
-
-
+   }
   }
 
 
   if ( method == "trait"){
 
-    if (length(probability) > 1) stop ("Provide 1 probability to apply across all traits")
+    if (length(probability) > 1)
+      stop ("Provide 1 probability to apply across all traits")
 
     remove <- round((length(traits)* taxa.num)* probability, 0)
     total_cells <- length(traits)*taxa.num
-
     all_combinations <- expand.grid(Row = 1:taxa.num, Column = traits)
     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
     for ( i in 1:remove){
       x[random_cells$Row[i], random_cells$Column[i]] <- "?"
-
-
     }
-
-
   }
 
 
   if ( method == "taxa"){
 
-    if (length(probability) > 1) stop ("Provide 1 probability to apply across all traits")
+    if (length(probability) > 1)
+      stop ("Provide 1 probability to apply across all traits")
 
     remove <- round((length(taxa)* trait.num)* probability, 0)
     total_cells <- length(taxa)* trait.num
@@ -172,25 +172,15 @@ for ( i in 1:remove){
     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
     for ( i in 1:remove){
       x[random_cells$Row[i], random_cells$Column[i]] <- "?"
-
-
     }
+ }
 
-
-  }
-
-
-
-
-  tax <- rownames(x)
+ tax <- rownames(x)
   for ( i in 1:length(tax)){
     data$sequences[[seq]][[tax[i]]] <- x[tax[i],]
 
   }
   return(data)
-
-
-
 }
 
 

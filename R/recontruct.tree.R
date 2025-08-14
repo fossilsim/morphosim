@@ -1,5 +1,6 @@
 #'#' @description
-#' This function is used to colour the branches in the plotting function when plotting the reconstructed tree.
+#' This function is used to colour the branches in the plotting
+#' function when plotting the reconstructed tree.
 #'
 #'
 #' @import ape
@@ -9,15 +10,10 @@ reconstruct.tree<- function(data){
 
   recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$trees$TimeTree)
   tps <- unname(recon$tree$tip.label)
-
   matches <- grepl("_1$", tps )
-
-  # Step 2: Extract and clean elements that match
+  # Extract elements that match
   reconTreeTips <- gsub("_1$", "", tps[matches])
-
-
   b.colours <- numeric(length(data$trees$TimeTree$edge.length))
-
 
   # Go through all the tips to determine are the in the reconstructed tree
   for ( Nt in 1:ape::Ntip(data$trees$TimeTree)){
@@ -32,9 +28,7 @@ reconstruct.tree<- function(data){
     }
   }
 
-
   # now go through what is left to determine if there are fossils along the branch
-   # this needs to be updated to change the color along the branch
   remaining.branches <-which(b.colours == 0)
   rem <- c()
   r.cols <- list(NA, NA)
@@ -45,15 +39,13 @@ reconstruct.tree<- function(data){
       Nt <- data$trees$TimeTree$edge[remaining.branches[rb],][2]
       branch.path <- ape::nodepath(data$trees$TimeTree, from = Nt, to = ape::Ntip(data$trees$TimeTree) + 1)
 
-      for (b in 1:length(branch.path)){
+        for (b in 1:length(branch.path)){
         b.colours[which(data$trees$TimeTree$edge[,2] == branch.path[b] )] = "black"
         if (branch.path[b] <= ape::Ntip(data$trees$TimeTree)) rem <- rbind(rem, remaining.branches[rb])
 
       }
-
     }
-
-  }
+   }
 
   remaining.branches <-which(b.colours == 0)
   for (rb in 1:length(remaining.branches)){
@@ -63,7 +55,6 @@ reconstruct.tree<- function(data){
       rem <- rbind(rem, remaining.branches[rb])
     }
   }
-
 
   b.colours[b.colours == "0"] <- "grey"
   r.cols[[1]] <- b.colours

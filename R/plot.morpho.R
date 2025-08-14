@@ -2,10 +2,10 @@
 #'
 #'#' @description
 #' This function creates a plot showing continuous evolution of discrete traits
-#' @param x A morpho object
+#' @param data A morpho object
 #' @param timetree TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
 #' @param trait What trait number you want to visualize
-#' @param fossil Do you want to plot the fossil along the tree. Default set to FALSE
+#' @param fossil Plot the fossil along the tree. Default set to FALSE
 #' @param br.rates Required if you provide a time tree
 #' @param root.edge If TRUE plot the root edge. Default = FALSE
 #' @param reconstructed Plot the reconstructed tree. Default = FALSE
@@ -21,10 +21,6 @@
 #' @export
 
 #' @examples
-
-#' # Non-time tree
-#' phy <- ape::rtree(10)
-#'
 #' # simulate characters along the branches of the tree
 #' transition_history <-  sim.morpho(tree = phy,
 #'                                   k = c(2,3,4),
@@ -35,7 +31,8 @@
 #'                                  variable = TRUE,
 #'                                   ncats.gamma = 4)
 #'
-#' plot(x = transition_history, trait = 1, timetree = FALSE)
+#' plot(transition_history_1, trait= 4, timetree = T, fossil = T,
+#' root.edge = T, reconstructed = T)
 #'
 
 plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
@@ -78,7 +75,6 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
   # Identify the root
   root <- as.integer(parent[!match(parent, child, 0)][1])
 
-
   if(!is.null(trait)){
   df <- data$transition_history[trait][[1]]
 
@@ -113,11 +109,8 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
       points(point_x, point_y, pch = 22, col = "black", bg = col[paint], cex = 4)
       text(point_x, point_y, labels = as.numeric(df$state[i]))
     }
-
-  }
-
-
-  }
+ }
+}
 
   ################
   ## colour branches
@@ -135,11 +128,8 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
       }
 
       ## add lines
-
-      tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
-      #root.age <- tree.age - data$time.tree$root.edge
-
-      branch <- data$fossil$ape.branch[q]
+     tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
+     branch <- data$fossil$ape.branch[q]
 
       #how far along the tree is the fossil
       time <- fossil_pos
@@ -151,11 +141,8 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
       position <- actual_position / data$tree$TimeTree$edge.length[branch]
       # Calculate the point's coordinates along the branch
       point_x <-  position * (edge_end_x[branch] - edge_start_x[branch])
-
       y_vals <- yy[data$trees$TimeTree[["edge"]][b.cols[[2]][p], 2]]
-      #segments(edge_start_x[b.cols[[2]][p]], y_vals, point_x, y_vals, col = "black")
       segments(point_x, y_vals, edge_end_x[b.cols[[2]][p]], y_vals, col = "grey")
-
     }
   }
 }
@@ -169,7 +156,6 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
     #root.age <- tree.age - data$time.tree$root.edge
     for (fsl in 1:length(data$fossil$sp)){
       branch <- data$fossil$ape.branch[fsl]
-
       #how far along the tree is the fossil
       time <- as.numeric(data$fossil$hmax[fsl])
       if (root.edge){
@@ -183,21 +169,19 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
       point_y <- yy[data$trees$TimeTree[["edge"]][branch, 2]]
 
       if (data$fossil$hmax[fsl] == 0){
+
       points(point_x, point_y, pch = 16, col = "forestgreen", cex = 0.5)
       } else {
         points(point_x, point_y, pch = 18, col = "black", cex = 1)
-
       }
     }
   }
-
-
 
   # Add a timescale below the plot
 
 if (timetree) {
 
-  if(root.edge){
+  if(root.edge) {
     axis_labels <- c((tree.age + data$trees$TimeTree$root.edge),0)
     axis(1, at = c(0, (tree.age + data$trees$TimeTree$root.edge)), labels = round(axis_labels, 2),
                      line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
@@ -206,8 +190,6 @@ if (timetree) {
     axis(1, at = c(0, tree.age), labels = round(axis_labels, 2),
          line = 1,col = col.timescale, lwd = 3, cex.axis = 1.3, col.axis = col.timescale)
     }
-
-
   mtext("Time before present", side = 1, line = 2.5, cex = 1.3, col = col.timescale)
-}
+  }
 }

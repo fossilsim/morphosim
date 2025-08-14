@@ -99,10 +99,14 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
     if(is.null(br.rates)){
       print("No branch rate provide, using default of 0.1 for all branches")
-      br.rates <- 0.1
+      br.rates <- rep(0.1, length(tree$edge.length))
     }
-      tree$edge.length <- time.tree$edge.length * br.rates
 
+      if(length(br.rates) == 1){
+        br.rates <- rep(br.rates, length(tree$edge.length))
+      }
+
+      tree$edge.length <- time.tree$edge.length * br.rates
   }
 
 
@@ -314,7 +318,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
           ## get the age of the partent node
           node_age <- ape::node.depth.edgelength(time.tree)[time.tree$edge[branch,1]]
           # get the time of change
-          changes_along_edge$time <- (changes_along_edge[,3] / br.rates) +  node_age + time.tree$root.edge
+          changes_along_edge$time <- (changes_along_edge[,3] / br.rates[branch]) +  node_age + time.tree$root.edge
 
 
         ## remove changes after fossil occurance
