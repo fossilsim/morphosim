@@ -10,6 +10,8 @@
 #'
 #' @param data Morpho object
 #'
+#' @export
+#'
 #' @examples
 #' summary <- stats_morpho(data = morpho_data)
 
@@ -29,19 +31,17 @@ stats_morpho <- function(data){
 
 
   ## convergent characters
-  morpho_summary[["Convergent_Traits"]] <- as.data.frame(convergent_evol(data = data))
+  morpho_summary[["Convergent_Traits"]] <-convergent_evol(data = data)
 
   ## number SA
-  if (length(morpho_data$sequences$seq) > 0){
-  num_sa <- length(data$fossil$sp)
+  if (!is.null(data$sequences$SA)){
+  num_sa <- length(data$sequences$SA)
   } else {
     num_sa <- 0
   }
   ## number extant tips
-  tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]  # depths from root to each tip
-  tree_height <- max(node.depth.edgelength(data$trees$TimeTree))                   # total height of the tree
-
-  # Tips at the present (extant)
+  tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
+  tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
   extant_tips <- length(data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8])
 
   ## number extinct tips
@@ -62,6 +62,9 @@ stats_morpho <- function(data){
 #' This function determines which traits have evoled through convergent evolution
 #'
 #' @param data a morpho object
+#'
+#'  @export
+#'
 
 convergent_evol <- function(data = NULL){
 
@@ -125,8 +128,16 @@ convergent_evol <- function(data = NULL){
       }
     }
   }
-  convergent_traits <- convergent_traits[-1,]
-  rownames(convergent_traits) <- seq(1,length(convergent_traits[,1]), 1)
+
+convergent_traits <- convergent_traits[-1,]
+if (length(convergent_traits) > 0){
+  if (length(convergent_traits["trait"])){
+    convergent_traits <- as.data.frame(t(convergent_traits))
+  } else {
+    convergent_traits <- as.data.frame(convergent_traits)
+  }
+rownames(convergent_traits) <- seq(1,length(convergent_traits$trait), 1)
+  }
   return(convergent_traits)
 }
 
@@ -138,6 +149,8 @@ convergent_evol <- function(data = NULL){
 #'
 #' @param tree phylogenetic tree
 #' @param tip tip label
+#'
+#' @export
 #'
 #' @examples
 #'route_n <- find_path_to_tip(tree, "t2")

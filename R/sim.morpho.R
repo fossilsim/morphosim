@@ -279,8 +279,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   ### fossil object
 
   if(!is.null(fossil)){
-
-    f.morpho <- fossil
+    f.morpho <- fossil[fossil$hmin != 0, ]
     f.morpho$ape.branch <-NA
     f.morpho$specimen <- NA
     f.morpho$specimen <- seq(1,length(f.morpho$sp))
@@ -334,7 +333,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
         }
 
       }
-      }
     }
 
 
@@ -348,7 +346,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
       fossil_sequence[[fossil_names[i]]] <- state_at_fossils[fossil_names[i],]
     }
 
-
+}
   }
 
   ## create morpho object

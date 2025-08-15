@@ -7,7 +7,9 @@
 convergent_evol(data = NULL)
 }
 \arguments{
-\item{data}{a morpho object}
+\item{data}{a morpho object
+
+ @export}
 }
 \description{
 This function determines which traits have evoled through convergent evolution
