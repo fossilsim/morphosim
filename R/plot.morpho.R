@@ -93,7 +93,7 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
       branch <- as.numeric(df$edge[i])
 
       if (timetree) {
-      position <- as.numeric(df$hmin[i]) / data$trees$BrRates
+      position <- as.numeric(df$hmin[i]) / data$trees$BrRates[branch]
         } else {
       position <- as.numeric(df$hmin[i])
       }

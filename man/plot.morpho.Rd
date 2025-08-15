@@ -17,11 +17,13 @@
 )
 }
 \arguments{
+\item{data}{A morpho object}
+
 \item{trait}{What trait number you want to visualize}
 
 \item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
 
-\item{fossil}{Do you want to plot the fossil along the tree. Default set to FALSE}
+\item{fossil}{Plot the fossil along the tree. Default set to FALSE}
 
 \item{reconstructed}{Plot the reconstructed tree. Default = FALSE}
 
@@ -33,8 +35,6 @@
 
 \item{...}{other arguments to be passed to methods, such as graphical parameters}
 
-\item{x}{A morpho object}
-
 \item{br.rates}{Required if you provide a time tree}
 }
 \description{
@@ -42,9 +42,6 @@
 This function creates a plot showing continuous evolution of discrete traits
 }
 \examples{
-# Non-time tree
-phy <- ape::rtree(10)
-
 # simulate characters along the branches of the tree
 transition_history <-  sim.morpho(tree = phy,
                                   k = c(2,3,4),
@@ -55,6 +52,7 @@ transition_history <-  sim.morpho(tree = phy,
                                  variable = TRUE,
                                   ncats.gamma = 4)
 
-plot(x = transition_history, trait = 1, timetree = FALSE)
+plot(transition_history_1, trait= 4, timetree = T, fossil = T,
+root.edge = T, reconstructed = T)
 
 }

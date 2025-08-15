@@ -3,11 +3,13 @@
 \name{reconstruct.tree}
 \alias{reconstruct.tree}
 \title{#' @description
-This function is used to colour the branches in the plotting function when plotting the reconstructed tree.}
+This function is used to colour the branches in the plotting
+function when plotting the reconstructed tree.}
 \usage{
 reconstruct.tree(data)
 }
 \description{
 #' @description
-This function is used to colour the branches in the plotting function when plotting the reconstructed tree.
+This function is used to colour the branches in the plotting
+function when plotting the reconstructed tree.
 }

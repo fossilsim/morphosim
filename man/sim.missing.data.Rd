@@ -24,7 +24,7 @@ to a single probability. Partition allows you to specify different probabilities
 The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
 allows you to specify different probabilities of being removed for each rate category. The number of probabilities
 provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
-for specific traits. Taxa llows you to specify a probability for specific taxa.}
+for specific traits. Taxa allows you to specify a probability for specific taxa.}
 
 \item{probability}{The probability of missing data to simulate.}
 
