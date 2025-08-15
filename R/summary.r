@@ -77,7 +77,7 @@ convergent_evol <- function(data = NULL){
 
   for (convT in 1:length(dat)){
     temp <- dat[[convT]]
-    trait_n <- tip_states[,convT]
+    trait_n <- tip_states[convT,]
 
 
     trans_trait <- matrix(nrow =  length(tree$tip.label), ncol = 2)
@@ -131,7 +131,7 @@ convergent_evol <- function(data = NULL){
 
 convergent_traits <- convergent_traits[-1,]
 if (length(convergent_traits) > 0){
-  if (length(convergent_traits["trait"])){
+  if (length(convergent_traits[,"trait"]) == 1){
     convergent_traits <- as.data.frame(t(convergent_traits))
   } else {
     convergent_traits <- as.data.frame(convergent_traits)
