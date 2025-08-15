@@ -106,11 +106,11 @@ convergent_evol <- function(data = NULL){
       }
     }
 
-    # make any unchaged tips equal to root (0) and root state
-    # Identify rows with any NA
+    # make any unchanged tips equal to root (0) and root state
+    # identify rows with any NA
     rows_na <- apply(trans_trait, 1, function(row) any(is.na(row)))
 
-    # Fill those rows with desired values
+    # fill those rows with values
     trans_trait[rows_na, ] <- matrix(
       rep(c(0, data$root.state[convT]), sum(rows_na)),
       nrow = sum(rows_na),
@@ -120,12 +120,13 @@ convergent_evol <- function(data = NULL){
     for (s in 1:length(states)){
       by_state <- trans_trait[which(trans_trait[,"state"] == states[s])]
       if (length(unique(by_state)) > 1){
-        n_row <- as.numeric(c(convT,states[s], length(unique(by_state))))
-        convergent_traits <-rbind(convergent_traits, n_row)
+        n <- as.numeric(c(convT,states[s], length(unique(by_state))))
+        convergent_traits <-rbind(convergent_traits, n)
       }
     }
   }
   convergent_traits <- convergent_traits[-1,]
+  rownames(convergent_traits) <- seq(1,length(convergent_traits[,1]), 1)
   return(convergent_traits)
 }
 
