@@ -73,15 +73,13 @@ plot(morpho_data, trait= 10, timetree = T,
      fossil = T, root.edge = F, reconstructed = T)
 
 ```
-##### Summaries data
+##### Summary statistics
 
 ```r
 sum <- stats_morpho(data = morpho_data)
-sum$Tree
-unique(sum$Convergent_Traits$trait)
 ```
 
-### Writing out simulated data for phylogenetic inference.  
+##### Writing out simulated data for phylogenetic inference.  
 
 ```r
 ape::write.nexus.data(morpho_data$sequences$tips, file = "../tip.nex")
