@@ -10,6 +10,8 @@
 #'   - "rate": removes characters by rate category (probabilities per rate category).
 #'   - "trait": removes characters from specific traits.
 #'   - "taxa": removes characters from specific taxa.
+#'   - "extinct": removes data from extinct taxa only. Note: This referes to characters from the
+#'   tips.
 #' @param probability Numeric. Probability of missing data (single value or vector depending on method).
 #' @param traits When method = "trait", indices of traits to remove.
 #' @param taxa When method = "taxa", indices of taxa to remove.
@@ -61,9 +63,10 @@ sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability
 
 
   #### Checks
-  if (is.null(method)) {
-    stop("You must specify a `method`: 'random', 'partition', 'rate', 'trait', or 'taxa'.")
+  if (is.null(method) || !method %in% c("random", "partition", "rate", "trait", "taxa", "extinct")) {
+    stop("You must specify a `method`: 'random', 'partition', 'rate', 'trait', extinct, or 'taxa'.")
   }
+
   if (is.null(data) || !inherits(data, "morpho")) {
     stop("`data` must be a morpho object.")
   }
@@ -177,10 +180,35 @@ for ( i in 1:remove){
     all_combinations <- expand.grid(Column = 1:trait.num,  Row = taxa)
     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
     for ( i in 1:remove){
-      x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+      x[as.character(random_cells$Row[i]), random_cells$Column[i]] <- "?"
     }
  }
 
+
+  ## Method: = Extinct
+  if ( method == "extinct"){
+
+    if (length(probability) > 1) {
+      stop("For method = 'extinct', provide a single probability.")
+    }
+    if (seq != "tips") {
+      stop("For method = extinct,`seq` must be 'tips'.")
+    }
+
+
+    ## number extant tips
+    tip_depths <- ape::node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
+    tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
+    tip_ages <-   round(abs(tip_depths - tree_height),3)
+    extinct <- data$trees$EvolTree$tip.label[which(tip_ages != 0) ]
+    remove <- round((length(extinct)* trait.num)* probability, 0)
+    total_cells <- length(extinct)* trait.num
+    all_combinations <- expand.grid(Column = 1:trait.num,  Row = extinct)
+    random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+    for ( i in 1:remove){
+      x[as.character(random_cells$Row[i]), random_cells$Column[i]] <- "?"
+    }
+  }
 
   ## update morpho object
  tax <- rownames(x)
