@@ -22,33 +22,33 @@ sim.morpho(
 )
 }
 \arguments{
-\item{tree}{Tree with branches that represent genetic distance associated with the character data.}
+\item{tree}{A phylogenetic tree (class "phylo") with branches representing genetic distance.}
 
-\item{time.tree}{Tree with branches that represent time associated with the character data.}
+\item{time.tree}{A phylogenetic tree (class "phylo") with branches representing time.}
 
-\item{ACRV}{Allow for among character rate variation. The default here is set to NULL. Can supply argument "gamma".}
+\item{ACRV}{Among-character rate variation. Default is `NULL`. If supplied, must be `"gamma"`.}
 
-\item{br.rates}{Clock rates per branch, currently can only be strict clock (a single rate).}
+\item{br.rates}{Clock rates per branch. Can be a single value (strict clock) or a vector of rates.}
 
-\item{variable}{Simulate only varying characters. The default here is set to FALSE.}
+\item{variable}{If `TRUE`, simulate only varying characters. Default is `FALSE`.}
 
-\item{ancestral}{Return the states at all ancestral nodes. Default set to FALSE.}
+\item{ancestral}{If `TRUE`, return the states at all ancestral nodes. Default is `FALSE`.}
 
-\item{k}{Number of trait states.}
+\item{k}{Number of trait states (integer ≥ 2). Can be a vector if using partitions.}
 
 \item{partition}{Specify the number of traits per partition}
 
-\item{trait.num}{The number of traits to simulate.}
+\item{trait.num}{The total number of traits to simulate (integer > 0).}
 
-\item{fossil}{Provide a fossil object (from FossilSim) to simulate morphological characters for}
+\item{fossil}{Fossil object (from `FossilSim`) to simulate morphological characters.}
 
-\item{alpha.gamma}{The value of alpha, i.e., the shape parameter, used to draw the rates from}
+\item{alpha.gamma}{Shape parameter α for the gamma distribution.}
 
-\item{ncats.gamma}{The number of rate categories}
+\item{ncats.gamma}{Number of gamma rate categories.}
 
-\item{define_gamma_rates}{You can specify the gamma rate categories you want to use for the simulation.}
+\item{define_gamma_rates}{Vector of gamma rate categories for the simulation.}
 
-\item{define_Q}{Provide a Q matrix for simulation}
+\item{define_Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
 }
 \value{
 An object of class morpho.

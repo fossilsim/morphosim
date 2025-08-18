@@ -2,18 +2,17 @@
 #'
 #' @description
 #' This function removes characters from a morphological matrix simulated using morphosim
-#' @param data A morpho object with sequence data
-#' @param seq Specify which sequence data you want to use ("tips", "nodes", "SA")
-#' @param method Specify the method/variable controlling the removal of data. There are 5 options available. "Random",
-#' "Partition", "Rate", "Trait", and "Taxa". Random removes characters at random across the entire matrix according
-#' to a single probability. Partition allows you to specify different probabilities of being removed for each partition.
-#' The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
-#' allows you to specify different probabilities of being removed for each rate category. The number of probabilities
-#' provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
-#'for specific traits. Taxa allows you to specify a probability for specific taxa.
-#' @param probability The probability of missing data to simulate.
-#' @param traits When method = trait, used to specify which trait/s you want to remove data from
-#' @param taxa When method = taxa, used to specify which taxon/taxa you want to remove data from
+#' @param data A `morpho` object with sequence data.
+#' @param seq Character. Which sequence data to use: "tips", "nodes", or "SA".
+#' @param method Character. Method for removing data. Options:
+#'   - "random": removes characters randomly across the matrix.
+#'   - "partition": removes characters by partition (probabilities per partition).
+#'   - "rate": removes characters by rate category (probabilities per rate category).
+#'   - "trait": removes characters from specific traits.
+#'   - "taxa": removes characters from specific taxa.
+#' @param probability Numeric. Probability of missing data (single value or vector depending on method).
+#' @param traits When method = "trait", indices of traits to remove.
+#' @param taxa When method = "taxa", indices of taxa to remove.
 #'
 #' @return An object of class morpho.
 #'
@@ -60,42 +59,52 @@
 sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability = NULL,
                              traits = NULL, taxa = NULL){
 
-  if(is.null(method)) stop("You must specify which method you would like to use")
 
-  if(is.null(data) ||!inherits(data, "morpho")){
-    stop("Provide a morphosim object to simulate the missing data")
+  #### Checks
+  if (is.null(method)) {
+    stop("You must specify a `method`: 'random', 'partition', 'rate', 'trait', or 'taxa'.")
+  }
+  if (is.null(data) || !inherits(data, "morpho")) {
+    stop("`data` must be a morpho object.")
+  }
+  if (is.null(seq) || !seq %in% c("tips", "nodes", "SA")) {
+    stop("`seq` must be one of 'tips', 'nodes', or 'SA'.")
+  }
+  if (is.null(probability)) {
+    stop("You must provide a `probability` value.")
+  }
+  if (!is.numeric(probability) || any(probability < 0 | probability > 1)) {
+    stop("`probability` must be between 0 and 1.")
   }
 
+
+
+  ## Create data frame
   x <- t(as.data.frame(data$sequences[[seq]]))
   trait.num  <- length(x[1,])
   taxa.num <-   length(x[,1])
 
+  ## Method: Random
 if (method == "random"){
 
 if (length(probability) > 1)
-  stop ("Provide 1 probability to apply across the entire matrix")
-
+  stop("For method = 'random', provide a single probability.")
 remove <- round((trait.num* taxa.num)* probability, 0)
 total_cells <- taxa.num*trait.num
 all_combinations <- expand.grid(Row = 1:taxa.num, Column = 1:trait.num)
 random_cells<- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
-
-
 for ( i in 1:remove){
   x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+  }
 }
 
 
-}
-
-
+  ## Method: Rate
   if( method == "rate"){
-
-   rates <-  data$model$RateVarTrait
-
-   if (length(probability) != length(unique(rates[1,])))
-     stop("Vector of probabilities does not match the
-          number of rate categories")
+  rates <-  data$model$RateVarTrait
+  if (length(probability) != length(unique(rates[1, ]))) {
+    stop("Length of `probability` must match the number of rate categories.")
+  }
 
    for ( j in 1:max(rates[1,])){
      traits_per_rate <- which(rates == j)
@@ -106,17 +115,15 @@ for ( i in 1:remove){
                                      Column =  traits_per_rate)
      random_cells <- all_combinations[sample(1:total_cells,
                                              remove, replace = FALSE), ]
-
-
-     for ( i in 1:remove){
+       for ( i in 1:remove){
        x[random_cells$Row[i], random_cells$Column[i]] <- "?"
 
-     }
+        }
       }
   }
 
 
-
+  ## Method: Partition
   if(method == "partition"){
 
     if (length(probability) != length(data$model))
@@ -124,8 +131,6 @@ for ( i in 1:remove){
 
     start_col <- 1
     for ( j in 1:length(data$model)){
-
-
     traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1",
                                             data[["model"]][j]))
     remove <- round((traits_per_partition* taxa.num)* probability[j], 0)
@@ -144,10 +149,12 @@ for ( i in 1:remove){
   }
 
 
+  ## Method: Trait
   if ( method == "trait"){
-
-    if (length(probability) > 1)
-      stop ("Provide 1 probability to apply across all traits")
+    if (length(probability) > 1) {
+      stop("For method = 'trait', provide a single probability.")
+    }
+    if (is.null(traits)) stop("For method = 'trait', you must specify `traits`.")
 
     remove <- round((length(traits)* taxa.num)* probability, 0)
     total_cells <- length(traits)*taxa.num
@@ -158,23 +165,24 @@ for ( i in 1:remove){
     }
   }
 
-
+  ## Method: Taxa
   if ( method == "taxa"){
 
-    if (length(probability) > 1)
-      stop ("Provide 1 probability to apply across all traits")
-
+    if (length(probability) > 1) {
+      stop("For method = 'taxa', provide a single probability.")
+    }
+    if (is.null(taxa)) stop("For method = 'taxa', you must specify `taxa`.")
     remove <- round((length(taxa)* trait.num)* probability, 0)
     total_cells <- length(taxa)* trait.num
-
     all_combinations <- expand.grid(Column = 1:trait.num,  Row = taxa)
-
     random_cells <- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
     for ( i in 1:remove){
       x[random_cells$Row[i], random_cells$Column[i]] <- "?"
     }
  }
 
+
+  ## update morpho object
  tax <- rownames(x)
   for ( i in 1:length(tax)){
     data$sequences[[seq]][[tax[i]]] <- x[tax[i],]

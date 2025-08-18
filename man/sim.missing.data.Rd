@@ -14,23 +14,22 @@ sim.missing.data(
 )
 }
 \arguments{
-\item{data}{A morpho object with sequence data}
+\item{data}{A `morpho` object with sequence data.}
 
-\item{seq}{Specify which sequence data you want to use ("tips", "nodes", "SA")}
+\item{seq}{Character. Which sequence data to use: `"tips"`, `"nodes"`, or `"SA"`.}
 
-\item{method}{Specify the method/variable controlling the removal of data. There are 5 options available. "Random",
-"Partition", "Rate", "Trait", and "Taxa". Random removes characters at random across the entire matrix according
-to a single probability. Partition allows you to specify different probabilities of being removed for each partition.
-The number of probabilities provided here must match the number of partitions the data was simulated under. Rate
-allows you to specify different probabilities of being removed for each rate category. The number of probabilities
-provided here must match the number of rates the data was simulated under. Traits allows you to specify a probability
-for specific traits. Taxa allows you to specify a probability for specific taxa.}
+\item{method}{Character. Method for removing data. Options:
+- `"random"`: removes characters randomly across the matrix.
+- `"partition"`: removes characters by partition (probabilities per partition).
+- `"rate"`: removes characters by rate category (probabilities per rate category).
+- `"trait"`: removes characters from specific traits.
+- `"taxa"`: removes characters from specific taxa.}
 
-\item{probability}{The probability of missing data to simulate.}
+\item{probability}{Numeric. Probability of missing data (single value or vector depending on method).}
 
-\item{traits}{When method = trait, used to specify which trait/s you want to remove data from}
+\item{traits}{When `method = "trait"`, indices of traits to remove.}
 
-\item{taxa}{When method = taxa, used to specify which taxon/taxa you want to remove data from}
+\item{taxa}{When `method = "taxa"`, indices of taxa to remove.}
 }
 \value{
 An object of class morpho.
