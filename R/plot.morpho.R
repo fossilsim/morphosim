@@ -36,26 +36,27 @@
 #'
 
 plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
-                        fossil = FALSE, reconstructed = FALSE, root.edge = FALSE, col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+                        fossil = FALSE, reconstructed = FALSE, root.edge = FALSE, edges = 1,
+                        label.offset = 0.05, e.cex = 0.5, f.cex = 1,col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
 
   ## Are we using a time tree?
   if(reconstructed == FALSE){
   if (timetree) {
     if(root.edge){
-    plot(data$trees$TimeTree, root.edge = T)
-    } else { plot(data$trees$TimeTree, root.edge = F)}
+    plot(data$trees$TimeTree, edge.width = edges, label.offset = label.offset, root.edge = T)
+    } else { plot(data$trees$TimeTree, label.offset = label.offset, edge.width = edges, root.edge = F)}
   } else {
-    plot(data$trees$EvolTree)
+    plot(data$trees$EvolTree, label.offset = label.offset, edge.width = edges)
   }
   } else {
     b.cols <- reconstruct.tree(data)
     if (timetree) {
       if(root.edge){
-      plot(data$trees$TimeTree, root.edge = T, edge.color = b.cols[[1]])
-    } else { plot(data$trees$TimeTree, root.edge = F, edge.color = b.cols[[1]])}
+      plot(data$trees$TimeTree, root.edge = T, label.offset = label.offset,edge.width = edges, edge.color = b.cols[[1]])
+    } else { plot(data$trees$TimeTree, root.edge = F,label.offset = label.offset, edge.width = edges, edge.color = b.cols[[1]])}
   } else {
-    plot(data$trees$EvolTree, edge.color = b.cols[[1]])
+    plot(data$trees$EvolTree, edge.width = edges,label.offset = label.offset, edge.color = b.cols[[1]])
   }
   }
 
@@ -112,6 +113,7 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
  }
 }
 
+  tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
   ################
   ## colour branches
   ###############
@@ -170,9 +172,9 @@ plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
 
       if (data$fossil$hmax[fsl] == 0){
 
-      points(point_x, point_y, pch = 16, col = "forestgreen", cex = 0.5)
+      points(point_x, point_y, pch = 16, col = "forestgreen", cex = e.cex)
       } else {
-        points(point_x, point_y, pch = 18, col = "black", cex = 1)
+        points(point_x, point_y, pch = 18, col = "black", cex = f.cex)
       }
     }
   }
