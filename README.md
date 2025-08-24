@@ -12,7 +12,7 @@ devtools::install_github("https://github.com/fossilsim/morphosim")
 
 
 ## Ex 1: Simulating Data Along a Phylogenetic Tree - Basic set up
-To simualte morphological data you will first need a phylogenetic tree. You can simulate a tree using the existing R package `Treesim`
+To simulate morphological data you will first need a phylogenetic tree. Morphosim can take either, a time tree or a tree with branch lengths in genetic distance as input. In this example we will use a time tree. You can simulate a tree using the existing R package `Treesim`
 
 ```r
 install.packages("Treesim")
@@ -32,10 +32,10 @@ tree = TreeSim::sim.bd.taxa(n = tips,
 ```
 #### Simulate Morphological data using morphosim. 
 MorphoSim lets you specify a variety of parameters for your simulations. In this example, we will focus on a few key parameters to get started.
-- **k**: the maximum number of character states. This can be a single integer greater than 1 or a vector of integers if you want to simulate more than 1 partitions. So in the following example, we are simulating two partitions, the first with 2 states and the second with 3.
+- **k**: the maximum number of character states. This can be a single integer greater than 1 or a vector of integers if you want to simulate more than 1 partitions. In the following example, we are therefore simulating two partitions, the first with 2 states and the second with 3.
 - **timetree**: if using a time tree specify here.
 - **tree**: if using a genetic distance tree specify here.
-- **partitions**: specify the number of traits per partition. This must match the number of states specificed in k.
+- **partitions**: specify the number of traits per partition. This must match the number of states specified in k.
 - **triat.num**: specify the total number of traits 
 - **br.rates**: This can be a single integer (strict clock) or a vector of integers (relaxed clock). This must be provided when using a time tree to convert the branch lengths into genetic distance.
 - **ancestral**: return the states at the internal nodes in the tree.
@@ -53,15 +53,15 @@ morpho_data <-  sim.morpho(k = c(2,3),
                            ancestral = TRUE)  
 
 ```
-#### Explore the simluated data
+#### Explore the simulated data
 - TODO: Explain the morpho object
 
-Morphosim has a plotting function which allows you to plot the simualted data along the branches of the tree. 
+Morphosim has a plotting function which allows you to plot the simulated data along the branches of the tree. 
 ```r
 plot(morpho_data, 
      trait= 1) # specify which trait you want to plot along the tree
 ```
-This function returns a number of characterstics about your data. It calculates the consistency index, the rentention index, identifies convergent traits, and the number of extinct and extant taxa.
+This function returns a number of characteristics about your data. It calculates the consistency index, the retention index, identifies convergent traits, and the number of extinct and extant taxa.
 ```r
 stats <- stats_morpho(morpho_data)
 ```
@@ -84,13 +84,13 @@ reltt <- simclock::relaxed.tree(t,
 ```
 For the character data we can relax the assumptions of the Mk model in a number of ways as described below
 
--**ACRV**: Here you can specify if you would like to model among character rate variation. This is commonly used for morphological data sets as traits may evolve at different rates. There are three input options here, `gamma`, `lgn`, and `user`. Gamma uses a discrete gamma distribution, lgn will use a discrete lognorma, and user allows the user to specify rates.
+-**ACRV**: Here you can specify if you would like to model among character rate variation. This is commonly used for morphological data sets as traits may evolve at different rates. There are three input options here, `gamma`, `lgn`, and `user`. Gamma uses a discrete gamma distribution, lgn will use a discrete lognormal, and user allows the user to specify rates.
 
--**ACRV.ncats**: the number of rate categories you want to simualte under
+-**ACRV.ncats**: the number of rate categories you want to simulate under
 
 -**alpha.gamma**: the shape of the alpha distribution
 
--**variable**: When set to true this will only return traits which vary acrosss taxa, i.e., the MkV model
+-**variable**: When set to true this will only return traits which vary across taxa, i.e., the MkV model
 
 ```r
 morpho_data <-  sim.morpho(k = c(2,3), 
@@ -118,7 +118,7 @@ ord_Q <- matrix(c(
   -0.5, 0.5, 0.0,
   0.3333333, -0.6666667, 0.3333333,
   0.0, 0.5, -0.5
-), nrow = 3, byrow = TRUE)r
+), nrow = 3, byrow = TRUE)
 ```
 This Q matrix can then be used to simulate characters
 
@@ -168,9 +168,9 @@ morpho_data <-  sim.morpho(k = c(2,3),
                            alpha.gamma = 1,
                            ACRV.ncats = 4
                            variable = TRUE,
-                           fossil = f)
+                           fossil = f2)
 ```
-We now have character data for all the tips in the true tree, as well as all the sampled ancestors. The inlusion of fossils also adds a number of options to the plotting function. We can choose if we want to plot the fossils along the tree, and to show the reconstructed version. 
+We now have character data for all the tips in the true tree, as well as all the sampled ancestors. The inclusion of fossils also adds a number of options to the plotting function. We can choose if we want to plot the fossils along the tree, and to show the reconstructed version. 
 
 ```r
 plot(data = morpho_data, 
