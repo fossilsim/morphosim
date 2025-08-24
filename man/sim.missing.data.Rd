@@ -16,20 +16,22 @@ sim.missing.data(
 \arguments{
 \item{data}{A `morpho` object with sequence data.}
 
-\item{seq}{Character. Which sequence data to use: `"tips"`, `"nodes"`, or `"SA"`.}
+\item{seq}{Character. Which sequence data to use: "tips", "nodes", or "SA".}
 
 \item{method}{Character. Method for removing data. Options:
-- `"random"`: removes characters randomly across the matrix.
-- `"partition"`: removes characters by partition (probabilities per partition).
-- `"rate"`: removes characters by rate category (probabilities per rate category).
-- `"trait"`: removes characters from specific traits.
-- `"taxa"`: removes characters from specific taxa.}
+- "random": removes characters randomly across the matrix.
+- "partition": removes characters by partition (probabilities per partition).
+- "rate": removes characters by rate category (probabilities per rate category).
+- "trait": removes characters from specific traits.
+- "taxa": removes characters from specific taxa.
+- "extinct": removes data from extinct taxa only. Note: This referes to characters from the
+tips.}
 
 \item{probability}{Numeric. Probability of missing data (single value or vector depending on method).}
 
-\item{traits}{When `method = "trait"`, indices of traits to remove.}
+\item{traits}{When method = "trait", indices of traits to remove.}
 
-\item{taxa}{When `method = "taxa"`, indices of taxa to remove.}
+\item{taxa}{When method = "taxa", indices of taxa to remove.}
 }
 \value{
 An object of class morpho.

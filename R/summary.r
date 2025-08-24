@@ -153,7 +153,8 @@ rownames(convergent_traits) <- seq(1,length(convergent_traits$trait), 1)
 #' @export
 #'
 #' @examples
-#'route_n <- find_path_to_tip(tree, "t2")
+#' phy <- ape::rtree(10)
+#'route_n <- find_path_to_tip(phy, "t2")
 #'
 find_path_to_tip <- function(tree, tip) {
   # Ensure the tip is valid

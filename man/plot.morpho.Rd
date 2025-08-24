@@ -11,6 +11,10 @@
   fossil = FALSE,
   reconstructed = FALSE,
   root.edge = FALSE,
+  edges = 1,
+  label.offset = 0.05,
+  e.cex = 0.5,
+  f.cex = 1,
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"),
   col.timescale = "darkgrey",
   ...

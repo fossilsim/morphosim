@@ -12,15 +12,17 @@
 #' @param k Number of trait states (integer ≥ 2). Can be a vector if using partitions.
 #' @param trait.num The total number of traits to simulate (integer > 0).
 #' @param partition Vector specifying the number of traits per partition.
-#' @param ACRV Among-character rate variation. Default is `NULL`. If supplied, must be `"gamma"`.
+#' @param ACRV Among character rate variation using either `gamma`, `lgn`, or `user`. Default is `NULL`.
 #' @param variable If `TRUE`, simulate only varying characters. Default is `FALSE`.
 #' @param ancestral If `TRUE`, return the states at all ancestral nodes. Default is `FALSE`.
 #' @param partition Specify the number of traits per partition
 #' @param fossil Fossil object (from `FossilSim`) to simulate morphological characters.
-#' @param define_gamma_rates Vector of gamma rate categories for the simulation.
+#' @param define.gamma.rates Vector of gamma rate categories for the simulation.
 #' @param alpha.gamma Shape parameter α for the gamma distribution.
-#' @param ncats.gamma Number of gamma rate categories.
-#' @param define_Q Q matrix for simulation. Must be square and rows must sum to zero.
+#' @param ACRV.ncats Number of rate categories for among character rate variation.
+#' @param meanlog mean of the distribution on the log scale.
+#' @param sdlog standard deviation of the distribution on the log scale.
+#' @paramdefine.Q Q matrix for simulation. Must be square and rows must sum to zero.
 #'
 #' @return An object of class morpho.
 #'
@@ -38,7 +40,7 @@
 #'                                          partition = c(10,5,5),
 #'                                          ACRV = "gamma",
 #'                                          variable = TRUE,
-#'                                          ncats.gamma = 4)
+#'                                          ACRV.ncats = 4)
 #'
 #'
 #' # To simulate ordered characters:
@@ -59,14 +61,26 @@
 #'                                     ancestral = TRUE,
 #'                                     ACRV = "gamma",
 #'                                     variable = TRUE,
-#'                                     ncats.gamma = 4,
-#'                                    define_Q = ord_Q)
+#'                                     ACRV.ncats = 4,
+#'                                   define.Q = ord_Q)
 
 
 
-sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NULL,  variable = FALSE, ancestral = FALSE,
-                               k = 2, partition = NULL, trait.num = NULL, fossil = NULL,
-                               alpha.gamma = 1, ncats.gamma = 4, define_gamma_rates = NULL, define_Q = NULL){
+sim.morpho <- function(tree = NULL,
+                       time.tree= NULL,
+                       ACRV = NULL,
+                       br.rates = NULL,
+                       variable = FALSE,
+                       ancestral = FALSE,
+                       k = 2,
+                       partition = NULL,
+                       trait.num = NULL,
+                       fossil = NULL,
+                       alpha.gamma = 1,
+                       ACRV.ncats = 4,
+                       define.gamma.rates = NULL,
+                       define.Q = NULL,
+                       ){
 
 
   if (is.null(tree) && is.null(time.tree))
@@ -74,24 +88,24 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   if (any(k <2)) stop("Need to simulate at least 2 states")
 
-  if (is.null(trait.num)) stop ("Specify the total number of traits to partition")
+  if (is.null(trait.num)) stop ("Specify the total number of traits to simulate")
 
-  if(!is.null(ACRV) && ACRV != "gamma")
-    stop("Rate variation can only be modeled using a gamma distribution" )
+  if( ACRV == "user" && !is.null(define.gamma.rates))
+    stop("Need to provide a vector of rates if ACRV is set to 'user'" )
 
   if(is.null(partition) && length(k) != 1)
     stop("Data being simulated under 1 partition, supply 1 character state for k")
 
   if(!is.null(partition) && length(k) != length(partition))
-    stop("Need to specify a Q matrix size for each partition")
+    stop("Need to specify maximum character state for each partition")
 
   if(!is.null(partition) &&  sum(partition) != trait.num)
-    stop("The total number characters in partition and trait.num must match")
+    stop("The total number characters in partitions and trait.num must match")
 
-  if (!is.null(define_Q)) {
-    if (!is.matrix(define_Q)) stop("`define_Q` must be a matrix.")
-    if (nrow(define_Q) != ncol(define_Q)) stop("`define_Q` must be square.")
-    if (any(abs(rowSums(define_Q)) > 1e-6)) {
+  if (!is.null(define.Q)) {
+    if (!is.matrix(define.Q)) stop("`define.Q` must be a matrix.")
+    if (nrow(define.Q) != ncol(define.Q)) stop("`define.Q` must be square.")
+    if (any(abs(rowSums(define.Q)) > 1e-6)) {
       stop("Incorrect Q matrix specified: rows must sum to zero.")
     }
   }
@@ -107,7 +121,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
   ## rates can be a single value or a vector for each branch
   if (is.null(tree) && !is.null(time.tree)){
     tree <- time.tree
-
     if(is.null(br.rates)){
       print("No branch rate provide, using default of 0.1 for all branches")
       br.rates <- rep(0.1, length(tree$edge.length))
@@ -119,7 +132,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
       tree$edge.length <- time.tree$edge.length * br.rates
   }
-
 
   tree.ordered <- reorder(tree)
 
@@ -153,24 +165,21 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   # identify the root
   root<- as.integer(parent[!match(parent, child, 0)][1])
-
-
-  ## current loop is a bit weird and depends on there being partitions.
   ## if traits set using one partition need to set partition <- trait.num
-
   if(is.null(partition)) partition <- trait.num
 
   ### Among character rate variation
   # eventually may need to put into the state function if partitions are not linked
   if(!is.null(ACRV)){
     if (ACRV == "gamma"){
-      if (!is.null(define_gamma_rates)){
-        gamma_rates <- define_gamma_rates
+      if (!is.null(define.gamma.rates)){
+        gamma_rates <- define.gamma.rates
       } else {
-        gamma_rates <- get_gamma_rates(alpha.gamma, ncats.gamma)
+        gamma_rates <- get_gamma_rates(alpha.gamma, ACRV.ncats)
       }
     }
-    else if(ACRV == "lognormal"){
+    else if(ACRV == "lgn"){
+      get_lognormal_rates <- get_lognormal_rates(meanlog, sdlog, ACRV.ncats)
 
     }
   }
@@ -180,19 +189,19 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
     part.trait.num <- partition[part]
 
     ##start loop for number of different states
-    # for (stat in 1:length(k))
     ### for a symmetric Q matrix
     part_k <- k[part]
 
     if (is.null(define_Q)){
       Q <- symmetric.Q.matrix(part_k)
-    } else {Q <- define_Q}
+    } else {
+      Q <-define.Q
+      }
 
     states <- as.character(c(0:(part_k -1)))
     bl <- tree.ordered$edge.length
 
-
-    for (tr in 1:part.trait.num){
+     for (tr in 1:part.trait.num){
       # message(tr)
       repeat {
 
@@ -203,11 +212,16 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
         ### Among character rate variation
         if(!is.null(ACRV)){
           if (ACRV == "gamma"){
-            trait_rate <- gamma_rates[sample(1:ncats.gamma, 1)]
+            trait_rate <- gamma_rates[sample(1:ACRV.ncats, 1)]
             Q_r <- Q * trait_rate
           }
           else if(ACRV == "lognormal"){
-
+            trait_rate <-lognormal_rates[sample(1:ACRV.ncats, 1)]
+            Q_r <- Q * trait_rate
+          }
+          else if(ACRV == "user"){
+            trait_rate <- define.gamma.rates[sample(1:length(define.gamma.rates), 1)]
+            Q_r <- Q * trait_rate
           }
         } else {
           Q_r <- Q
@@ -301,7 +315,6 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
         current_state <- state_at_nodes[[which(rownames(state_at_nodes) == parent),tr.num]]
 
         ## does this branch have any changes?
-
         if (!(f.morpho$ape.branch[spec]  %in% transition_history[[tr.num]][[1]])){
           state_at_fossils[spec,tr.num] <- current_state
         } else {
@@ -349,7 +362,7 @@ sim.morpho <- function(tree = NULL, time.tree= NULL, ACRV = NULL, br.rates = NUL
 
   #  create list of simulated traits
   for ( i in 1:length(tip_names)){
-    tip_sequence[[tip_names[i]]] <-state_at_tips[tip_names[i],]
+    tip_sequence[[tip_names[i]]] <- state_at_tips[tip_names[i],]
   }
 
   seq[["tips"]] <- tip_sequence
