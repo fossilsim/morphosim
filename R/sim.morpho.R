@@ -17,7 +17,7 @@
 #' @param ancestral If `TRUE`, return the states at all ancestral nodes. Default is `FALSE`.
 #' @param partition Specify the number of traits per partition
 #' @param fossil Fossil object (from `FossilSim`) to simulate morphological characters.
-#' @param define.gamma.rates Vector of gamma rate categories for the simulation.
+#' @param define.ACRV.rates Vector of gamma rate categories for the simulation.
 #' @param alpha.gamma Shape parameter α for the gamma distribution.
 #' @param ACRV.ncats Number of rate categories for among character rate variation.
 #' @param meanlog mean of the distribution on the log scale.
@@ -80,7 +80,7 @@ sim.morpho <- function(tree = NULL,
                        meanlog = NULL,
                        sdlog = NULL,
                        ACRV.ncats = 4,
-                       define.gamma.rates = NULL,
+                       define.ACRV.rates = NULL,
                        define.Q = NULL) {
 
 
@@ -90,7 +90,7 @@ sim.morpho <- function(tree = NULL,
 
   if (is.null(trait.num)) stop ("Specify the total number of traits to simulate")
 
-  if( ACRV == "user" && !is.null(define.gamma.rates)){
+  if( ACRV == "user" && !is.null(define.ACRV.rates)){
     stop("Need to provide a vector of rates if ACRV is set to 'user'" )}
 
   if(is.null(partition) && length(k) != 1){
@@ -172,8 +172,8 @@ sim.morpho <- function(tree = NULL,
   # eventually may need to put into the state function if partitions are not linked
   if(!is.null(ACRV)){
     if (ACRV == "gamma"){
-      if (!is.null(define.gamma.rates)){
-        gamma_rates <- define.gamma.rates
+      if (!is.null(define.ACRV.rates)){
+        gamma_rates <- define.ACRV.rates
       } else {
         gamma_rates <- get_gamma_rates(alpha.gamma, ACRV.ncats)
       }
@@ -220,7 +220,7 @@ sim.morpho <- function(tree = NULL,
             Q_r <- Q * trait_rate
           }
           else if(ACRV == "user"){
-            trait_rate <- define.gamma.rates[sample(1:length(define.gamma.rates), 1)]
+            trait_rate <- define.ACRV.rates[sample(1:length(define.ACRV.rates), 1)]
             Q_r <- Q * trait_rate
           }
         } else {
@@ -278,12 +278,13 @@ sim.morpho <- function(tree = NULL,
         }
       }
 
+       if(!is.null(ACRV)){
       if (ACRV == "gamma") {
         ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
         } else if(ACRV == "lgn"){
          ACRV_rate[tr.num] <- which(lognormal_rates == trait_rate)
          }
-
+       }
       transition_history[[tr.num]] <- as.data.frame(transitions)
       tr.num <- tr.num + 1
       rs <- rbind(rs, root.state)
