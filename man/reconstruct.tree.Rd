@@ -3,13 +3,16 @@
 \name{reconstruct.tree}
 \alias{reconstruct.tree}
 \title{#' @description
-This function is used to colour the branches in the plotting
+This function is used to color the branches in the plotting
 function when plotting the reconstructed tree.}
 \usage{
 reconstruct.tree(data)
 }
+\arguments{
+\item{data}{Morpho object which contains fossil data}
+}
 \description{
 #' @description
-This function is used to colour the branches in the plotting
+This function is used to color the branches in the plotting
 function when plotting the reconstructed tree.
 }

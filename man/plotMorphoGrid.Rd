@@ -27,13 +27,20 @@ This function plots the full morphological matrix assocaited with the character 
 at the tips of a tree. Requires a morpho object as input.
 }
 \examples{
- # simualte a tree
 phy <- ape::rtree(10)
 
-# simulate character data for the tree
-simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 10)
+# simulate characters along the branches of the tree
+morpho_data <- sim.morpho(tree = phy,
+                          k = c(2,3,4),
+                          trait.num = 20,
+                          ancestral = TRUE,
+                          partition = c(10,5,5),
+                          ACRV = "gamma",
+                          variable = TRUE,
+                          ACRV.ncats = 4 )
 
 # plot the character matrix
-plotMorphoGrid(data = simulated_morpho, num.trait = 1)
+plotMorphoGrid(data = morpho_data, num.trait = "all")
+
 
 }

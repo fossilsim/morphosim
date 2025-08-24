@@ -33,15 +33,15 @@
 #' phy <- ape::rtree(10)
 #'
 #'# simulate characters along the branches of the tree
-#'transition_history <-  sim.morpho(tree = phy,
-#'                                          k = c(2,3,4),
-#'                                          trait.num = 20,
-#'                                          ancestral = TRUE,
-#'                                          partition = c(10,5,5),
-#'                                          ACRV = "gamma",
-#'                                          variable = TRUE,
-#'                                          ACRV.ncats = 4)
-#'
+#' morpho_data <-  sim.morpho(tree = phy,
+#'                            k = c(2,3,4),
+#'                            trait.num = 20,
+#'                            ancestral = TRUE,
+#'                            partition = c(10,5,5),
+#'                            ACRV = "gamma",
+#'                            variable = TRUE,
+#'                            ACRV.ncats = 4,
+#'                            define.Q = NULL)
 #'
 #' # To simulate ordered characters:
 #' # First define a Q-matrix. The following is for ordered characters where transitions can only occur
@@ -55,14 +55,14 @@
 #'
 #' # This Q matrix can be then used to simulate character data.
 #'
-#' transition_history_2 <-  sim.morpho(tree = phy,
-#'                                     k = 3,
-#'                                     trait.num = 20,
-#'                                     ancestral = TRUE,
-#'                                     ACRV = "gamma",
-#'                                     variable = TRUE,
-#'                                     ACRV.ncats = 4,
-#'                                   define.Q = ord_Q)
+#' morpho_data <- sim.morpho(tree = phy,
+#'                           k = 3,
+#'                           trait.num = 20,
+#'                           ancestral = TRUE,
+#'                           ACRV = "gamma",
+#'                           variable = TRUE,
+#'                           ACRV.ncats = 4,
+#'                          define.Q = ord_Q)
 
 
 
@@ -77,29 +77,30 @@ sim.morpho <- function(tree = NULL,
                        trait.num = NULL,
                        fossil = NULL,
                        alpha.gamma = 1,
+                       meanlog = NULL,
+                       sdlog = NULL,
                        ACRV.ncats = 4,
                        define.gamma.rates = NULL,
                        define.Q = NULL) {
 
 
-  if (is.null(tree) && is.null(time.tree))
-    stop ("Must provide a tree object")
+  if (is.null(tree) && is.null(time.tree)) stop ("Must provide a tree object")
 
   if (any(k <2)) stop("Need to simulate at least 2 states")
 
   if (is.null(trait.num)) stop ("Specify the total number of traits to simulate")
 
-  if( ACRV == "user" && !is.null(define.gamma.rates))
-    stop("Need to provide a vector of rates if ACRV is set to 'user'" )
+  if( ACRV == "user" && !is.null(define.gamma.rates)){
+    stop("Need to provide a vector of rates if ACRV is set to 'user'" )}
 
-  if(is.null(partition) && length(k) != 1)
-    stop("Data being simulated under 1 partition, supply 1 character state for k")
+  if(is.null(partition) && length(k) != 1){
+    stop("Data being simulated under 1 partition, supply 1 character state for k")}
 
-  if(!is.null(partition) && length(k) != length(partition))
-    stop("Need to specify maximum character state for each partition")
+  if(!is.null(partition) && length(k) != length(partition)){
+    stop("Need to specify maximum character state for each partition")}
 
-  if(!is.null(partition) &&  sum(partition) != trait.num)
-    stop("The total number characters in partitions and trait.num must match")
+  if(!is.null(partition) &&  sum(partition) != trait.num){
+    stop("The total number characters in partitions and trait.num must match")}
 
   if (!is.null(define.Q)) {
     if (!is.matrix(define.Q)) stop("`define.Q` must be a matrix.")
@@ -178,7 +179,7 @@ sim.morpho <- function(tree = NULL,
       }
     }
     else if(ACRV == "lgn"){
-      get_lognormal_rates <- get_lognormal_rates(meanlog, sdlog, ACRV.ncats)
+      lognormal_rates <- get_lognormal_rates(meanlog, sdlog, ACRV.ncats)
 
     }
   }
@@ -191,7 +192,7 @@ sim.morpho <- function(tree = NULL,
     ### for a symmetric Q matrix
     part_k <- k[part]
 
-    if (is.null(define_Q)){
+    if (is.null(define.Q)){
       Q <- symmetric.Q.matrix(part_k)
     } else {
       Q <-define.Q
@@ -214,8 +215,8 @@ sim.morpho <- function(tree = NULL,
             trait_rate <- gamma_rates[sample(1:ACRV.ncats, 1)]
             Q_r <- Q * trait_rate
           }
-          else if(ACRV == "lognormal"){
-            trait_rate <-lognormal_rates[sample(1:ACRV.ncats, 1)]
+          else if(ACRV == "lgn"){
+            trait_rate <- lognormal_rates[sample(1:ACRV.ncats, 1)]
             Q_r <- Q * trait_rate
           }
           else if(ACRV == "user"){
@@ -277,7 +278,12 @@ sim.morpho <- function(tree = NULL,
         }
       }
 
-      if (!is.null(ACRV)) ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
+      if (ACRV == "gamma") {
+        ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
+        } else if(ACRV == "lgn"){
+         ACRV_rate[tr.num] <- which(lognormal_rates == trait_rate)
+         }
+
       transition_history[[tr.num]] <- as.data.frame(transitions)
       tr.num <- tr.num + 1
       rs <- rbind(rs, root.state)
@@ -287,7 +293,10 @@ sim.morpho <- function(tree = NULL,
 
   ### fossil object
    if(!is.null(fossil)){
-    f.morpho <- fossil[fossil$hmin != 0, ]
+     # ***NEED TO FIX***
+     #there is some repititon here. When we include rho this will also simulate
+     #data for fossils at the tips of the tree.
+    f.morpho <- fossil
     f.morpho$ape.branch <-NA
     f.morpho$specimen <- NA
     f.morpho$specimen <- seq(1,length(f.morpho$sp))
@@ -389,13 +398,19 @@ sim.morpho <- function(tree = NULL,
 
   seq[["SA"]] <- fossil_sequence
 
+  # this is a dumb way to check the next few lines. Update by calling all rates
+  # regardless of distribution the same name
+
   if(is.null(ACRV)){
     ACRV_rate <- NULL}
 
-  if(!exists("gamma_rates")){
-    gamma_rates <- NULL
+  if (exists("gamma_rates")) {
+    discrete_rates <- gamma_rates
+  } else if (exists("lognormal_rates")) {
+    discrete_rates <- lognormal_rates
+  } else {
+    discrete_rates <- NULL
   }
-
 
   # define model used
   if (isTRUE(variable)) {
@@ -414,7 +429,7 @@ sim.morpho <- function(tree = NULL,
   model <- list(NA,NA,NA)
   names(model) <- c("Specified", "RateVar", "RateVarTrait")
   model[["Specified"]] <- model_components
-  model[["RateVar"]] <- gamma_rates
+  model[["RateVar"]] <- discrete_rates
   model[["RateVarTrait"]] <- ACRV_rate
 
   sim.output <- as.morpho(data = seq, trees = trees, model = model,

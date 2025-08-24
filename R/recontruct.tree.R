@@ -1,12 +1,15 @@
 #'#' @description
-#' This function is used to colour the branches in the plotting
+#' This function is used to color the branches in the plotting
 #' function when plotting the reconstructed tree.
 #'
 #'
 #' @import ape
 #' @import FossilSim
+#'
+#' @param data Morpho object which contains fossil data
 
 reconstruct.tree<- function(data){
+
 
   recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$trees$TimeTree)
   tps <- unname(recon$tree$tip.label)

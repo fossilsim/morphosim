@@ -11,23 +11,30 @@
 #' @param timetree  TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
 #'
 #' @export
-
-
+#'
 #' @examples
-#'  # simualte a tree
 #' phy <- ape::rtree(10)
 #'
-#' # simulate character data for the tree
-#' simulated_morpho <- sim.morpho(phy, k = 2, trait.num = 10)
+#' # simulate characters along the branches of the tree
+#' morpho_data <- sim.morpho(tree = phy,
+#'                           k = c(2,3,4),
+#'                           trait.num = 20,
+#'                           ancestral = TRUE,
+#'                           partition = c(10,5,5),
+#'                           ACRV = "gamma",
+#'                           variable = TRUE,
+#'                           ACRV.ncats = 4 )
 #'
 #' # plot the character matrix
-#' plotMorphoGrid(data = simulated_morpho, num.trait = 1)
+#' plotMorphoGrid(data = morpho_data, num.trait = "all")
 #'
-plotMorphoGrid <- function(data = NULL, timetree = FALSE, num.trait = "all", col =  c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")){
+#'
 
 
-
-  ## check has missing data
+plotMorphoGrid <- function(data = NULL,
+                           timetree = FALSE,
+                           num.trait = "all",
+                           col =  c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")){
 
   if (inherits(data$sequences$tips[[1]][1], "character")) {
     data$sequences$tips <- lapply(data$sequences$tips, function(x) {
@@ -41,6 +48,7 @@ n.taxa <- length(data$trees$EvolTree$tip.label)
 n.traits <- length( data$sequences$tips[[1]])
 
 
+
 ## Are we using a time tree?
 if (timetree) {
   tree_string <-  write.tree(data$trees$TimeTree)
@@ -50,14 +58,9 @@ if (timetree) {
   tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
 }
 
-
-
-
 par(xaxs = "i", yaxs = "i")
 plot(x =c(0,1), y =c(0,1),xaxt = 'n', yaxt = 'n',bty = 'n', pch = '',
      ylab = '', xlab = '', main = "Morphological matrix", cex.main= 1, font.main = 6)
-
-
 
 ## use ablines instead of grid so there is a bit more control
 # need to divide the plot into the number of traits and taxa
@@ -131,10 +134,3 @@ for (i in 1:n.traits) {
 }
 par(mar = c(5,4,4,2) + 0.1)
 }
-
-
-
-
-
-
-

@@ -16,6 +16,8 @@ sim.morpho(
   trait.num = NULL,
   fossil = NULL,
   alpha.gamma = 1,
+  meanlog = NULL,
+  sdlog = NULL,
   ACRV.ncats = 4,
   define.gamma.rates = NULL,
   define.Q = NULL
@@ -44,15 +46,15 @@ sim.morpho(
 
 \item{alpha.gamma}{Shape parameter α for the gamma distribution.}
 
+\item{meanlog}{mean of the distribution on the log scale.}
+
+\item{sdlog}{standard deviation of the distribution on the log scale.}
+
 \item{ACRV.ncats}{Number of rate categories for among character rate variation.}
 
 \item{define.gamma.rates}{Vector of gamma rate categories for the simulation.}
 
 \item{define.Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
-
-\item{meanlog}{mean of the distribution on the log scale.}
-
-\item{sdlog}{standard deviation of the distribution on the log scale.}
 }
 \value{
 An object of class morpho.
@@ -69,15 +71,15 @@ all branches.
 phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
-transition_history <-  sim.morpho(tree = phy,
-                                         k = c(2,3,4),
-                                         trait.num = 20,
-                                         ancestral = TRUE,
-                                         partition = c(10,5,5),
-                                         ACRV = "gamma",
-                                         variable = TRUE,
-                                         ACRV.ncats = 4)
-
+morpho_data <-  sim.morpho(tree = phy,
+                           k = c(2,3,4),
+                           trait.num = 20,
+                           ancestral = TRUE,
+                           partition = c(10,5,5),
+                           ACRV = "gamma",
+                           variable = TRUE,
+                           ACRV.ncats = 4,
+                           define.Q = NULL)
 
 # To simulate ordered characters:
 # First define a Q-matrix. The following is for ordered characters where transitions can only occur
@@ -89,14 +91,14 @@ ord_Q <- matrix(c(
 0.0, 0.5, -0.5
 ), nrow = 3, byrow = TRUE)
 
-# This Q matrix can be then used to simualte character data.
+# This Q matrix can be then used to simulate character data.
 
-transition_history_2 <-  sim.morpho(tree = phy,
-                                    k = 3,
-                                    trait.num = 20,
-                                    ancestral = TRUE,
-                                    ACRV = "gamma",
-                                    variable = TRUE,
-                                    ACRV.ncats = 4,
-                                  define.Q = ord_Q)
+morpho_data <- sim.morpho(tree = phy,
+                          k = 3,
+                          trait.num = 20,
+                          ancestral = TRUE,
+                          ACRV = "gamma",
+                          variable = TRUE,
+                          ACRV.ncats = 4,
+                         define.Q = ord_Q)
 }

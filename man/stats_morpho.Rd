@@ -18,5 +18,18 @@ the tip sequence data.
 3. Summary information about the size and structure of the tree.
 }
 \examples{
+#' # simulate a phylogenetic tree
+phy <- ape::rtree(10)
+
+# simulate characters along the branches of the tree
+morpho_data <- sim.morpho(tree = phy,
+                          k = c(2,3,4),
+                          trait.num = 20,
+                          ancestral = TRUE,
+                          partition = c(10,5,5),
+                          ACRV = "gamma",
+                          variable = TRUE,
+                          ACRV.ncats = 4)
+
 summary <- stats_morpho(data = morpho_data)
 }

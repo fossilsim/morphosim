@@ -3,12 +3,16 @@
 #'#' @description
 #' This function creates a plot showing continuous evolution of discrete traits
 #' @param data A morpho object
-#' @param timetree TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE
-#' @param trait What trait number you want to visualize
+#' @param timetree TRUE or FALSE Indicate whether you want to plot a time
+#' tree or not. default FALSE, uses distance tree if FALSE
+#' @param trait The trait number to plot
 #' @param fossil Plot the fossil along the tree. Default set to FALSE
-#' @param br.rates Required if you provide a time tree
 #' @param root.edge If TRUE plot the root edge. Default = FALSE
 #' @param reconstructed Plot the reconstructed tree. Default = FALSE
+#' @param edges Width of the branch lengths
+#' @param label.offset Distance of tip label to tree tips
+#' @param f.cex Size of fossils
+#' @param e.cex Size of extant taxa
 #' @param col A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated
 #' @param col.timescale a single color for the timescale, "darkgrey" by standard
 #' @param ... other arguments to be passed to methods, such as graphical parameters
@@ -24,44 +28,50 @@
 #' phy <- ape::rtree(10)
 #'
 #' # simulate characters along the branches of the tree
-#' transition_history <-  sim.morpho(tree = phy,
-#'                                   k = c(2,3,4),
-#'                                    trait.num = 20,
-#'                                   ancestral = TRUE,
-#'                                   partition = c(10,5,5),
-#'                                   ACRV = "gamma",
-#'                                   variable = TRUE,
-#'                                   ACRV.ncats = 4,
-#'                                   define.Q = NULL)
+#' morpho_data <-  sim.morpho(tree = phy,
+#'                            k = c(2,3,4),
+#'                            trait.num = 20,
+#'                            ancestral = TRUE,
+#'                            partition = c(10,5,5),
+#'                            ACRV = "gamma",
+#'                            variable = TRUE,
+#'                            ACRV.ncats = 4,
+#'                            define.Q = NULL)
 #'
-#' plot(transition_history_1, trait= 4, timetree = T, fossil = T,
-#' root.edge = T, reconstructed = T)
+#' plot(morpho_data, trait= 4, timetree = FALSE, fossil = FALSE,
+#' root.edge = FALSE, reconstructed = FALSE)
 #'
 
-plot <- function(data = NULL, trait = NULL, timetree = FALSE,
-                        fossil = FALSE, reconstructed = FALSE, root.edge = FALSE, edges = 1,
-                        label.offset = 0.05, e.cex = 0.5, f.cex = 1,col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
+plot.morpho <- function(data = NULL,
+                        trait = NULL,
+                        timetree = FALSE,
+                        fossil = FALSE,
+                        reconstructed = FALSE,
+                        root.edge = FALSE,
+                        edges = 1,
+                        label.offset = 0.05,
+                        e.cex = 0.5,
+                        f.cex = 1,
+                        col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
+  # choose which tree to plot
+  tree_to_plot <- if (timetree) data$trees$TimeTree else data$trees$EvolTree
 
-  ## Are we using a time tree?
-  if(reconstructed == FALSE){
-  if (timetree) {
-    if(root.edge){
-    plot(data$trees$TimeTree, edge.width = edges, label.offset = label.offset, root.edge = T)
-    } else { plot(data$trees$TimeTree, label.offset = label.offset, edge.width = edges, root.edge = F)}
-  } else {
-    plot(data$trees$EvolTree, label.offset = label.offset, edge.width = edges)
-  }
-  } else {
+  # Get branch colours (reconstructed vs. default)
+  if (reconstructed) {
     b.cols <- reconstruct.tree(data)
-    if (timetree) {
-      if(root.edge){
-      plot(data$trees$TimeTree, root.edge = T, label.offset = label.offset,edge.width = edges, edge.color = b.cols[[1]])
-    } else { plot(data$trees$TimeTree, root.edge = F,label.offset = label.offset, edge.width = edges, edge.color = b.cols[[1]])}
+    edge_col <- b.cols[[1]]
   } else {
-    plot(data$trees$EvolTree, edge.width = edges,label.offset = label.offset, edge.color = b.cols[[1]])
+    edge_col <- "black"
   }
-  }
+
+  # plot
+  plot(tree_to_plot,
+    edge.width = edges,
+    label.offset = label.offset,
+    root.edge =  root.edge,
+    edge.color = edge_col
+  )
 
 
    # get the plot information
@@ -115,8 +125,7 @@ plot <- function(data = NULL, trait = NULL, timetree = FALSE,
     }
  }
 }
-
-  tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
+  if (timetree) tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
   ################
   ## colour branches
   ###############

@@ -1,4 +1,13 @@
-
+#' Write reconstructed tree to file
+#'
+#' @description
+#' Write the reconstructed tree to Newick string
+#'
+#' @param data Morpho object
+#' @param file File name
+#'
+#' @export
+#'
 write.recon.tree <- function (data, file) {
 
 r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
@@ -6,8 +15,18 @@ r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
 ape::write.tree(r_tree$tree, file = file)
 }
 
-
-
+#' Write reconstructed Matrix to file
+#'
+#' @description
+#' Write the reconstructed matrix to a nexus file
+#'
+#' @param data Morpho object
+#' @param file File name
+#' @param keep_matrix Logical. If TRUE, returns a matrix showing the naming transformations
+#' between `morphosim` and `fossilsim` of Sampled ancestors.
+#'
+#' @export
+#'
 write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                           tree = data$trees$TimeTree)
@@ -69,6 +88,21 @@ write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
 }
 
 
+#' Write the taxa ages
+#'
+#' @description
+#' Writes the ages of the specimen in the true tree to a file. The tsv format used
+#' here is directly compatible with RevBayes
+#'
+#' @param data Morpho object
+#' @param file File name
+#' @param uncertainty Numeric. Adds uncertainty to fossil ages in the morpho object.
+#'  The ages in the object are point estimates by default; setting `uncertainty`
+#'  will create an age range of ± this value (in millions of years).
+#'
+#'
+#' @export
+
 write.tsv <- function (data, file, uncertainty = 0) {
 
   ## ages of full tree
@@ -92,6 +126,17 @@ write.tsv <- function (data, file, uncertainty = 0) {
 
 }
 
+#' Write the taxa ages of reconstructed tree
+#'
+#' @description
+#' Writes the ages of the specimen in the reconstructed tree to a file. The tsv format used
+#' here is directly compatible with RevBayes
+#'
+#' @param data Morpho object
+#' @param file File name
+#' @param uncertainty Numeric. Adds uncertainty to fossil ages in the morpho object.
+#'  The ages in the object are point estimates by default; setting `uncertainty`
+#'  will create an age range of ± this value (in millions of years).
 
 write.recon.tsv <- function (data, file, uncertainty = 0){
 

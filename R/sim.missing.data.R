@@ -5,13 +5,14 @@
 #' @param data A `morpho` object with sequence data.
 #' @param seq Character. Which sequence data to use: "tips", "nodes", or "SA".
 #' @param method Character. Method for removing data. Options:
-#'   - "random": removes characters randomly across the matrix.
-#'   - "partition": removes characters by partition (probabilities per partition).
-#'   - "rate": removes characters by rate category (probabilities per rate category).
-#'   - "trait": removes characters from specific traits.
-#'   - "taxa": removes characters from specific taxa.
-#'   - "extinct": removes data from extinct taxa only. Note: This referes to characters from the
-#'   tips.
+#' \itemize{
+#'   \item "random": removes characters randomly across the matrix.
+#'   \item "partition": removes characters by partition (probabilities per partition).
+#'   \item "rate": removes characters by rate category (probabilities per rate category).
+#'   \item "trait": removes characters from specific traits.
+#'   \item "taxa": removes characters from specific taxa.
+#'   \item "extinct": removes data from extinct taxa only. Note: This refers to characters from the tips.
+#' }
 #' @param probability Numeric. Probability of missing data (single value or vector depending on method).
 #' @param traits When method = "trait", indices of traits to remove.
 #' @param taxa When method = "taxa", indices of taxa to remove.
@@ -21,39 +22,52 @@
 #' @export
 
 #' @examples
+#' #' # simulate a phylogenetic tree
+#' phy <- ape::rtree(10)
+#'
+#' # simulate characters along the branches of the tree
+#' morpho_data <-  sim.morpho(tree = phy,
+#'                            k = c(2,3,4),
+#'                            trait.num = 20,
+#'                            ancestral = TRUE,
+#'                            partition = c(10,5,5),
+#'                            ACRV = "gamma",
+#'                            variable = TRUE,
+#'                            ACRV.ncats = 4,
+#'                            define.Q = NULL)
 #'
 #' # randomly remove data
-#' missing.data <- sim.missing.data(data = transition_history,
+#' missing.data <- sim.missing.data(data = morpho_data,
 #'                                   method = "random",
 #'                                   seq = "tips",
 #'                                   probability = 0.5)
 #'
 #'
 #' # remove data based on the partition
-#' missing.data <- sim.missing.data(data = transition_history,
+#' missing.data <- sim.missing.data(data = morpho_data,
 #'                                  method = "partition",
 #'                                  seq = "tips",
-#'                                  probability = c(0.7, 0, 1, 0.5))
+#'                                  probability = c(0.7, 0, 0.5))
 #'
 #' # remove data based on the rate it was simulated under
-#' missing.data <- sim.missing.data(data = transition_history,
+#' missing.data <- sim.missing.data(data = morpho_data,
 #'                                         method = "rate",
 #'                                         seq = "tips",
 #'                                         probability = c(0,0,0.2,1))
 #'
 #' # remove  characters from specific traits
-#' missing.data <- sim.missing.data(data = transition_history,
+#' missing.data <- sim.missing.data(data = morpho_data,
 #'                                  method = "trait",
 #'                                  seq = "tips",
 #'                                  probability = 1,
 #'                                  traits = c(1,2,5))
 #'
 #' # remove  characters from specific taxa
-#' missing.data <- sim.missing.data(data = transition_history,
+#' missing.data <- sim.missing.data(data = morpho_data,
 #'                                  method = "taxa",
 #'                                  seq = "tips",
 #'                                  probability = 1,
-#'                                  traits = c(1,3,6))
+#'                                  taxa = c("t1", "t2")
 #'
 
 
@@ -129,13 +143,13 @@ for ( i in 1:remove){
   ## Method: Partition
   if(method == "partition"){
 
-    if (length(probability) != length(data$model))
+    if (length(probability) != length(data$model)){
       stop("Vector of probabilities does not match the number of partitions")
-
+        }
     start_col <- 1
     for ( j in 1:length(data$model)){
     traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1",
-                                            data[["model"]][j]))
+                                            data[["model"]][["Specified"]][j]))
     remove <- round((traits_per_partition* taxa.num)* probability[j], 0)
     total_cells <- traits_per_partition*taxa.num
 
