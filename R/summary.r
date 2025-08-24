@@ -31,7 +31,7 @@ stats_morpho <- function(data){
 
 
   ## convergent characters
-  morpho_summary[["Convergent_Traits"]] <-convergent_evol(data = data)
+  morpho_summary[["Convergent_Traits"]] <- convergent_evol(data = data)
 
   ## number SA
   if (!is.null(data$sequences$SA)){

@@ -16,6 +16,7 @@ This function traverses the tree to determine the evolutionary path (branches)
 from root to a given tip
 }
 \examples{
-route_n <- find_path_to_tip(tree, "t2")
+phy <- ape::rtree(10)
+route_n <- find_path_to_tip(phy, "t2")
 
 }

@@ -22,7 +22,7 @@
 #' @param ACRV.ncats Number of rate categories for among character rate variation.
 #' @param meanlog mean of the distribution on the log scale.
 #' @param sdlog standard deviation of the distribution on the log scale.
-#' @paramdefine.Q Q matrix for simulation. Must be square and rows must sum to zero.
+#' @param define.Q Q matrix for simulation. Must be square and rows must sum to zero.
 #'
 #' @return An object of class morpho.
 #'
@@ -53,7 +53,7 @@
 #' 0.0, 0.5, -0.5
 #' ), nrow = 3, byrow = TRUE)
 #'
-#' # This Q matrix can be then used to simualte character data.
+#' # This Q matrix can be then used to simulate character data.
 #'
 #' transition_history_2 <-  sim.morpho(tree = phy,
 #'                                     k = 3,
@@ -79,8 +79,7 @@ sim.morpho <- function(tree = NULL,
                        alpha.gamma = 1,
                        ACRV.ncats = 4,
                        define.gamma.rates = NULL,
-                       define.Q = NULL,
-                       ){
+                       define.Q = NULL) {
 
 
   if (is.null(tree) && is.null(time.tree))

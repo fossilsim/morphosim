@@ -16,26 +16,29 @@
 #' @import FossilSim
 #' @import stats
 #' @import graphics
-#' @importFrom methods is
 #' @import TreeSim
 #' @export
 
 #' @examples
+#' # simulate a phylogenetic tree
+#' phy <- ape::rtree(10)
+#'
 #' # simulate characters along the branches of the tree
 #' transition_history <-  sim.morpho(tree = phy,
 #'                                   k = c(2,3,4),
 #'                                    trait.num = 20,
 #'                                   ancestral = TRUE,
 #'                                   partition = c(10,5,5),
-#'                                  ACRV = "gamma",
-#'                                  variable = TRUE,
-#'                                   ncats.gamma = 4)
+#'                                   ACRV = "gamma",
+#'                                   variable = TRUE,
+#'                                   ACRV.ncats = 4,
+#'                                   define.Q = NULL)
 #'
 #' plot(transition_history_1, trait= 4, timetree = T, fossil = T,
 #' root.edge = T, reconstructed = T)
 #'
 
-plot.morpho <- function(data = NULL, trait = NULL, timetree = FALSE,
+plot <- function(data = NULL, trait = NULL, timetree = FALSE,
                         fossil = FALSE, reconstructed = FALSE, root.edge = FALSE, edges = 1,
                         label.offset = 0.05, e.cex = 0.5, f.cex = 1,col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 

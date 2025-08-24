@@ -16,9 +16,9 @@ sim.morpho(
   trait.num = NULL,
   fossil = NULL,
   alpha.gamma = 1,
-  ncats.gamma = 4,
-  define_gamma_rates = NULL,
-  define_Q = NULL
+  ACRV.ncats = 4,
+  define.gamma.rates = NULL,
+  define.Q = NULL
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ sim.morpho(
 
 \item{time.tree}{A phylogenetic tree (class "phylo") with branches representing time.}
 
-\item{ACRV}{Among-character rate variation. Default is `NULL`. If supplied, must be `"gamma"`.}
+\item{ACRV}{Among character rate variation using either `gamma`, `lgn`, or `user`. Default is `NULL`.}
 
 \item{br.rates}{Clock rates per branch. Can be a single value (strict clock) or a vector of rates.}
 
@@ -44,11 +44,15 @@ sim.morpho(
 
 \item{alpha.gamma}{Shape parameter α for the gamma distribution.}
 
-\item{ncats.gamma}{Number of gamma rate categories.}
+\item{ACRV.ncats}{Number of rate categories for among character rate variation.}
 
-\item{define_gamma_rates}{Vector of gamma rate categories for the simulation.}
+\item{define.gamma.rates}{Vector of gamma rate categories for the simulation.}
 
-\item{define_Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
+\item{define.Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
+
+\item{meanlog}{mean of the distribution on the log scale.}
+
+\item{sdlog}{standard deviation of the distribution on the log scale.}
 }
 \value{
 An object of class morpho.
@@ -72,7 +76,7 @@ transition_history <-  sim.morpho(tree = phy,
                                          partition = c(10,5,5),
                                          ACRV = "gamma",
                                          variable = TRUE,
-                                         ncats.gamma = 4)
+                                         ACRV.ncats = 4)
 
 
 # To simulate ordered characters:
@@ -93,6 +97,6 @@ transition_history_2 <-  sim.morpho(tree = phy,
                                     ancestral = TRUE,
                                     ACRV = "gamma",
                                     variable = TRUE,
-                                    ncats.gamma = 4,
-                                   define_Q = ord_Q)
+                                    ACRV.ncats = 4,
+                                  define.Q = ord_Q)
 }
