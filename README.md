@@ -19,7 +19,7 @@ install.packages("Treesim")
 library(Treesim)
 ```
 
-##### Simulate a birth death tree using Treesim
+#### Simulate a birth death tree using Treesim
 ```r
 lambda = 0.1         # speciation rate
 mu = 0.05            # exintction rate
@@ -30,7 +30,7 @@ tree = TreeSim::sim.bd.taxa(n = tips,
                          lambda = lambda, 
                          mu = mu)[[1]]                       
 ```
-##### Simulate Morphological data using morphosim. 
+#### Simulate Morphological data using morphosim. 
 MorphoSim lets you specify a variety of parameters for your simulations. In this example, we will focus on a few key parameters to get started.
 - **k**: the maximum number of character states. This can be a single integer greater than 1 or a vector of integers if you want to simulate more than 1 partitions. So in the following example, we are simulating two partitions, the first with 2 states and the second with 3.
 - **timetree**: if using a time tree specify here.
@@ -53,7 +53,9 @@ morpho_data <-  sim.morpho(k = c(2,3),
                            ancestral = TRUE)  
 
 ```
-##### Explore the simluated data
+#### Explore the simluated data
+- TODO: Explain the morpho object
+
 Morphosim has a plotting function which allows you to plot the simualted data along the branches of the tree. 
 ```r
 plot(morpho_data, 
@@ -71,10 +73,9 @@ stats <- stats_morpho(morpho_data)
 The previous example, simulated characters according to an Mk model under a strict clock. However, there are more complex models we may want to use for simulations. Firstly, with MorphoSim we can use a relaxed clock model where each branch has a different rate. We can use an existing R package, `simclock` to simulate rates along our tree which we can input into Morphosim 
 
 
-#####  Simulate branch lengths using a independent log normal relaxed clock model
+####  Simulate branch lengths using a independent log normal relaxed clock model
 
 ```r
-
 devtools::install_github("dosreislab/simclock")
 reltt <- simclock::relaxed.tree(t, 
                                 model="iln", 
@@ -132,4 +133,50 @@ morpho_data <-  sim.morpho(k = 3,
                            alpha.gamma = 1,
                            ACRV.ncats = 4
                            variable = TRUE)
+```
+
+## Example 3: Simulating Data sets with Sampled Ancestors
+MorphoSim integrates with `FossilSim`, allowing fossils simulated in FossilSim to be incorporated when simulating character traits. Because MorphoSim tracks where along branches transitions occur, it can generate traits that are specific to the time and lineage in which a fossil is sampled.
+
+```r
+install_github("fossilsim/fossilsim")
+```
+#### Simulate fossil and extant species sampling
+
+```r
+rate = 0.1 # fossil sampling rate
+f = FossilSim::sim.fossils.poisson(rate = rate, 
+                                   tree = tree, 
+                                   root.edge = F)
+
+rho = 0.5 # extant species sampling rate
+f2 = FossilSim::sim.extant.samples(fossils = f, 
+                                   tree = tree, 
+                                   rho = rho)
+```
+
+This fossils object can be passed into the `sim.morpho` function
+
+```r
+morpho_data <-  sim.morpho(k = c(2,3), 
+                           time.tree = tree,
+                           tree = NULL,
+                           partition = c(10,10),
+                           trait.num = 20,
+                           br.rates = reltt$edge.length,
+                           ACRV = "gamma",
+                           alpha.gamma = 1,
+                           ACRV.ncats = 4
+                           variable = TRUE,
+                           fossil = f)
+```
+We now have character data for all the tips in the true tree, as well as all the sampled ancestors. The inlusion of fossils also adds a number of options to the plotting function. We can choose if we want to plot the fossils along the tree, and to show the reconstructed version. 
+
+```r
+plot(data = morpho_data, 
+     trait= 1, 
+     timetree = T, 
+     fossil = T,
+     root.edge = T, 
+     reconstructed = T)
 ```
