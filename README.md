@@ -11,7 +11,7 @@ devtools::install_github("https://github.com/fossilsim/morphosim")
     
 
 
-## Ex 1: Simulating Data Along a Phylogenetic Tree - Basic set up
+## Example 1: Simulating Data Along a Phylogenetic Tree - Basic set up
 To simulate morphological data you will first need a phylogenetic tree. Morphosim can take either, a time tree or a tree with branch lengths in genetic distance as input. In this example we will use a time tree. You can simulate a tree using the existing R package `Treesim`
 
 ```r
