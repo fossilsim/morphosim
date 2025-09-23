@@ -1,11 +1,11 @@
 Package: MorphoSim
 Type: Package
-Title: SIMULATE and VISUALISE DISCRETE CHARACTERS ALONG PHYLOGENETIC TREES
+Title: simulate discrete character data along phylogenetic trees
 Version: 0.1.0
-Author: Laura Mulvey, Tim Brandler, Meghan Gallaspy, Joelle Barido-Sottani, Rachel Warnock
+Author: Laura Mulvey, Tim Brandler, Alessio Capobianco, Rachel Warnock, Joelle Barido-Sottani
 Maintainer: Laura Mulvey <lauramulvey479@gmail.com>
 Description: Simulate morphological characters along phylogenetic trees. It can be used either along distance or time trees using user specific rates of change. The package also contains functions to visualise these processes along trees and in matrices.
-License: GPL-3
+License: Apache-2.0
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports: ape, FossilSim, stats, graphics, TreeSim, phangorn

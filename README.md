@@ -180,3 +180,6 @@ plot(data = morpho_data,
      root.edge = T, 
      reconstructed = T)
 ```
+
+## Licence 
+Apache 2.0 License

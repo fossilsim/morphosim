@@ -41,6 +41,4 @@ morpho_data <- sim.morpho(tree = phy,
 
 # plot the character matrix
 plotMorphoGrid(data = morpho_data, num.trait = "all")
-
-
 }

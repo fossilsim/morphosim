@@ -19,7 +19,7 @@ sim.morpho(
   meanlog = NULL,
   sdlog = NULL,
   ACRV.ncats = 4,
-  define.gamma.rates = NULL,
+  define.ACRV.rates = NULL,
   define.Q = NULL
 )
 }
@@ -52,7 +52,7 @@ sim.morpho(
 
 \item{ACRV.ncats}{Number of rate categories for among character rate variation.}
 
-\item{define.gamma.rates}{Vector of gamma rate categories for the simulation.}
+\item{define.ACRV.rates}{Vector of gamma rate categories for the simulation.}
 
 \item{define.Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
 }
