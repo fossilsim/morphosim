@@ -34,6 +34,9 @@ plotMorphoGrid <- function(data = NULL,
                            num.trait = "all",
                            col =  c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")){
 
+  old_par <- par(no.readonly = TRUE)
+  on.exit(par(old_par))
+
   if (inherits(data$sequences$tips[[1]][1], "character")) {
     data$sequences$tips <- lapply(data$sequences$tips, function(x) {
       x[x == "?"] <- NA        # Replace "?" with NA
@@ -130,5 +133,5 @@ for (i in 1:n.traits) {
     }
   }
 }
-par(mar = c(5,4,4,2) + 0.1)
+
 }

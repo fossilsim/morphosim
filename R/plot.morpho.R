@@ -54,6 +54,13 @@ plot.morpho <- function(data = NULL,
                         f.cex = 1,
                         col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
+
+  old_par <- par(no.readonly = TRUE)
+  on.exit(par(old_par))
+
+  par(mar = c(3, 3, 2.5, 1))
+
+
   # choose which tree to plot
   tree_to_plot <- if (timetree) data$trees$TimeTree else data$trees$EvolTree
 
