@@ -85,80 +85,84 @@ stats_morpho <- function(data){
 #'  @export
 #'
 
-convergent_evol <- function(data = NULL){
+convergent_evol <- function(data = NULL) {
 
   dat <- data[["transition_history"]]
   tree <- data$trees$EvolTree
   tip_states <- as.data.frame(data$sequences$tips)
   ntax <- length(tree$tip.label)
+
   convergent_traits <- matrix(ncol = 3)
   colnames(convergent_traits) <- c("trait", "state", "num.transitions")
 
-  for (convT in 1:length(dat)){
+  for (convT in seq_along(dat)) {
     temp <- dat[[convT]]
-    trait_n <- tip_states[convT,]
+    trait_n <- tip_states[convT, ]
 
+    # Skip if there are no transitions
+    if (length(temp$edge) == 0) next
 
-    trans_trait <- matrix(nrow =  length(tree$tip.label), ncol = 2)
+    # Prepare transition matrix
+    trans_trait <- matrix(nrow = ntax, ncol = 2)
     rownames(trans_trait) <- tree$tip.label
-    colnames(trans_trait)<- c("transition", "state")
-    ## number our transitions
-    temp$num <- seq(1, length(temp$edge), 1)
+    colnames(trans_trait) <- c("transition", "state")
 
-    for(tip in 1:length(tree$tip.label)){
-      # go through the tree and get the last transistion associated with each tip
+    # Number transitions
+    temp$num <- seq_along(temp$edge)
+
+    for (tip in seq_along(tree$tip.label)) {
       route_n <- find_path_to_tip(tree, tree$tip.label[tip])
-      ## where are the transitions? starting at the route
-      for (l in seq(length(route_n[,1]), 1)){
+
+      for (l in seq(nrow(route_n), 1)) {
         bran <- which(tree$edge[, 1] == route_n[l, "parent"] &
                         tree$edge[, 2] == route_n[l, "child"])
 
-        ## is there a change on this branch?
-        if (bran %in% temp$edge){
-          temp_sub <- subset(temp, temp$edge == bran)
+        if (bran %in% temp$edge) {
+          temp_sub <- subset(temp, edge == bran)
           max_tran <- max(temp_sub$hmin)
 
           trans_trait[tree$tip.label[tip], "transition"] <-
-            temp_sub$num[temp_sub$hmin ==  max_tran]
+            temp_sub$num[temp_sub$hmin == max_tran]
 
           trans_trait[tree$tip.label[tip], "state"] <-
-            temp_sub$state[temp_sub$hmin ==  max_tran]
+            temp_sub$state[temp_sub$hmin == max_tran]
+
           break
         }
       }
     }
 
-    # make any unchanged tips equal to root (0) and root state
-    # identify rows with any NA
+    # Fill unchanged tips with root state
     rows_na <- apply(trans_trait, 1, function(row) any(is.na(row)))
+    if (any(rows_na)) {
+      trans_trait[rows_na, ] <- matrix(
+        rep(c(0, data$root.state[convT]), sum(rows_na)),
+        nrow = sum(rows_na),
+        byrow = TRUE
+      )
+    }
 
-    # fill those rows with values
-    trans_trait[rows_na, ] <- matrix(
-      rep(c(0, data$root.state[convT]), sum(rows_na)),
-      nrow = sum(rows_na),
-      byrow = TRUE
-    )
-    states <- unique(trans_trait[,"state"])
-    for (s in 1:length(states)){
-      by_state <- trans_trait[which(trans_trait[,"state"] == states[s])]
-      if (length(unique(by_state)) > 1){
-        n <- as.numeric(c(convT,states[s], length(unique(by_state))))
-        convergent_traits <-rbind(convergent_traits, n)
+    # Identify convergent traits
+    states <- unique(trans_trait[, "state"])
+    for (s in states) {
+      by_state <- trans_trait[trans_trait[, "state"] == s, "transition"]
+      if (length(unique(by_state)) > 1) {
+        n <- as.numeric(c(convT, s, length(unique(by_state))))
+        convergent_traits <- rbind(convergent_traits, n)
       }
     }
   }
 
-convergent_traits <- convergent_traits[-1,]
-if (length(convergent_traits) > 0){
-  if (length(convergent_traits[,"trait"]) == 1){
-    convergent_traits <- as.data.frame(t(convergent_traits))
-  } else {
+  # Clean up output
+  convergent_traits <- convergent_traits[-1, , drop = FALSE]
+  if (nrow(convergent_traits) > 0) {
     convergent_traits <- as.data.frame(convergent_traits)
+    rownames(convergent_traits) <- seq_len(nrow(convergent_traits))
   }
-rownames(convergent_traits) <- seq(1,length(convergent_traits$trait), 1)
-  }
+
   return(convergent_traits)
 }
+
 
 
 #' Determines the route (nodes and branches) for a tip in a phylogenetic tree
