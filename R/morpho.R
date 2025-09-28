@@ -16,27 +16,13 @@
 #' @param transition_history The constant character transitions along the branches
 #'
 #' @export
-#morpho <- function(data = NULL, tree = NULL, time.tree = NULL, model = NULL,
-          #         node.seq = NULL, transition_history = NULL, root.states = NULL, fossil_sequence = NULL,
-          #         fossil = NULL, ACRV_rate = NULL, gamma_rates = NULL){
-
-  morpho <- function(data = NULL, trees = NULL, model = NULL,
-                     transition_history = NULL, root.states = NULL,
-                     fossil = NULL){
-
-  # check the number of sequences match the number of tips in the tree
-  #if (length(data) != length(tree$tip.label)) {
-  #  stop("Number of sequences doesn't match the number of tips in the tree.")
- # }
-
-  # check each sequence contains the same number of characters
-  #if (length(unique(sapply(data, length))) != 1) {
-  #  stop("Each sequence should contain the same number of characters.")
-  #}
+morpho <- function(sequences = NULL, trees = NULL, model = NULL,
+                   transition_history = NULL, root.states = NULL,
+                   fossil = NULL) {
 
   # Create a list to store sequences, tree, and model
   morpho.list <- list(
-    sequences = data,
+    sequences = sequences,
     trees = trees,
     model = model,
     transition_history = transition_history,
@@ -49,6 +35,7 @@
   return(morpho.list)
 }
 
+
 #' @export
 #' @aliases morpho
 print.morpho <- function(x, max.length = 5, ...){
@@ -57,16 +44,16 @@ print.morpho <- function(x, max.length = 5, ...){
   seq.data <- t(as.data.frame(x$sequences$tips))
 
   if(ncol(seq.data) > 4){
-  print(seq.data[,1:max.length])
+    print(seq.data[,1:max.length])
   } else {
     print(seq.data)
-    }
+  }
 
   # Print a summary of the morphological data
   cat("Morphological data for", length(x$sequences$tips), "taxa with",
       length(x$sequences$tips[[1]]), "traits per taxon and", sort(unique(as.vector(seq.data))),
       "as character states\n")
-      cat("Showing maximum of", max.length, "traits here for now\n")
+  cat("Showing maximum of", max.length, "traits here for now\n")
 }
 
 #' @export
@@ -81,21 +68,23 @@ summary.morpho <- function(object, max.length = 5, ...){
   cat("Model:", object$model, "\n")
 }
 
+
+
 #' @export
 #' @rdname morpho
-as.morpho <- as.morpho <- function(data, trees, model = NULL,
-                                   transition_history = NULL, root.states = NULL,
-                                   fossil = NULL) UseMethod("as.morpho")
-
+as.morpho <- function(sequences, trees, model = NULL,
+                      transition_history = NULL, root.states = NULL,
+                      fossil = NULL) {
+  UseMethod("as.morpho")
+}
 
 #' @export
-as.morpho.default <- function(data, ...) {
-  morpho(data, ...)
+as.morpho.default <- function(sequences, ...) {
+  morpho(sequences, ...)
 }
 
 #' @export
 #' @rdname morpho
-is.morpho <- function(data) {
-  inherits(data, "morpho")
+is.morpho <- function(sequences) {
+  inherits(sequences, "morpho")
 }
-

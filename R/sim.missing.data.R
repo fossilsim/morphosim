@@ -67,7 +67,7 @@
 #'                                  method = "taxa",
 #'                                  seq = "tips",
 #'                                  probability = 1,
-#'                                  taxa = c("t1", "t2")
+#'                                  taxa = c("t1", "t2"))
 #'
 
 

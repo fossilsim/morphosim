@@ -51,9 +51,10 @@ stats_morpho <- function(data){
   if (!is.null(data$sequences$SA)){
   num_sa <- length(data$sequences$SA)
   } else {
-    num_sa <- 0
+    num_sa <- NA
   }
   ## number extant tips
+  if(!is.null(data$trees$TimeTree)){
   tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
   tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
   extant_tips <- length(data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8])
@@ -61,6 +62,10 @@ stats_morpho <- function(data){
   ## number extinct tips
   extinct_tips <- length(data$trees$TimeTree$tip.label) - extant_tips
 
+  } else {
+    extant_tips <- NA
+    extinct_tips <- NA
+  }
   morpho_summary[["Tree"]] <- data.frame(
     Extanat =  extant_tips,
     Extinct = extinct_tips,

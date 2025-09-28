@@ -86,6 +86,6 @@ missing.data <- sim.missing.data(data = morpho_data,
                                  method = "taxa",
                                  seq = "tips",
                                  probability = 1,
-                                 taxa = c("t1", "t2")
+                                 taxa = c("t1", "t2"))
 
 }

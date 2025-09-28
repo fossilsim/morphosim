@@ -7,7 +7,7 @@
 \title{Morpho object}
 \usage{
 morpho(
-  data = NULL,
+  sequences = NULL,
   trees = NULL,
   model = NULL,
   transition_history = NULL,
@@ -16,7 +16,7 @@ morpho(
 )
 
 as.morpho(
-  data,
+  sequences,
   trees,
   model = NULL,
   transition_history = NULL,
@@ -24,9 +24,12 @@ as.morpho(
   fossil = NULL
 )
 
-is.morpho(data)
+is.morpho(sequences)
 }
 \arguments{
+\item{sequences}{A list containing all of the sequences simulated. This can contain sequences for taxa
+at the tips or the tree, along the nodes, and if present, for sampled ancestors (SA)}
+
 \item{trees}{A list containing the trees and branch lengths used for the simulation. EvolTree contains a
 phylogenetic tree with branch lengths representing evolutionary distance. TimeTree (if present)
 contains the same tree with branch lengths in unit of time. BrRates can either be a single value, when
@@ -41,9 +44,6 @@ to simualte each trait}
 \item{root.states}{A vector supplying the root state for each character}
 
 \item{fossil}{Fossil object used to simulate data}
-
-\item{sequences}{A list containing all of the sequences simulated. This can contain sequences for taxa
-at the tips or the tree, along the nodes, and if present, for sampled ancestors (SA)}
 }
 \description{
 Create a morpho object.
