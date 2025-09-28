@@ -5,7 +5,7 @@
 \title{Plot full evolutionary history}
 \usage{
 \method{plot}{morpho}(
-  data = NULL,
+  x = NULL,
   trait = NULL,
   timetree = FALSE,
   fossil = FALSE,
@@ -21,7 +21,7 @@
 )
 }
 \arguments{
-\item{data}{A morpho object}
+\item{x}{A morpho object}
 
 \item{trait}{The trait number to plot}
 

@@ -2,7 +2,7 @@
 #'
 #'#' @description
 #' This function creates a plot showing continuous evolution of discrete traits
-#' @param data A morpho object
+#' @param x A morpho object
 #' @param timetree TRUE or FALSE Indicate whether you want to plot a time
 #' tree or not. default FALSE, uses distance tree if FALSE
 #' @param trait The trait number to plot
@@ -42,7 +42,7 @@
 #' root.edge = FALSE, reconstructed = FALSE)
 #'
 
-plot.morpho <- function(data = NULL,
+plot.morpho <- function(x = NULL,
                         trait = NULL,
                         timetree = FALSE,
                         fossil = FALSE,
@@ -55,6 +55,7 @@ plot.morpho <- function(data = NULL,
                         col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"), col.timescale = "darkgrey", ...){
 
 
+  data <- x
   old_par <- par(no.readonly = TRUE)
   on.exit(par(old_par))
 
