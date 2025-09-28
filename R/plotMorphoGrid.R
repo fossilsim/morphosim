@@ -27,8 +27,6 @@
 #'
 #' # plot the character matrix
 #' plotMorphoGrid(data = morpho_data, num.trait = "all")
-#'
-#'
 
 
 plotMorphoGrid <- function(data = NULL,
