@@ -23,8 +23,8 @@
 #'                           ACRV = "gamma",
 #'                           variable = TRUE,
 #'                           ACRV.ncats = 4)
-#' summary <- stats_morpho(data = morpho_data)
-stats_morpho <- function(data){
+#' summary <- stats.morpho(data = morpho_data)
+stats.morpho <- function(data){
 
   morpho_summary <- vector("list", 3)
   names(morpho_summary) <- c("Statistics", "Convergent_Traits", "Tree")
@@ -205,4 +205,75 @@ find_path_to_tip <- function(tree, tip) {
   }
 
   return(output)
+}
+
+
+#' Combine Two Morpho Objects
+#'
+#' This function merges two `morpho` objects, combining their sequences,
+#' model parameters, and transition histories, while ensuring tree and fossil
+#' consistency.
+#'
+#' @param x A `morpho` object.
+#' @param y A `morpho` object.
+#'
+#' @return A combined `morpho` object.
+#' @export
+#'
+#' @examples
+#' # combined <- combine_morpho(morpho1, morpho2)
+combine.morpho <- function(x, y) {
+
+  if (!inherits(x, "morpho")) stop("x must be a 'morpho' object")
+  if (!inherits(y, "morpho")) stop("y must be a 'morpho' object")
+  if (!identical(x$fossil, y$fossil)) stop("morpho objects have different fossil objects")
+  if (!phangorn::RF.dist(x$trees$EvolTree,
+                         y$trees$EvolTree) == 0) stop("morpho objects have different trees")
+  if (!identical(x$trees$BrRates, y$trees$BrRate)) stop("morpho objects have different branch lengths")
+
+  combined_tips <- list()
+  tip_names <- names(x$sequences$tips)
+  for (i in seq_along(tip_names)) {
+    combined_tips[[tip_names[i]]] <- c(unname(x$sequences$tips[[i]]),
+                                       unname(y$sequences$tips[[i]]))
+  }
+
+  combined_nodes <- list()
+  nodes_names <- names(x$sequences$nodes)
+  for (i in seq_along(nodes_names)) {
+    combined_nodes[[nodes_names[i]]] <- c(unname(x$sequences$nodes[[i]]),
+                                          unname(y$sequences$nodes[[i]]))
+  }
+
+  combined_SA <- list()
+  sa_names <- names(x$sequences$SA)
+  for (i in seq_along(sa_names)) {
+    combined_SA[[sa_names[i]]] <- c(unname(x$sequences$SA[[i]]),
+                                    unname(y$sequences$SA[[i]]))
+  }
+
+  out <- list(
+    sequences = list(
+      tips  = combined_tips,
+      nodes = combined_nodes,
+      SA    = combined_SA
+    ),
+    trees = list(
+      EvolTree = x$trees$EvolTree,
+      TimeTree = x$trees$TimeTree,
+      BrRates  = x$trees$BrRates
+    ),
+    model = list(
+      Specified    = c(x$model$Specified, y$model$Specified),
+      RateVar      = rbind(x$model$RateVar, y$model$RateVar),
+      RateVarTrait = rbind(x$model$RateVarTrait, y$model$RateVarTrait)
+    ),
+    transition_history = c(x$transition_history, y$transition_history),
+    root.states        = c(x$root.states, y$root.states),
+    fossil             = x$fossil,
+    combined = TRUE
+  )
+
+  class(out) <- class(x)
+  return(out)
 }
