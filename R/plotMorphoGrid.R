@@ -84,7 +84,7 @@ x_labs <- seq(center_b, center_final, xx )
 axis(3, at=x_labs,labels=1:n.traits,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0.95)
 
-if(!is.null(data$model$RateVarTrait)){
+if(!is.null(data$model$RateVarTrait) && is.null(data$combined)){
 axis(1, at=x_labs,labels=data$model$RateVarTrait,
      col.axis="black", las=1, cex.axis=0.8, lwd ="0", pos = 0)
   mtext('Rate Category', side=1, line=1, at=-0.07, cex = 0.7, font = 6)

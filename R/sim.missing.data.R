@@ -94,6 +94,10 @@ sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability
     stop("`probability` must be between 0 and 1.")
   }
 
+  if(method == "rate" && !is.null(data$combined)){
+    stop ("Cannot use rates on data sets that are combined from different models.
+          Simulate missing data first and then combine.")
+  }
 
 
   ## Create data frame
