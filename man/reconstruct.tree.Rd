@@ -2,17 +2,24 @@
 % Please edit documentation in R/recontruct.tree.R
 \name{reconstruct.tree}
 \alias{reconstruct.tree}
-\title{#' @description
-This function is used to color the branches in the plotting
-function when plotting the reconstructed tree.}
+\title{Color branches for plotting a reconstructed tree}
 \usage{
 reconstruct.tree(data)
 }
 \arguments{
-\item{data}{Morpho object which contains fossil data}
+\item{data}{A morpho object which contains fossil data and a time-calibrated tree.}
+}
+\value{
+A list of length 2:
+  \item{b.colours}{Vector of branch colors for plotting.}
+  \item{rem}{Indices of branches with fossils.}
 }
 \description{
-#' @description
-This function is used to color the branches in the plotting
-function when plotting the reconstructed tree.
+This function generates colors for branches when plotting a reconstructed tree
+from a morpho object containing fossil data. Branches that are part of the
+reconstructed tree or have fossils along them are colored black; all others are grey.
+}
+\examples{
+# Assuming `morpho_data` is a morpho object with fossil data:
+# branch_colors <- reconstruct.tree(morpho_data)
 }

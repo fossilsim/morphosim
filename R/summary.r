@@ -1,23 +1,20 @@
 #' Calculates statistics for a morpho object
 #'
 #' @description
-#' This function computes three key pieces of information:
-#' 1. The Consistency Index (CI) and Retention Index (RI) based on
-#' the tip sequence data.
-#' 2. Convergent traits, identifying traits that have evolved independently
-#'  multiple times.
+#' Computes three key pieces of information for a morpho object:
+#' 1. The Consistency Index (CI) and Retention Index (RI) based on the tip sequence data.
+#' 2. Convergent traits, identifying traits that have evolved independently multiple times.
 #' 3. Summary information about the size and structure of the tree.
 #'
-#' @param data Morpho object
+#' @param data A morpho object
 #' @import phangorn
-#'
+#' @return A list with three elements:
+#'   - \code{Statistics}: data.frame with CI and RI
+#'   - \code{Convergent_Traits}: data.frame listing convergent traits
+#'   - \code{Tree}: data.frame summarizing extant/extinct tips and sampled ancestors
 #' @export
-#'
 #' @examples
-#' #' # simulate a phylogenetic tree
 #' phy <- ape::rtree(10)
-#'
-#' # simulate characters along the branches of the tree
 #' morpho_data <- sim.morpho(tree = phy,
 #'                           k = c(2,3,4),
 #'                           trait.num = 20,
@@ -26,13 +23,12 @@
 #'                           ACRV = "gamma",
 #'                           variable = TRUE,
 #'                           ACRV.ncats = 4)
-#'
 #' summary <- stats_morpho(data = morpho_data)
-
 stats_morpho <- function(data){
 
   morpho_summary <- vector("list", 3)
   names(morpho_summary) <- c("Statistics", "Convergent_Traits", "Tree")
+
   ## consistency index & retention index
   phylev <- unique(unlist(unique(data$sequences$tips)))
   tree <- data$trees$EvolTree
@@ -43,48 +39,48 @@ stats_morpho <- function(data){
     RI = phangorn::RI(tree, data_ph)
   )
 
-
   ## convergent characters
   morpho_summary[["Convergent_Traits"]] <- convergent_evol(data = data)
 
-  ## number SA
+  ## number of sampled ancestors
   if (!is.null(data$sequences$SA)){
-  num_sa <- length(data$sequences$SA)
+    num_sa <- length(data$sequences$SA)
   } else {
     num_sa <- NA
   }
-  ## number extant tips
-  if(!is.null(data$trees$TimeTree)){
-  tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
-  tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
-  extant_tips <- length(data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8])
 
-  ## number extinct tips
-  extinct_tips <- length(data$trees$TimeTree$tip.label) - extant_tips
+  ## number of extant tips
+  if(!is.null(data$trees$TimeTree)){
+    tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
+    tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
+    extant_tips <- length(data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8])
+
+    ## number extinct tips
+    extinct_tips <- length(data$trees$TimeTree$tip.label) - extant_tips
 
   } else {
     extant_tips <- NA
     extinct_tips <- NA
   }
+
   morpho_summary[["Tree"]] <- data.frame(
-    Extanat =  extant_tips,
+    Extant =  extant_tips,
     Extinct = extinct_tips,
     Sampled_Ancestors = num_sa
   )
 
   return(morpho_summary)
-
 }
 
-#' Determines the number of convergently evolved traits
-#' @description
-#' This function determines which traits have evoled through convergent evolution
-#'
-#' @param data a morpho object
-#'
-#'  @export
-#'
 
+#' Determines the number of convergently evolved traits
+#'
+#' @description
+#' Identifies which traits have evolved independently multiple times (convergent evolution) in a morpho object.
+#'
+#' @param data A morpho object
+#' @return A data.frame listing convergent traits, their state, and number of transitions
+#' @export
 convergent_evol <- function(data = NULL) {
 
   dat <- data[["transition_history"]]
@@ -118,7 +114,7 @@ convergent_evol <- function(data = NULL) {
                         tree$edge[, 2] == route_n[l, "child"])
 
         if (bran %in% temp$edge) {
-          temp_sub <- subset(temp, edge == bran)
+          temp_sub <- temp[temp[["edge"]] == bran, ]
           max_tran <- max(temp_sub$hmin)
 
           trans_trait[tree$tip.label[tip], "transition"] <-
@@ -164,21 +160,18 @@ convergent_evol <- function(data = NULL) {
 }
 
 
-
 #' Determines the route (nodes and branches) for a tip in a phylogenetic tree
+#'
 #' @description
-#' This function traverses the tree to determine the evolutionary path (branches)
-#' from root to a given tip
+#' Traverses the tree to determine the evolutionary path (branches) from root to a given tip.
 #'
-#' @param tree phylogenetic tree
-#' @param tip tip label
-#'
+#' @param tree A phylogenetic tree of class \code{phylo}
+#' @param tip Tip label (character)
+#' @return A matrix with columns \code{parent} and \code{child} representing the path
 #' @export
-#'
 #' @examples
 #' phy <- ape::rtree(10)
-#'route_n <- find_path_to_tip(phy, "t2")
-#'
+#' route_n <- find_path_to_tip(phy, "t2")
 find_path_to_tip <- function(tree, tip) {
   # Ensure the tip is valid
   if (!tip %in% tree$tip.label) {

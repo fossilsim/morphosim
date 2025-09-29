@@ -7,21 +7,22 @@
 stats_morpho(data)
 }
 \arguments{
-\item{data}{Morpho object}
+\item{data}{A morpho object}
+}
+\value{
+A list with three elements:
+  - \code{Statistics}: data.frame with CI and RI
+  - \code{Convergent_Traits}: data.frame listing convergent traits
+  - \code{Tree}: data.frame summarizing extant/extinct tips and sampled ancestors
 }
 \description{
-This function computes three key pieces of information:
-1. The Consistency Index (CI) and Retention Index (RI) based on
-the tip sequence data.
-2. Convergent traits, identifying traits that have evolved independently
- multiple times.
+Computes three key pieces of information for a morpho object:
+1. The Consistency Index (CI) and Retention Index (RI) based on the tip sequence data.
+2. Convergent traits, identifying traits that have evolved independently multiple times.
 3. Summary information about the size and structure of the tree.
 }
 \examples{
-#' # simulate a phylogenetic tree
 phy <- ape::rtree(10)
-
-# simulate characters along the branches of the tree
 morpho_data <- sim.morpho(tree = phy,
                           k = c(2,3,4),
                           trait.num = 20,
@@ -30,6 +31,5 @@ morpho_data <- sim.morpho(tree = phy,
                           ACRV = "gamma",
                           variable = TRUE,
                           ACRV.ncats = 4)
-
 summary <- stats_morpho(data = morpho_data)
 }

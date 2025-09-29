@@ -7,16 +7,17 @@
 find_path_to_tip(tree, tip)
 }
 \arguments{
-\item{tree}{phylogenetic tree}
+\item{tree}{A phylogenetic tree of class \code{phylo}}
 
-\item{tip}{tip label}
+\item{tip}{Tip label (character)}
+}
+\value{
+A matrix with columns \code{parent} and \code{child} representing the path
 }
 \description{
-This function traverses the tree to determine the evolutionary path (branches)
-from root to a given tip
+Traverses the tree to determine the evolutionary path (branches) from root to a given tip.
 }
 \examples{
 phy <- ape::rtree(10)
 route_n <- find_path_to_tip(phy, "t2")
-
 }

@@ -7,10 +7,11 @@
 convergent_evol(data = NULL)
 }
 \arguments{
-\item{data}{a morpho object
-
- @export}
+\item{data}{A morpho object}
+}
+\value{
+A data.frame listing convergent traits, their state, and number of transitions
 }
 \description{
-This function determines which traits have evoled through convergent evolution
+Identifies which traits have evolved independently multiple times (convergent evolution) in a morpho object.
 }
