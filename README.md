@@ -84,11 +84,11 @@ reltt <- simclock::relaxed.tree(t,
 ```
 For the character data we can relax the assumptions of the Mk model in a number of ways as described below
 
--**ACRV**: Here you can specify if you would like to model among character rate variation. This is commonly used for morphological data sets as traits may evolve at different rates. There are three input options here, `gamma`, `lgn`, and `user`. Gamma uses a discrete gamma distribution, lgn will use a discrete lognormal, and user allows the user to specify rates.
+- **ACRV**: Here you can specify if you would like to model among character rate variation. This is commonly used for morphological data sets as traits may evolve at different rates. There are three input options here, `gamma`, `lgn`, and `user`. Gamma uses a discrete gamma distribution, lgn will use a discrete lognormal, and user allows the user to specify rates.
 
--**ACRV.ncats**: the number of rate categories you want to simulate under
+- **ACRV.ncats**: the number of rate categories you want to simulate under
 
--**alpha.gamma**: the shape of the alpha distribution
+- **alpha.gamma**: the shape of the alpha distribution
 
 -**variable**: When set to true this will only return traits which vary across taxa, i.e., the MkV model
 
