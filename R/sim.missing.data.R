@@ -127,8 +127,9 @@ for ( i in 1:remove){
     stop("Length of `probability` must match the number of rate categories.")
   }
 
-   for ( j in 1:max(rates[1,])){
-     traits_per_rate <- which(rates == j)
+   for ( j in 1:length(unique(rates[1, ]))){
+
+     traits_per_rate <- which(rates == unique(rates[1, ])[j])
      remove <- round((length(traits_per_rate)* taxa.num)* probability[j], 0)
      total_cells <- length(traits_per_rate)*taxa.num
 
