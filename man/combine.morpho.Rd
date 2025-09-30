@@ -20,5 +20,5 @@ model parameters, and transition histories, while ensuring tree and fossil
 consistency.
 }
 \examples{
-# combined <- combine_morpho(morpho1, morpho2)
+combined <- combine_morpho(morpho1, morpho2)
 }

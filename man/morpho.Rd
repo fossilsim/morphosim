@@ -36,7 +36,7 @@ contains the same tree with branch lengths in unit of time. BrRates can either b
 simulating under a strict clock, or a vector of values representing the rate/branch}
 
 \item{model}{A list containing all model attributes. Model specifies the components specified to simulate under.
-RateVar containes the relative values drawn from the specified distribution. RateVarTrait species the rate used
+RateVar contains the relative values drawn from the specified distribution. RateVarTrait species the rate used
 to simulate each trait}
 
 \item{transition_history}{The constant character transitions along the branches}

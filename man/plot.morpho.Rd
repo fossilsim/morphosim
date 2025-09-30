@@ -11,7 +11,7 @@
   fossil = FALSE,
   reconstructed = FALSE,
   root.edge = FALSE,
-  edges = 1,
+  edge.width = 1,
   label.offset = 0.05,
   e.cex = 0.5,
   f.cex = 1,
@@ -34,7 +34,7 @@ tree or not. Default = FALSE (uses distance tree if FALSE).}
 
 \item{root.edge}{If TRUE plot the root edge. Default = FALSE.}
 
-\item{edges}{Width of the branch lengths.}
+\item{edge.width}{Width of the branches.}
 
 \item{label.offset}{Distance of tip label to tree tips.}
 
