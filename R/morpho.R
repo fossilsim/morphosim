@@ -9,7 +9,7 @@
 #' contains the same tree with branch lengths in unit of time. BrRates can either be a single value, when
 #' simulating under a strict clock, or a vector of values representing the rate/branch
 #' @param model A list containing all model attributes. Model specifies the components specified to simulate under.
-#' RateVar containes the relative values drawn from the specified distribution. RateVarTrait species the rate used
+#' RateVar contains the relative values drawn from the specified distribution. RateVarTrait species the rate used
 #' to simulate each trait
 #' @param root.states A vector supplying the root state for each character
 #' @param fossil Fossil object used to simulate data

@@ -10,7 +10,7 @@
 #' @param fossil Plot the fossil along the tree. Default = FALSE.
 #' @param root.edge If TRUE plot the root edge. Default = FALSE.
 #' @param reconstructed Plot the reconstructed tree. Default = FALSE.
-#' @param edges Width of the branch lengths.
+#' @param edge.width Width of the branches.
 #' @param label.offset Distance of tip label to tree tips.
 #' @param f.cex Size of fossils.
 #' @param e.cex Size of extant taxa.
@@ -51,7 +51,7 @@ plot.morpho <- function(x = NULL,
                         fossil = FALSE,
                         reconstructed = FALSE,
                         root.edge = FALSE,
-                        edges = 1,
+                        edge.width = 1,
                         label.offset = 0.05,
                         e.cex = 0.5,
                         f.cex = 1,
@@ -114,7 +114,7 @@ plot.morpho <- function(x = NULL,
 
   plot(
     tree_to_plot,
-    edge.width = edges,
+    edge.width = edge.width,
     label.offset = label.offset,
     root.edge = root.edge,
     edge.color = edge_col

@@ -121,7 +121,7 @@ sim.morpho <- function(tree = NULL,
   if (is.null(tree) && !is.null(time.tree)) {
     tree <- time.tree
     if (is.null(br.rates)) {
-      print("No branch rate provide, using default of 0.1 for all branches")
+      print("No branch rate provided, using default of 0.1 for all branches")
       br.rates <- rep(0.1, length(tree$edge.length))
     }
     if (length(br.rates) == 1) {

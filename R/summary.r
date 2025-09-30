@@ -220,7 +220,7 @@ find_path_to_tip <- function(tree, tip) {
 #' @export
 #'
 #' @examples
-#' # combined <- combine_morpho(morpho1, morpho2)
+#' combined <- combine_morpho(morpho1, morpho2)
 combine.morpho <- function(x, y) {
 
   if (!inherits(x, "morpho")) stop("x must be a 'morpho' object")

@@ -44,11 +44,8 @@ plotMorphoGrid <- function(data = NULL,
     })
   }
 
-
   n.taxa <- length(data$trees$EvolTree$tip.label)
   n.traits <- length( data$sequences$tips[[1]])
-
-
 
   ## Are we using a time tree?
   if (timetree) {
