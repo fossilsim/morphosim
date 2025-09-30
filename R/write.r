@@ -28,6 +28,7 @@ ape::write.tree(r_tree$tree, file = file)
 #' @export
 #'
 write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
+
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                           tree = data$trees$TimeTree)
   SA_tips <- c()
@@ -55,17 +56,14 @@ write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
 
     transformation[l,"Morphosim"] <- SA_tips[l]
     transformation[l,"Fossilsim"] <- reconSA[l]
-
   }
 
   total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
   } else {
     total_tips <- data$sequences$tips[c(seq_tips)]
-  }
+    }
 
-
-
-  ## need to change the sequence names to match the reconstructed tree
+    ## need to change the sequence names to match the reconstructed tree
   for ( l in 1:length(seq_tips)){
     current <- names(data$sequences$tips[c(seq_tips)[l]])
     names(total_tips)[names(total_tips) == current ] <- paste0(current, "_1")
@@ -75,12 +73,12 @@ write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
   for( l in 1:length(SA_tips)){
     rematch <- unname(transformation[l,"Fossilsim"])
     names(total_tips)[names(total_tips) == SA_tips[l]] <- paste0(rematch, "_2")
-  }
-  }
+      }
+    }
 
   if(!is.null(file)) {
   ape::write.nexus.data(total_tips , file = file)
-  }
+    }
 
   if(keep_matrix == T){
     return(transformation)
@@ -123,7 +121,6 @@ write.tsv <- function (data, file, uncertainty = 0) {
       cat("\n", file = file, append = TRUE)
     }
   }
-
 }
 
 #' Write the taxa ages of reconstructed tree
@@ -180,8 +177,7 @@ write.recon.tsv <- function (data, file, uncertainty = 0){
     cat("\n", file = file, append = TRUE)
 
   }
-
-  }
+ }
 
   ## sampled ancestors
 
@@ -194,9 +190,7 @@ write.recon.tsv <- function (data, file, uncertainty = 0){
 
     # Subset the data frame to get hmin
     hmin <- data$fossil$hmin[data$fossil$ape.branch == branch_num &
-        data$fossil$specimen  == specimen_num
-    ]
-
+        data$fossil$specimen  == specimen_num]
 
     nm <- paste0(transformations[i, "Fossilsim"], "_2")
     if (hmin - uncertainty < 0){
@@ -207,9 +201,8 @@ write.recon.tsv <- function (data, file, uncertainty = 0){
     cat(nm,min_age, (hmin + uncertainty),
         sep = "\t", file = file, append = T )
     cat("\n", file = file, append = TRUE)
+    }
   }
-  }
-
 }
 
 

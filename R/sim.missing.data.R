@@ -106,18 +106,18 @@ sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability
   taxa.num <-   length(x[,1])
 
   ## Method: Random
-if (method == "random"){
+  if (method == "random"){
 
-if (length(probability) > 1)
-  stop("For method = 'random', provide a single probability.")
-remove <- round((trait.num* taxa.num)* probability, 0)
-total_cells <- taxa.num*trait.num
-all_combinations <- expand.grid(Row = 1:taxa.num, Column = 1:trait.num)
-random_cells<- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
-for ( i in 1:remove){
-  x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+    if (length(probability) > 1)
+    stop("For method = 'random', provide a single probability.")
+    remove <- round((trait.num* taxa.num)* probability, 0)
+    total_cells <- taxa.num*trait.num
+    all_combinations <- expand.grid(Row = 1:taxa.num, Column = 1:trait.num)
+    random_cells<- all_combinations[sample(1:total_cells, remove, replace = FALSE), ]
+    for ( i in 1:remove){
+    x[random_cells$Row[i], random_cells$Column[i]] <- "?"
+    }
   }
-}
 
 
   ## Method: Rate
@@ -125,7 +125,7 @@ for ( i in 1:remove){
   rates <-  data$model$RateVarTrait
   if (length(probability) != length(unique(rates[1, ]))) {
     stop("Length of `probability` must match the number of rate categories.")
-  }
+       }
 
    for ( j in 1:length(unique(rates[1, ]))){
 
@@ -140,8 +140,8 @@ for ( i in 1:remove){
        for ( i in 1:remove){
        x[random_cells$Row[i], random_cells$Column[i]] <- "?"
 
-        }
       }
+    }
   }
 
 
@@ -150,7 +150,8 @@ for ( i in 1:remove){
 
     if (length(probability) != length(data$model)){
       stop("Vector of probabilities does not match the number of partitions")
-        }
+      }
+
     start_col <- 1
     for ( j in 1:length(data$model)){
     traits_per_partition <-  as.numeric(sub(".*Part:(\\d+).*", "\\1",
@@ -165,9 +166,9 @@ for ( i in 1:remove){
 
     for ( i in 1:remove){
       x[random_cells$Row[i], random_cells$Column[i]] <- "?"
-     }
+      }
     start_col <- start_col + traits_per_partition
-   }
+    }
   }
 
 
@@ -194,6 +195,7 @@ for ( i in 1:remove){
       stop("For method = 'taxa', provide a single probability.")
     }
     if (is.null(taxa)) stop("For method = 'taxa', you must specify `taxa`.")
+
     remove <- round((length(taxa)* trait.num)* probability, 0)
     total_cells <- length(taxa)* trait.num
     all_combinations <- expand.grid(Column = 1:trait.num,  Row = taxa)
@@ -201,7 +203,7 @@ for ( i in 1:remove){
     for ( i in 1:remove){
       x[as.character(random_cells$Row[i]), random_cells$Column[i]] <- "?"
     }
- }
+  }
 
 
   ## Method: = Extinct

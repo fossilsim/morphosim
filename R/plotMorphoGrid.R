@@ -121,7 +121,7 @@ plotMorphoGrid <- function(data = NULL,
 
   ## fill in the boxes with the state
   for (i in 1:n.traits) {
-    for (j in 1:n.taxa) {
+    for (j in 1:n.taxa)   {
       state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
       if (is.na(state)) state = "?"
 
@@ -133,5 +133,4 @@ plotMorphoGrid <- function(data = NULL,
       }
     }
   }
-
 }
