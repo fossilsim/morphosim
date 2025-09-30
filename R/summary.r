@@ -7,7 +7,6 @@
 #' 3. Summary information about the size and structure of the tree.
 #'
 #' @param data A morpho object
-#' @import phangorn
 #' @return A list with three elements:
 #'   - \code{Statistics}: data.frame with CI and RI
 #'   - \code{Convergent_Traits}: data.frame listing convergent traits
@@ -51,8 +50,8 @@ stats.morpho <- function(data){
 
   ## number of extant tips
   if(!is.null(data$trees$TimeTree)){
-    tip_depths <- node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
-    tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
+    tip_depths <- ape::node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
+    tree_height <- max(ape::node.depth.edgelength(data$trees$TimeTree))
     extant_tips <- length(data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8])
 
     ## number extinct tips

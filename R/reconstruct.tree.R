@@ -7,8 +7,6 @@
 #'
 #' @param data A morpho object which contains fossil data and a time-calibrated tree.
 #'
-#' @import ape
-#' @import FossilSim
 #' @return A list of length 2:
 #'   \item{b.colours}{Vector of branch colors for plotting.}
 #'   \item{rem}{Indices of branches with fossils.}

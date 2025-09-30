@@ -52,10 +52,10 @@ plotMorphoGrid <- function(data = NULL,
 
   ## Are we using a time tree?
   if (timetree) {
-    tree_string <-  write.tree(data$trees$TimeTree)
+    tree_string <-  ape::write.tree(data$trees$TimeTree)
     tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
   } else {
-    tree_string <-  write.tree(data$trees$EvolTree)
+    tree_string <-  ape::write.tree(data$trees$EvolTree)
     tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
   }
 

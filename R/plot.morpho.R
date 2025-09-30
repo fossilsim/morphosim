@@ -21,11 +21,8 @@
 #' @param ... Other arguments to be passed to methods, such as graphical
 #'   parameters.
 #'
-#' @import ape
-#' @import FossilSim
 #' @import stats
 #' @import graphics
-#' @import TreeSim
 #' @export
 #'
 #' @examples
@@ -125,7 +122,7 @@ plot.morpho <- function(x = NULL,
 
   # get the plot information
 
-  tree_plot_info <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+  tree_plot_info <- get("last_plot.phylo", envir = ape::.PlotPhyloEnv)
 
   edge_start_x <- tree_plot_info$xx[data$trees$EvolTree$edge[, 1]]
   edge_end_x <- tree_plot_info$xx[data$trees$EvolTree$edge[, 2]]

@@ -2,7 +2,7 @@
 % Please edit documentation in R/write.r
 \name{write.recon.matrix}
 \alias{write.recon.matrix}
-\title{Write reconstructed Matrix to file}
+\title{Write reconstructed character matrix to file}
 \usage{
 write.recon.matrix(data, file = NULL, keep_matrix = F)
 }
@@ -15,5 +15,5 @@ write.recon.matrix(data, file = NULL, keep_matrix = F)
 between `morphosim` and `fossilsim` of Sampled ancestors.}
 }
 \description{
-Write the reconstructed matrix to a nexus file
+Write the character matrix for the reconstructed tree to a nexus file
 }

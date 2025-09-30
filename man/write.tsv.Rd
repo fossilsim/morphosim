@@ -16,6 +16,6 @@ The ages in the object are point estimates by default; setting `uncertainty`
 will create an age range of ± this value (in millions of years).}
 }
 \description{
-Writes the ages of the specimen in the true tree to a file. The tsv format used
+Writes the ages of the specimens in the true tree to a file. The tsv format used
 here is directly compatible with RevBayes
 }

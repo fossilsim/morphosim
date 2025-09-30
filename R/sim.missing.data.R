@@ -219,7 +219,7 @@ sim.missing.data <- function(data = NULL, seq = NULL, method = NULL, probability
 
     ## number extant tips
     tip_depths <- ape::node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
-    tree_height <- max(node.depth.edgelength(data$trees$TimeTree))
+    tree_height <- max(ape::node.depth.edgelength(data$trees$TimeTree))
     tip_ages <-   round(abs(tip_depths - tree_height),3)
     extinct <- data$trees$EvolTree$tip.label[which(tip_ages != 0) ]
     remove <- round((length(extinct)* trait.num)* probability, 0)
