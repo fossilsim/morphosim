@@ -23,51 +23,55 @@
 \arguments{
 \item{x}{A morpho object}
 
-\item{trait}{The trait number to plot}
+\item{trait}{The trait number to plot.}
 
-\item{timetree}{TRUE or FALSE Indicate whether you want to plot a time
-tree or not. default FALSE, uses distance tree if FALSE}
+\item{timetree}{TRUE or FALSE. Indicate whether you want to plot a time
+tree or not. Default = FALSE (uses distance tree if FALSE).}
 
-\item{fossil}{Plot the fossil along the tree. Default set to FALSE}
+\item{fossil}{Plot the fossil along the tree. Default = FALSE.}
 
-\item{reconstructed}{Plot the reconstructed tree. Default = FALSE}
+\item{reconstructed}{Plot the reconstructed tree. Default = FALSE.}
 
-\item{root.edge}{If TRUE plot the root edge. Default = FALSE}
+\item{root.edge}{If TRUE plot the root edge. Default = FALSE.}
 
-\item{edges}{Width of the branch lengths}
+\item{edges}{Width of the branch lengths.}
 
-\item{label.offset}{Distance of tip label to tree tips}
+\item{label.offset}{Distance of tip label to tree tips.}
 
-\item{e.cex}{Size of extant taxa}
+\item{e.cex}{Size of extant taxa.}
 
-\item{f.cex}{Size of fossils}
+\item{f.cex}{Size of fossils.}
 
-\item{col}{A vector of colors that should be the same length or longer than the number of different character states (k). if not specified, the traits from 0 to 6 can be differentiated}
+\item{col}{A vector of colors that should be the same length or longer than
+the number of different character states (k). If not specified, the traits
+from 0 to 6 can be differentiated.}
 
-\item{col.timescale}{a single color for the timescale, "darkgrey" by standard}
+\item{col.timescale}{A single color for the timescale. Default = "darkgrey".}
 
-\item{...}{other arguments to be passed to methods, such as graphical parameters}
+\item{...}{Other arguments to be passed to methods, such as graphical
+parameters.}
 }
 \description{
-#' @description
-This function creates a plot showing continuous evolution of discrete traits
+This function creates a plot showing continuous evolution of discrete traits.
 }
 \examples{
 # simulate a phylogenetic tree
 phy <- ape::rtree(10)
 
 # simulate characters along the branches of the tree
-morpho_data <-  sim.morpho(tree = phy,
-                           k = c(2,3,4),
-                           trait.num = 20,
-                           ancestral = TRUE,
-                           partition = c(10,5,5),
-                           ACRV = "gamma",
-                           variable = TRUE,
-                           ACRV.ncats = 4,
-                           define.Q = NULL)
+morpho_data <- sim.morpho(
+  tree = phy,
+  k = c(2, 3, 4),
+  trait.num = 20,
+  ancestral = TRUE,
+  partition = c(10, 5, 5),
+  ACRV = "gamma",
+  variable = TRUE,
+  ACRV.ncats = 4,
+  define.Q = NULL
+)
 
-plot(morpho_data, trait= 4, timetree = FALSE, fossil = FALSE,
-root.edge = FALSE, reconstructed = FALSE)
+plot(morpho_data, trait = 4, timetree = FALSE, fossil = FALSE,
+     root.edge = FALSE, reconstructed = FALSE)
 
 }
