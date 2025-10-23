@@ -7,7 +7,7 @@
 #' @param timetree TRUE or FALSE. Indicate whether you want to plot a time
 #'   tree or not. Default = FALSE (uses distance tree if FALSE).
 #' @param trait The trait number to plot.
-#' @param fossil Plot the fossil along the tree. Default = FALSE.
+#' @param show.fossil Plot the fossil along the tree. Default = FALSE.
 #' @param root.edge If TRUE plot the root edge. Default = FALSE.
 #' @param reconstructed Plot the reconstructed tree. Default = FALSE.
 #' @param edge.width Width of the branches.
@@ -42,13 +42,13 @@
 #'   define.Q = NULL
 #' )
 #'
-#' plot(morpho_data, trait = 4, timetree = FALSE, fossil = FALSE,
+#' plot(morpho_data, trait = 4, timetree = FALSE, show.fossil = FALSE,
 #'      root.edge = FALSE, reconstructed = FALSE)
 #'
 plot.morpho <- function(x = NULL,
                         trait = NULL,
                         timetree = FALSE,
-                        fossil = FALSE,
+                        show.fossil = FALSE,
                         reconstructed = FALSE,
                         root.edge = FALSE,
                         edge.width = 1,
@@ -63,7 +63,7 @@ plot.morpho <- function(x = NULL,
   if (is.null(x)) {
     stop("'x' cannot be NULL. Please provide a morpho object.")
   }
-  if (!is.list(x) || is.null(x$trees)) {
+  if (!is.morpho(x) || is.null(x$trees)) {
     stop("'x' must be a morpho object containing a 'trees' element.")
   }
 
@@ -78,7 +78,7 @@ plot.morpho <- function(x = NULL,
   if (!is.logical(timetree) || length(timetree) != 1) {
     stop("'timetree' must be TRUE or FALSE.")
   }
-  if (!is.logical(fossil) || length(fossil) != 1) {
+  if (!is.logical(show.fossil) || length(show.fossil) != 1) {
     stop("'fossil' must be TRUE or FALSE.")
   }
   if (!is.logical(root.edge) || length(root.edge) != 1) {
@@ -88,7 +88,7 @@ plot.morpho <- function(x = NULL,
     stop("'reconstructed' must be TRUE or FALSE.")
   }
 
-  if (fossil && is.null(x$fossil)) {
+  if (show.fossil && is.null(x$fossil)) {
     stop("No fossil data found in 'x', but 'fossil = TRUE' was requested.")
   }
 
@@ -216,7 +216,7 @@ plot.morpho <- function(x = NULL,
 
   # add fossils
 
-  if (fossil) {
+  if (show.fossil) {
     tree.age <- max(ape::node.depth.edgelength(data$trees$TimeTree))
     for (fsl in 1:length(data$fossil$sp)) {
       branch <- data$fossil$ape.branch[fsl]
