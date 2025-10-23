@@ -54,8 +54,6 @@ morpho_data <-  sim.morpho(k = c(2,3),
 
 ```
 #### Explore the simulated data
-- TODO: Explain the morpho object
-
 Morphosim has a plotting function which allows you to plot the simulated data along the branches of the tree. 
 ```r
 plot(morpho_data, 
@@ -176,7 +174,7 @@ We now have character data for all the tips in the true tree, as well as all the
 plot(data = morpho_data, 
      trait= 1, 
      timetree = T, 
-     fossil = T,
+     shoe.fossil = T,
      root.edge = T, 
      reconstructed = T)
 ```

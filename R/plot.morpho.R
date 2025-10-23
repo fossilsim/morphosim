@@ -209,6 +209,7 @@ plot.morpho <- function(x = NULL,
         position <- actual_position / data$tree$TimeTree$edge.length[branch]
         point_x <- position * (edge_end_x[branch] - edge_start_x[branch])
         y_vals <- yy[data$trees$TimeTree[["edge"]][b.cols[[2]][p], 2]]
+        segments(point_x, y_vals, edge_end_x[b.cols[[2]][p]], y_vals, col = "white")
         segments(point_x, y_vals, edge_end_x[b.cols[[2]][p]], y_vals, col = "grey")
       }
     }
