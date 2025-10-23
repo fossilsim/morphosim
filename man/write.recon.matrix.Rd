@@ -4,7 +4,7 @@
 \alias{write.recon.matrix}
 \title{Write reconstructed character matrix to file}
 \usage{
-write.recon.matrix(data, file = NULL, keep_matrix = F)
+write.recon.matrix(data, file = NULL)
 }
 \arguments{
 \item{data}{Morpho object}

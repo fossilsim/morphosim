@@ -8,23 +8,56 @@
 #' all branches.
 #' @param tree A phylogenetic tree (class "phylo") with branches representing genetic distance.
 #' @param time.tree A phylogenetic tree (class "phylo") with branches representing time.
-#' @param br.rates Clock rates per branch. Can be a single value (strict clock) or a vector of rates.
 #' @param k Number of trait states (integer ≥ 2). Can be a vector if using partitions.
 #' @param trait.num The total number of traits to simulate (integer > 0).
 #' @param partition Vector specifying the number of traits per partition.
-#' @param ACRV Among character rate variation using either `gamma`, `lgn`, or `user`. Default is `NULL`.
-#' @param variable If `TRUE`, simulate only varying characters. Default is `FALSE`.
-#' @param ancestral If `TRUE`, return the states at all ancestral nodes. Default is `FALSE`.
-#' @param partition Specify the number of traits per partition
-#' @param fossil Fossil object (from `FossilSim`) to simulate morphological characters.
-#' @param define.ACRV.rates Vector of gamma rate categories for the simulation.
-#' @param alpha.gamma Shape parameter α for the gamma distribution.
+#' @param br.rates Clock rates per branch. Can be a single value (strict clock) or a vector of rates.
+#' @param ACRV Among character rate variation using either `gamma`, `lgn`,`user`, or `NULL`.
+#' When `gamma` specified, rates will be drawn from the discretized gamma distribution. Must define
+#' number of categories (ACRV.ncats) and the shape of the distribution (alpha.gamma).
+#' When `lgn` specified, rates will be drawn from the discretized lognormal distribution.
+#' Must specify the mean (meanlog) and standard deviation (sdlog) of the distribution as well as the number of
+#' categories (ACRV.ncats). When `user` specified, the user can provide their own rates of evolution (define.ACRV.rates).
+#' When `NULL` specified all traits are simulated under the same rate. Default is `NULL`.
+#' @param alpha.gamma Shape parameter α for the gamma distribution. Default set to 1.
 #' @param ACRV.ncats Number of rate categories for among character rate variation.
 #' @param meanlog mean of the distribution on the log scale.
-#' @param sdlog standard deviation of the distribution on the log scale.
-#' @param define.Q Q matrix for simulation. Must be square and rows must sum to zero.
+#' @param sdlog standard deviation of the distribution on the log scale
+#' @param define.ACRV.rates Vector of gamma rate categories for the simulation.
+#' @param variable If `TRUE`, simulate only varying characters. Default is `FALSE`.
+#' @param ancestral If `TRUE`, return the states at all ancestral nodes. Default is `TRUE`.
+#' @param fossil Fossil object (from `FossilSim`) to simulate morphological characters.
+#' @param define.Q Q matrix for simulation. Must be a square matrix and rows must sum to zero.
 #'
-#' @return An object of class morpho.
+#' @return An object of class `morpho`, with the following components:
+#' \describe{
+#'   \item{sequences}{A list containing up to 3 elements: morphological data for the `tips`
+#'   of the tree, the `nodes`, and, if provided, the sampled ancestors (`SA`). For `SA`,
+#'   the naming scheme differs from that of `FossilSim`: the morphological data are named
+#'   using the specimen number (`data$fossil$specimen`) and the branch number along which
+#'   the fossil was sampled.}
+#'
+#'   \item{tree}{A list containing up to 3 elements: the `EvolTree` (branch lengths in
+#'   genetic distance), the `TimeTree` (branch lengths in time units), and `BrRates`
+#'   (the evolutionary rate per branch).}
+#'
+#'   \item{model}{Information about the model used to simulate the data. `Specified`
+#'   states the exact model used per partition, as well as the number of traits and
+#'   character states respectively. `RateVar` contains the relative rates used to simulate
+#'   the data, and `RateVarTrait` contains information about which rate category was used
+#'   to simulate each trait. These values are listed from lowest rate (1) to highest.}
+#'
+#'   \item{transition_history}{A list containing *n* data frames, where *n* is the number
+#'   of simulated traits. Each data frame contains information about transitions that
+#'   occurred for that state, including the branch number (`edge`), the new state (`state`),
+#'   and the point along the branch where the transition occurred (`hmin`).}
+#'
+#'   \item{root.states}{A vector of root states for each trait.}
+#'
+#'   \item{fossil}{The fossil object provided to `morphsim` from `FossilSim`. The naming
+#'   scheme therefore matches that of `FossilSim`.}
+#' }
+
 #'
 #' @export
 
@@ -36,11 +69,11 @@
 #' morpho_data <-  sim.morpho(tree = phy,
 #'                            k = c(2,3,4),
 #'                            trait.num = 20,
-#'                            ancestral = TRUE,
 #'                            partition = c(10,5,5),
 #'                            ACRV = "gamma",
-#'                            variable = TRUE,
 #'                            ACRV.ncats = 4,
+#'                            variable = TRUE,
+#'                            ancestral = TRUE,
 #'                            define.Q = NULL)
 #'
 #' # To simulate ordered characters:
@@ -68,19 +101,19 @@
 
 sim.morpho <- function(tree = NULL,
                        time.tree = NULL,
-                       ACRV = NULL,
-                       br.rates = NULL,
-                       variable = FALSE,
-                       ancestral = FALSE,
                        k = 2,
+                       trait.num,
                        partition = NULL,
-                       trait.num = NULL,
-                       fossil = NULL,
+                       br.rates = NULL,
+                       ACRV = NULL,
                        alpha.gamma = 1,
+                       ACRV.ncats = 4,
                        meanlog = NULL,
                        sdlog = NULL,
-                       ACRV.ncats = 4,
                        define.ACRV.rates = NULL,
+                       variable = FALSE,
+                       ancestral = TRUE,
+                       fossil = NULL,
                        define.Q = NULL) {
 
   if (is.null(tree) && is.null(time.tree)) stop("Must provide a tree object")
@@ -113,7 +146,7 @@ sim.morpho <- function(tree = NULL,
 
   if (!is.logical(variable)) stop("`variable` must be TRUE or FALSE.")
   if (!is.logical(ancestral)) stop("`ancestral` must be TRUE or FALSE.")
-  if (!is.null(fossil) && !is.data.frame(fossil)) {
+  if (!is.null(fossil) && !FossilSim::is.fossils(fossil)) {
     stop("`fossil` must be a FossilSim object.")
   }
 
@@ -149,7 +182,7 @@ sim.morpho <- function(tree = NULL,
   parent <- as.integer(edge[, 1])
   child <- as.integer(edge[, 2])
   tips <- setdiff(child, parent)
-  nodes <- setdiff(parent, tips)
+  nodes <-unique(parent)
 
   # create an result matrix
   transition_history <- list()
@@ -166,13 +199,11 @@ sim.morpho <- function(tree = NULL,
   ### Among character rate variation
   if (!is.null(ACRV)) {
     if (ACRV == "gamma") {
-      if (!is.null(define.ACRV.rates)) {
-        gamma_rates <- define.ACRV.rates
-      } else {
-        gamma_rates <- get_gamma_rates(alpha.gamma, ACRV.ncats)
-      }
-    } else if (ACRV == "lgn") {
-      lognormal_rates <- get_lognormal_rates(meanlog, sdlog, ACRV.ncats)
+      disc_rates <- get_gamma_rates(alpha.gamma, ACRV.ncats)
+    } else if(ACRV == "user"){
+      disc_rates <- define.ACRV.rates
+      } else if (ACRV == "lgn") {
+      disc_rates <- get_lognormal_rates(meanlog, sdlog, ACRV.ncats)
     }
   }
 
@@ -196,17 +227,9 @@ sim.morpho <- function(tree = NULL,
         state_at_nodes[as.character(root), tr.num] <- as.numeric(root.state)
 
         if (!is.null(ACRV)) {
-          if (ACRV == "gamma") {
-            trait_rate <- gamma_rates[sample(1:ACRV.ncats, 1)]
+            trait_rate <- disc_rates[sample(1:ACRV.ncats, 1)]
             Q_r <- Q * trait_rate
-          } else if (ACRV == "lgn") {
-            trait_rate <- lognormal_rates[sample(1:ACRV.ncats, 1)]
-            Q_r <- Q * trait_rate
-          } else if (ACRV == "user") {
-            trait_rate <- define.ACRV.rates[sample(1:length(define.ACRV.rates), 1)]
-            Q_r <- Q * trait_rate
-          }
-        } else {
+             } else {
           Q_r <- Q
         }
 
@@ -250,12 +273,9 @@ sim.morpho <- function(tree = NULL,
       }
 
       if (!is.null(ACRV)) {
-        if (ACRV == "gamma") {
-          ACRV_rate[tr.num] <- which(gamma_rates == trait_rate)
-        } else if (ACRV == "lgn") {
-          ACRV_rate[tr.num] <- which(lognormal_rates == trait_rate)
-        }
+         ACRV_rate[tr.num] <- which(disc_rates == trait_rate)
       }
+
       transition_history[[tr.num]] <- as.data.frame(transitions)
       tr.num <- tr.num + 1
       rs <- rbind(rs, root.state)
@@ -344,13 +364,9 @@ sim.morpho <- function(tree = NULL,
 
   if (is.null(ACRV)) ACRV_rate <- NULL
 
-  # this is a dumb way to check the next few lines. Update by calling all rates
-  # regardless of distribution the same name
 
-  if (exists("gamma_rates")) {
-    discrete_rates <- gamma_rates
-  } else if (exists("lognormal_rates")) {
-    discrete_rates <- lognormal_rates
+  if (exists("disc_rates")) {
+    discrete_rates <- disc_rates
   } else {
     discrete_rates <- NULL
   }

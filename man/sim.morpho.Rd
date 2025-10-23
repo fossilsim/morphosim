@@ -7,19 +7,19 @@
 sim.morpho(
   tree = NULL,
   time.tree = NULL,
-  ACRV = NULL,
-  br.rates = NULL,
-  variable = FALSE,
-  ancestral = FALSE,
   k = 2,
+  trait.num,
   partition = NULL,
-  trait.num = NULL,
-  fossil = NULL,
+  br.rates = NULL,
+  ACRV = NULL,
   alpha.gamma = 1,
+  ACRV.ncats = 4,
   meanlog = NULL,
   sdlog = NULL,
-  ACRV.ncats = 4,
   define.ACRV.rates = NULL,
+  variable = FALSE,
+  ancestral = TRUE,
+  fossil = NULL,
   define.Q = NULL
 )
 }
@@ -28,36 +28,69 @@ sim.morpho(
 
 \item{time.tree}{A phylogenetic tree (class "phylo") with branches representing time.}
 
-\item{ACRV}{Among character rate variation using either `gamma`, `lgn`, or `user`. Default is `NULL`.}
-
-\item{br.rates}{Clock rates per branch. Can be a single value (strict clock) or a vector of rates.}
-
-\item{variable}{If `TRUE`, simulate only varying characters. Default is `FALSE`.}
-
-\item{ancestral}{If `TRUE`, return the states at all ancestral nodes. Default is `FALSE`.}
-
 \item{k}{Number of trait states (integer ≥ 2). Can be a vector if using partitions.}
-
-\item{partition}{Specify the number of traits per partition}
 
 \item{trait.num}{The total number of traits to simulate (integer > 0).}
 
-\item{fossil}{Fossil object (from `FossilSim`) to simulate morphological characters.}
+\item{partition}{Vector specifying the number of traits per partition.}
 
-\item{alpha.gamma}{Shape parameter α for the gamma distribution.}
+\item{br.rates}{Clock rates per branch. Can be a single value (strict clock) or a vector of rates.}
 
-\item{meanlog}{mean of the distribution on the log scale.}
+\item{ACRV}{Among character rate variation using either `gamma`, `lgn`,`user`, or `NULL`.
+When `gamma` specified, rates will be drawn from the discretized gamma distribution. Must define
+number of categories (ACRV.ncats) and the shape of the distribution (alpha.gamma).
+When `lgn` specified, rates will be drawn from the discretized lognormal distribution.
+Must specify the mean (meanlog) and standard deviation (sdlog) of the distribution as well as the number of
+categories (ACRV.ncats). When `user` specified, the user can provide their own rates of evolution (define.ACRV.rates).
+When `NULL` specified all traits are simulated under the same rate. Default is `NULL`.}
 
-\item{sdlog}{standard deviation of the distribution on the log scale.}
+\item{alpha.gamma}{Shape parameter α for the gamma distribution. Default set to 1.}
 
 \item{ACRV.ncats}{Number of rate categories for among character rate variation.}
 
+\item{meanlog}{mean of the distribution on the log scale.}
+
+\item{sdlog}{standard deviation of the distribution on the log scale}
+
 \item{define.ACRV.rates}{Vector of gamma rate categories for the simulation.}
 
-\item{define.Q}{Q matrix for simulation. Must be square and rows must sum to zero.}
+\item{variable}{If `TRUE`, simulate only varying characters. Default is `FALSE`.}
+
+\item{ancestral}{If `TRUE`, return the states at all ancestral nodes. Default is `TRUE`.}
+
+\item{fossil}{Fossil object (from `FossilSim`) to simulate morphological characters.}
+
+\item{define.Q}{Q matrix for simulation. Must be a square matrix and rows must sum to zero.}
 }
 \value{
-An object of class morpho.
+An object of class `morpho`, with the following components:
+\describe{
+  \item{sequences}{A list containing up to 3 elements: morphological data for the `tips`
+  of the tree, the `nodes`, and, if provided, the sampled ancestors (`SA`). For `SA`,
+  the naming scheme differs from that of `FossilSim`: the morphological data are named
+  using the specimen number (`data$fossil$specimen`) and the branch number along which
+  the fossil was sampled.}
+
+  \item{tree}{A list containing up to 3 elements: the `EvolTree` (branch lengths in
+  genetic distance), the `TimeTree` (branch lengths in time units), and `BrRates`
+  (the evolutionary rate per branch).}
+
+  \item{model}{Information about the model used to simulate the data. `Specified`
+  states the exact model used per partition, as well as the number of traits and
+  character states respectively. `RateVar` contains the relative rates used to simulate
+  the data, and `RateVarTrait` contains information about which rate category was used
+  to simulate each trait. These values are listed from lowest rate (1) to highest.}
+
+  \item{transition_history}{A list containing *n* data frames, where *n* is the number
+  of simulated traits. Each data frame contains information about transitions that
+  occurred for that state, including the branch number (`edge`), the new state (`state`),
+  and the point along the branch where the transition occurred (`hmin`).}
+
+  \item{root.states}{A vector of root states for each trait.}
+
+  \item{fossil}{The fossil object provided to `morphsim` from `FossilSim`. The naming
+  scheme therefore matches that of `FossilSim`.}
+}
 }
 \description{
 This function simulates discrete character data along the branches of a phylogentic tree. It can be used with
@@ -74,11 +107,11 @@ phy <- ape::rtree(10)
 morpho_data <-  sim.morpho(tree = phy,
                            k = c(2,3,4),
                            trait.num = 20,
-                           ancestral = TRUE,
                            partition = c(10,5,5),
                            ACRV = "gamma",
-                           variable = TRUE,
                            ACRV.ncats = 4,
+                           variable = TRUE,
+                           ancestral = TRUE,
                            define.Q = NULL)
 
 # To simulate ordered characters:
