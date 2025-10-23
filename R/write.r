@@ -15,7 +15,8 @@
 write.recon.tree <- function (data, file) {
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
-                                                          tree = data$trees$TimeTree)
+                                                          tree = data$trees$TimeTree,
+                                                          tip_order = "youngest_first")
   ape::write.tree(r_tree$tree, file = file)
 }
 
@@ -34,10 +35,11 @@ write.recon.tree <- function (data, file) {
 #'}
 #' @export
 #'
-write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
+write.recon.matrix <- function (data, file = NULL) {
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
-                                                          tree = data$trees$TimeTree)
+                                                          tree = data$trees$TimeTree,
+                                                          tip_order =  "youngest_first")
   SA_tips <- c()
   tps <- unname(r_tree$tree$tip.label)
   matches <- grepl("_1$", tps )
@@ -50,25 +52,7 @@ write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
   matches <- grepl("_2$", tps )
   reconSA <-  gsub("_2$", "", tps[matches])
 
-  transformation <- matrix(ncol = 2, nrow = length(reconSA))
-  colnames(transformation) <- c("Morphosim", "Fossilsim")
-  if (length(reconSA) > 0){
-
-    for (l in 1:length(reconSA)){
-      t_label <- which(data$trees$TimeTree$tip.label == reconSA[l])
-      b_num <- which(data$trees$TimeTree$edge[,2] == t_label)
-      spec_min <- min(data$fossil$hmin[data$fossil$ape.branch == b_num])
-      spec_num <- data$fossil$specimen[ data$fossil$hmin == spec_min ]
-      SA_tips <- rbind(SA_tips, c(paste0(spec_num, "_", b_num)))
-
-      transformation[l,"Morphosim"] <- SA_tips[l]
-      transformation[l,"Fossilsim"] <- reconSA[l]
-    }
-
-    total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
-  } else {
-    total_tips <- data$sequences$tips[c(seq_tips)]
-  }
+  transformation <- morphsim_fossilsim(data)
 
   ## need to change the sequence names to match the reconstructed tree
   for ( l in 1:length(seq_tips)){
@@ -115,7 +99,7 @@ write.tsv <- function (data, file, uncertainty = 0) {
   ## ages of full tree
   tip_depths <- ape::node.depth.edgelength(data$trees$TimeTree)[1:length(data$trees$TimeTree$tip.label)]
   tree_height <- max(ape::node.depth.edgelength(data$trees$TimeTree))
-  tip_ages <-   round(abs(tip_depths - tree_height),3)
+  tip_ages <-   round(abs(tree_height - tip_depths),3)
   # extant_tips <- data$trees$TimeTree$tip.label[abs(tip_depths - tree_height) < 1e-8]
 
   cat("taxon", "min_age", "max_age", sep = "\t", "\n", file = file)
@@ -152,8 +136,9 @@ write.tsv <- function (data, file, uncertainty = 0) {
 write.recon.tsv <- function (data, file, uncertainty = 0){
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
-                                                          tree = data$trees$TimeTree)
-  transformations <- write.recon.matrix(data, keep_matrix = T)
+                                                          tree = data$trees$TimeTree,
+                                                          tip_order = "youngest_first")
+  transformations <- morphsim_fossilsim(data)
 
   cat("taxon", "min_age", "max_age", sep = "\t", "\n", file = file)
 
@@ -219,7 +204,55 @@ write.recon.tsv <- function (data, file, uncertainty = 0){
   }
 }
 
+#' Match sampled ancestor labels
+#'
+#' @description
+#' Match the sampled ancestor labels from Morphsim and Fossilsim
+#' @param data Morpho object containing fossils
+#' @examples
+#' morphsim_fossilsim <- function(data = morpho_data)
+#'
+#' @export
 
+morphsim_fossilsim <- function (data = NULL){
+
+  if(is.null(data$fossil)) stop("Morpho object does not contian fossils")
+
+  r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
+                                                          tree = data$trees$TimeTree,
+                                                          tip_order =  "youngest_first")
+  SA_tips <- c()
+  tps <- unname(r_tree$tree$tip.label)
+  matches <- grepl("_1$", tps )
+  # Extract elements that match
+  reconTreeTips <- gsub("_1$", "", tps[matches])
+
+  ## add these tip labels to the file + plus all sampled ancestor
+  seq_tips <- which(names(data$sequences$tips) %in% reconTreeTips)
+
+  matches <- grepl("_2$", tps )
+  reconSA <-  gsub("_2$", "", tps[matches])
+
+  transformation <- matrix(ncol = 2, nrow = length(reconSA))
+  colnames(transformation) <- c("Morphosim", "Fossilsim")
+  if (length(reconSA) > 0){
+
+    for (l in 1:length(reconSA)){
+      t_label <- which(data$trees$TimeTree$tip.label == reconSA[l])
+      b_num <- which(data$trees$TimeTree$edge[,2] == t_label)
+      spec_min <- min(data$fossil$hmin[data$fossil$ape.branch == b_num])
+      spec_num <- data$fossil$specimen[ data$fossil$hmin == spec_min ]
+      SA_tips <- rbind(SA_tips, c(paste0(spec_num, "_", b_num)))
+
+      transformation[l,"Morphosim"] <- SA_tips[l]
+      transformation[l,"Fossilsim"] <- reconSA[l]
+    }
+
+    total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
+  } else {
+    total_tips <- data$sequences$tips[c(seq_tips)]
+  }
+}
 
 
 

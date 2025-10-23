@@ -17,3 +17,8 @@ between `morphosim` and `fossilsim` of Sampled ancestors.}
 \description{
 Write the character matrix for the reconstructed tree to a nexus file
 }
+\examples{
+\dontrun{
+write.recon.matrix(data = morpho_data, file = "reconstructed.nex")
+}
+}

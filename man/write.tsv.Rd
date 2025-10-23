@@ -19,3 +19,8 @@ will create an age range of ± this value (in millions of years).}
 Writes the ages of the specimens in the true tree to a file. The tsv format used
 here is directly compatible with RevBayes
 }
+\examples{
+\dontrun{
+write.tsv(data = morpho_data, file = "ages.tsv")
+}
+}

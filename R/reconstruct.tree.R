@@ -17,7 +17,8 @@
 #' # branch_colors <- reconstruct.tree(morpho_data)
 reconstruct.tree <- function(data) {
 
-  recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$trees$TimeTree)
+  recon <- FossilSim::reconstructed.tree.fossils.objects(data$fossil, data$trees$TimeTree,
+                                                         tip_order = "youngest_first")
   tps <- unname(recon$tree$tip.label)
   matches <- grepl("_1$", tps)
 

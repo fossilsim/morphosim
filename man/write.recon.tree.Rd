@@ -14,3 +14,8 @@ write.recon.tree(data, file)
 \description{
 Write the reconstructed tree to Newick string
 }
+\examples{
+\dontrun{
+write.recon.tree(data = morpho_data, file = "reconstructed.tre")
+}
+}
