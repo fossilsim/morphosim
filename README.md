@@ -76,10 +76,10 @@ The previous example, simulated characters according to an Mk model under a stri
 
 ```r
 devtools::install_github("dosreislab/simclock")
-reltt <- simclock::relaxed.tree(t, 
+reltt <- simclock::relaxed.tree(tree, 
                                 model="iln", 
                                 r=.04e-1,     # mean mutation rate
-                                s2=.26e-2).   # diffusion rate
+                                s2=.26e-2)   # diffusion rate
 ```
 For the character data we can relax the assumptions of the Mk model in a number of ways as described below
 
@@ -100,7 +100,7 @@ morpho_data <-  sim.morpho(k = c(2,3),
                            br.rates = reltt$edge.length,
                            ACRV = "gamma",
                            alpha.gamma = 1,
-                           ACRV.ncats = 4
+                           ACRV.ncats = 4,
                            variable = TRUE)
 
 ```
