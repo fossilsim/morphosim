@@ -62,7 +62,7 @@ plot(morpho_data,
 ```
 This function returns a number of characteristics about your data. It calculates the consistency index, the retention index, identifies convergent traits, and the number of extinct and extant taxa.
 ```r
-stats <- stats_morpho(morpho_data)
+stats <- stats.morpho(morpho_data)
 ```
 
 
