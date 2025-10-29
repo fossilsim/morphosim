@@ -7,6 +7,7 @@ The latest version can be installed from github using `devtools`
 ``` r   
 library(devtools)
 devtools::install_github("https://github.com/fossilsim/morphosim")
+library(MorphoSim)
 ```
     
 
