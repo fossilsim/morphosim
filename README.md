@@ -19,7 +19,7 @@ install.packages("TreeSim")
 library(TreeSim)
 ```
 
-#### Simulate a birth death tree using Treesim
+#### Simulate a birth death tree using TreeSim
 ```r
 lambda = 0.1         # speciation rate
 mu = 0.05            # exintction rate
@@ -36,7 +36,7 @@ MorphoSim lets you specify a variety of parameters for your simulations. In this
 - **timetree**: if using a time tree specify here.
 - **tree**: if using a genetic distance tree specify here.
 - **partitions**: specify the number of traits per partition. This must match the number of states specified in k.
-- **triat.num**: specify the total number of traits 
+- **trait.num**: specify the total number of traits 
 - **br.rates**: This can be a single integer (strict clock) or a vector of integers (relaxed clock). This must be provided when using a time tree to convert the branch lengths into genetic distance.
 - **ancestral**: return the states at the internal nodes in the tree.
 
