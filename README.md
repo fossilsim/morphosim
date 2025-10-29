@@ -23,8 +23,8 @@ library(TreeSim)
 #### Simulate a birth death tree using TreeSim
 ```r
 lambda = 0.1         # speciation rate
-mu = 0.05            # exintction rate
-tips = 5             # number of tips
+mu = 0.05            # extinction rate
+tips = 5             # number of extant tips
 
 tree = TreeSim::sim.bd.taxa(n = tips, 
                          numbsim = 1, 
