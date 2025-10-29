@@ -174,7 +174,7 @@ We now have character data for all the tips in the true tree, as well as all the
 plot(data = morpho_data, 
      trait= 1, 
      timetree = T, 
-     shoe.fossil = T,
+     show.fossil = T,
      root.edge = T, 
      reconstructed = T)
 ```
