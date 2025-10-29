@@ -172,7 +172,7 @@ morpho_data <-  sim.morpho(k = c(2,3),
 We now have character data for all the tips in the true tree, as well as all the sampled ancestors. The inclusion of fossils also adds a number of options to the plotting function. We can choose if we want to plot the fossils along the tree, and to show the reconstructed version. 
 
 ```r
-plot(data = morpho_data, 
+plot(x = morpho_data, 
      trait= 1, 
      timetree = T, 
      show.fossil = T,
