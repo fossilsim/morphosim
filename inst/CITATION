@@ -1,4 +1,4 @@
-citHeader("To cite MorphoSim, please use:")
+citHeader("To cite MorphSim, please use:")
 
 citEntry(
   "Manual",   # <-- bibtype is the first unnamed argument
@@ -9,10 +9,10 @@ citEntry(
     person("Rachel", "Warnock", role = "aut"),
     person("Joëlle", "Barido-Sottani", role = "aut")
   ),
-  title = "MorphoSim",
+  title = "MorphSim",
   year = 2025,
   version = "0.1.0",
-  url = "https://github.com/fossilsim/morphosim",
+  url = "https://github.com/fossilsim/morphsim",
   note = "R package for simulating discrete morphological data. Licensed under Apache-2.0."
 )
 

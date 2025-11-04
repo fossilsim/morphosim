@@ -1,7 +1,7 @@
 #' Remove morphological character data
 #'
 #' @description
-#' This function removes characters from a morphological matrix simulated using morphosim
+#' This function removes characters from a morphological matrix simulated using morphsim
 #' @param data A `morpho` object with sequence data.
 #' @param seq Character. Which sequence data to use: "tips", "nodes", or "SA".
 #' @param method Character. Method for removing data. Options:

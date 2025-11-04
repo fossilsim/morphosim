@@ -28,7 +28,7 @@ write.recon.tree <- function (data, file) {
 #' @param data Morpho object
 #' @param file File name
 #' @param keep_matrix Logical. If TRUE, returns a matrix showing the naming transformations
-#' between `morphosim` and `fossilsim` of Sampled ancestors.
+#' between `morphsim` and `fossilsim` of Sampled ancestors.
 #' @examples
 #' \dontrun{
 #' write.recon.matrix(data = morpho_data, file = "reconstructed.nex")
@@ -234,7 +234,7 @@ morphsim_fossilsim <- function (data = NULL){
   reconSA <-  gsub("_2$", "", tps[matches])
 
   transformation <- matrix(ncol = 2, nrow = length(reconSA))
-  colnames(transformation) <- c("Morphosim", "Fossilsim")
+  colnames(transformation) <- c("Morphsim", "Fossilsim")
   if (length(reconSA) > 0){
 
     for (l in 1:length(reconSA)){
@@ -244,7 +244,7 @@ morphsim_fossilsim <- function (data = NULL){
       spec_num <- data$fossil$specimen[ data$fossil$hmin == spec_min ]
       SA_tips <- rbind(SA_tips, c(paste0(spec_num, "_", b_num)))
 
-      transformation[l,"Morphosim"] <- SA_tips[l]
+      transformation[l,"Morphsim"] <- SA_tips[l]
       transformation[l,"Fossilsim"] <- reconSA[l]
     }
 

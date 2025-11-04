@@ -8,7 +8,7 @@
   x = NULL,
   trait = NULL,
   timetree = FALSE,
-  fossil = FALSE,
+  show.fossil = FALSE,
   reconstructed = FALSE,
   root.edge = FALSE,
   edge.width = 1,
@@ -28,7 +28,7 @@
 \item{timetree}{TRUE or FALSE. Indicate whether you want to plot a time
 tree or not. Default = FALSE (uses distance tree if FALSE).}
 
-\item{fossil}{Plot the fossil along the tree. Default = FALSE.}
+\item{show.fossil}{Plot the fossil along the tree. Default = FALSE.}
 
 \item{reconstructed}{Plot the reconstructed tree. Default = FALSE.}
 
@@ -71,7 +71,7 @@ morpho_data <- sim.morpho(
   define.Q = NULL
 )
 
-plot(morpho_data, trait = 4, timetree = FALSE, fossil = FALSE,
+plot(morpho_data, trait = 4, timetree = FALSE, show.fossil = FALSE,
      root.edge = FALSE, reconstructed = FALSE)
 
 }

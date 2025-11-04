@@ -38,7 +38,7 @@ sim.missing.data(
 An object of class morpho.
 }
 \description{
-This function removes characters from a morphological matrix simulated using morphosim
+This function removes characters from a morphological matrix simulated using morphsim
 }
 \examples{
 #' # simulate a phylogenetic tree

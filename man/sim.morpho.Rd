@@ -83,7 +83,7 @@ An object of class `morpho`, with the following components:
 
   \item{transition_history}{A list containing *n* data frames, where *n* is the number
   of simulated traits. Each data frame contains information about transitions that
-  occurred for that state, including the branch number (`edge`), the new state (`state`),
+  occurred for that trait, including the branch number (`edge`), the new state number (`state`),
   and the point along the branch where the transition occurred (`hmin`).}
 
   \item{root.states}{A vector of root states for each trait.}

@@ -12,7 +12,7 @@ write.recon.matrix(data, file = NULL)
 \item{file}{File name}
 
 \item{keep_matrix}{Logical. If TRUE, returns a matrix showing the naming transformations
-between `morphosim` and `fossilsim` of Sampled ancestors.}
+between `morphsim` and `fossilsim` of Sampled ancestors.}
 }
 \description{
 Write the character matrix for the reconstructed tree to a nexus file
