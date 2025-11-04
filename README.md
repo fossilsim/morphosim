@@ -1,19 +1,19 @@
-## MorphoSim 
+## MorphSim 
 
-R package for simulating discrete character data along rooted phylogenies. Through integration with established R packages, MorphoSim enables the simulation of biologically meaningful datasets across a variety of scenarios. 
+R package for simulating discrete character data along rooted phylogenies. Through integration with established R packages, MorphSim enables the simulation of biologically meaningful datasets across a variety of scenarios. 
 
 The latest version can be installed from github using `devtools` 
 
 ``` r   
 library(devtools)
-devtools::install_github("https://github.com/fossilsim/morphosim")
-library(MorphoSim)
+devtools::install_github("https://github.com/fossilsim/morphsim")
+library(MorphSim)
 ```
     
 
 
 ## Example 1: Simulating Data Along a Phylogenetic Tree - Basic set up
-To simulate morphological data you will first need a phylogenetic tree. MorphoSim can take either, a time tree or a tree with branch lengths in genetic distance as input. In this example we will use a time tree. You can simulate a tree using the existing R package `TreeSim`
+To simulate morphological data you will first need a phylogenetic tree. MorphSim can take either, a time tree or a tree with branch lengths in genetic distance as input. In this example we will use a time tree. You can simulate a tree using the existing R package `TreeSim`
 
 ```r
 install.packages("TreeSim")
@@ -31,8 +31,8 @@ tree = TreeSim::sim.bd.taxa(n = tips,
                          lambda = lambda, 
                          mu = mu)[[1]]                       
 ```
-#### Simulate Morphological data using MorphoSim. 
-MorphoSim lets you specify a variety of parameters for your simulations. In this example, we will focus on a few key parameters to get started.
+#### Simulate Morphological data using MorphSim. 
+MorphSim lets you specify a variety of parameters for your simulations. In this example, we will focus on a few key parameters to get started.
 - **k**: the maximum number of character states. This can be a single integer greater than 1 or a vector of integers if you want to simulate more than 1 partitions. In the following example, we are therefore simulating two partitions, the first with 2 states and the second with 3.
 - **timetree**: if using a time tree specify here.
 - **tree**: if using a genetic distance tree specify here.
@@ -55,7 +55,7 @@ morpho_data <-  sim.morpho(k = c(2,3),
 
 ```
 #### Explore the simulated data
-Morphosim has a plotting function which allows you to plot the simulated data along the branches of the tree. 
+Morphsim has a plotting function which allows you to plot the simulated data along the branches of the tree. 
 ```r
 plot(morpho_data, 
      trait= 1) # specify which trait you want to plot along the tree
@@ -69,7 +69,7 @@ stats <- stats.morpho(morpho_data)
 
 
 ## Example 2: Simulating Biologically Realistic Data Sets
-The previous example, simulated characters according to an Mk model under a strict clock. However, there are more complex models we may want to use for simulations. Firstly, with MorphoSim we can use a relaxed clock model where each branch has a different rate. We can use an existing R package, `simclock` to simulate rates along our tree which we can input into MorphoSim 
+The previous example, simulated characters according to an Mk model under a strict clock. However, there are more complex models we may want to use for simulations. Firstly, with MorphSim we can use a relaxed clock model where each branch has a different rate. We can use an existing R package, `simclock` to simulate rates along our tree which we can input into MorphSim 
 
 
 ####  Simulate branch lengths using a independent log normal relaxed clock model
@@ -108,7 +108,7 @@ morpho_data <-  sim.morpho(k = c(2,3),
 > Note: If you choose to simulate data under an ACRV using a lognormal distribution, you will need to provide values for the `meanlog` and the `sdlog`. Similarly for the user option the rates should be passed through `define.ACRV.rates`
 
 ### Ordered characters
-In morphological datasets, transitions between character states are often restricted, meaning that a change can only occur between specific states. For example, a character might be able to transition from 0 → 1, but not directly from 1 → 2; the species must pass through the intermediate state. These are known as correlated characters. In MorphoSim, we can simulate such characters by defining a Q matrix that enforces these allowed transitions.
+In morphological datasets, transitions between character states are often restricted, meaning that a change can only occur between specific states. For example, a character might be able to transition from 0 → 1, but not directly from 1 → 2; the species must pass through the intermediate state. These are known as correlated characters. In MorphSim, we can simulate such characters by defining a Q matrix that enforces these allowed transitions.
 
 Define a Q matrix the allows 0 &harr; 1 &harr; 2
 
@@ -135,7 +135,7 @@ morpho_data <-  sim.morpho(k = 3,
 ```
 
 ## Example 3: Simulating Data sets with Sampled Ancestors
-MorphoSim integrates with `FossilSim`, allowing fossils simulated in FossilSim to be incorporated when simulating character traits. Because MorphoSim tracks where along branches transitions occur, it can generate traits that are specific to the time and lineage in which a fossil is sampled.
+MorphSim integrates with `FossilSim`, allowing fossils simulated in FossilSim to be incorporated when simulating character traits. Because MorphSim tracks where along branches transitions occur, it can generate traits that are specific to the time and lineage in which a fossil is sampled.
 
 ```r
 install_github("fossilsim/fossilsim")

@@ -1,4 +1,4 @@
-Package: MorphoSim
+Package: MorphSim
 Type: Package
 Title: simulate discrete character data along phylogenetic trees
 Version: 0.1.0
