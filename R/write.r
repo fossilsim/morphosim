@@ -52,7 +52,14 @@ write.recon.matrix <- function (data, file = NULL) {
   matches <- grepl("_2$", tps )
   reconSA <-  gsub("_2$", "", tps[matches])
 
-  transformation <- morphsim_fossilsim(data)
+  transformation <-morphsim_fossilsim(data)
+
+  if (length(reconSA) > 0){
+
+    total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
+  } else {
+    total_tips <- data$sequences$tips[c(seq_tips)]
+  }
 
   ## need to change the sequence names to match the reconstructed tree
   for ( l in 1:length(seq_tips)){
@@ -69,10 +76,6 @@ write.recon.matrix <- function (data, file = NULL) {
 
   if(!is.null(file)) {
     ape::write.nexus.data(total_tips , file = file)
-  }
-
-  if(keep_matrix){
-    return(transformation)
   }
 }
 
@@ -247,11 +250,8 @@ morphsim_fossilsim <- function (data = NULL){
       transformation[l,"Morphsim"] <- SA_tips[l]
       transformation[l,"Fossilsim"] <- reconSA[l]
     }
-
-    total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
-  } else {
-    total_tips <- data$sequences$tips[c(seq_tips)]
   }
+   return(transformation)
 }
 
 
