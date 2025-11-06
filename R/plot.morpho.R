@@ -95,7 +95,7 @@ plot.morpho <- function(x = NULL,
   data <- x
   old_par <- par(no.readonly = TRUE)
   on.exit(par(old_par))
-  #par(mar = c(4, 3, 2.5, 2))
+  par(mar = c(5, 3, 2.5, 2))
 
   # choose which tree to plot
 
