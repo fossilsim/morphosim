@@ -35,7 +35,10 @@ write.recon.tree <- function (data, file) {
 #'}
 #' @export
 #'
-write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
+write.recon.matrix <- function (data, file = NULL, keep_align = FALSE) {
+
+  if (!is.morpho(morpho_data)) stop ("must provide a morpho object")
+  if (is.null(morpho_data$fossil)) stop ("need a fossil object for reconstruction")
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                           tree = data$trees$TimeTree,
@@ -89,8 +92,8 @@ write.recon.matrix <- function (data, file = NULL, keep_matrix = F) {
     ape::write.nexus.data(total_tips , file = file, format = "standard")
   }
 
-  if(keep_matrix){
-    return(transformation)
+  if(!is.null(keep_align)){
+    return(total_tips)
   }
 }
 

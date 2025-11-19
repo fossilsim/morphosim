@@ -276,3 +276,33 @@ combine.morpho <- function(x, y) {
   class(out) <- class(x)
   return(out)
 }
+
+
+#' Add reconstructed tree and matrix to morpho object
+#'
+#' @description Function to add the reconstructed tree and corresponding reconstructed
+#' matrix to an existing morpho object
+#'
+#' @param data `morpho object` containing a fossil object
+#'
+#' @return a `morpho object`
+#'
+#' @export
+#' @example
+#' re <- get.reconstructed(morpho_data)
+#'
+get.reconstructed <- function(data = morpho_data) {
+  if (!is.morpho(data)) stop ("must provide a morpho object")
+  if (is.null(data$fossil)) stop ("must provide a morpho object with fossil information")
+
+  r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
+                                                        tree = data$trees$TimeTree,
+                                                        tip_order = "youngest_first")
+  recon <- write.recon.matrix(morpho_data, keep_align = T)
+
+  data$sequences[["recon"]] <- recon
+  data$trees[["Recon"]] <- r_tree
+
+  return(data)
+}
+

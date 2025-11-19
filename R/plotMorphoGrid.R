@@ -4,6 +4,7 @@
 #' This function plots the full morphological matrix assocaited with the character data
 #' at the tips of a tree. Requires a morpho object as input.
 #' @param data A morpho object
+#' @param seq the sequence data to plot: "tips", "nodes", "SA", or "recon"
 #' @param num.trait default is set to "all" which plots all traits in black font. If you
 #' want to focus on a specific trait set it here, e.g. num.trait = 1 and this trait will
 #' be highlighted
@@ -26,31 +27,41 @@
 #'                           ACRV.ncats = 4 )
 #'
 #' # plot the character matrix
-#' plotMorphoGrid(data = morpho_data, num.trait = "all")
+#' plotMorphoGrid(data = morpho_data, seq = "tips", num.trait = "all")
 
 
 plotMorphoGrid <- function(data = NULL,
                            timetree = FALSE,
+                           seq = "tips",
                            num.trait = "all",
                            col =  c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")){
 
   old_par <- par(no.readonly = TRUE)
   on.exit(par(old_par))
 
-  if (inherits(data$sequences$tips[[1]][1], "character")) {
-    data$sequences$tips <- lapply(data$sequences$tips, function(x) {
+  if (inherits(data$sequences[[seq]][[1]][1], "character")) {
+    data$sequences[[seq]] <- lapply(data$sequences[[seq]], function(x) {
       x[x == "?"] <- NA        # Replace "?" with NA
       as.numeric(x)            # Convert character vector to numeric
     })
   }
 
+  if (seq == "recon"){
+    n.taxa <- length(data$trees$Recon$tree$tip.label)
+  } else {
   n.taxa <- length(data$trees$EvolTree$tip.label)
-  n.traits <- length( data$sequences$tips[[1]])
+  }
+  n.traits <- length( data$sequences[[seq]][[1]])
 
   ## Are we using a time tree?
   if (timetree) {
+    if (seq == "recon") {
+      tree_string <-  ape::write.tree(data$trees$Recon$tree)
+      tip_labs <- regmatches(tree_string, gregexpr("t\\d+_\\d+", tree_string))[[1]]
+    } else {
     tree_string <-  ape::write.tree(data$trees$TimeTree)
     tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
+    }
   } else {
     tree_string <-  ape::write.tree(data$trees$EvolTree)
     tip_labs <- regmatches(tree_string, gregexpr("t\\d+", tree_string))[[1]]
@@ -88,7 +99,7 @@ plotMorphoGrid <- function(data = NULL,
   }
   for (i in 1:n.traits) {
     for (j in 1:n.taxa) {
-      state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
+      state <- as.numeric( data$sequences[[seq]][[tip_labs[j]]][i])
       bg_col <- col[state + 1]
       if (is.na(state)) bg_col = "lightgrey"
       # Draw a rectangle for each box
@@ -119,7 +130,7 @@ plotMorphoGrid <- function(data = NULL,
   ## fill in the boxes with the state
   for (i in 1:n.traits) {
     for (j in 1:n.taxa)   {
-      state <- as.numeric( data$sequences$tips[[tip_labs[j]]][i])
+      state <- as.numeric( data$sequences[[seq]][[tip_labs[j]]][i])
       if (is.na(state)) state = "?"
 
       # Add the state text in the box
