@@ -52,8 +52,21 @@ write.recon.matrix <- function (data, file = NULL, keep_align = FALSE) {
   ## add these tip labels to the file + plus all sampled ancestor
   seq_tips <- which(names(data$sequences$tips) %in% reconTreeTips)
 
+  ## older fossil sampling events
+  old <- c()
+  if (any(as.numeric(sub("t", "", reconTreeTips)) >
+          length(data$trees$EvolTree$tip.label))){
+
+    old_number <- which(as.numeric(sub("t", "", reconTreeTips)) >
+      length(data$trees$EvolTree$tip.label))
+
+    old <- c(old, reconTreeTips[old_number])
+
+  }
+
   matches <- grepl("_2$", tps )
   reconSA <-  gsub("_2$", "", tps[matches])
+
 
   transformation <- matrix(ncol = 2, nrow = length(reconSA))
   colnames(transformation) <- c("Morphsim", "Fossilsim")
@@ -85,6 +98,21 @@ write.recon.matrix <- function (data, file = NULL, keep_align = FALSE) {
     for( l in 1:length(SA_tips)){
       rematch <- unname(transformation[l,"Fossilsim"])
       names(total_tips)[names(total_tips) == SA_tips[l]] <- paste0(rematch, "_2")
+    }
+  }
+
+  # deals with fossil sampling events not on tips
+  if (length(old) > 0){
+    n <- names(data$sequences$SA)
+    sa_names <- strsplit(names(data$sequences$SA), "_")
+    name_matrix <- t(sapply(sa_names, function(x) as.numeric(x)))
+    for ( o in 1:length(old)){
+      ed <- which (data$trees$EvolTree$edge[,2] == as.numeric(sub("t", "", old[o])))
+      matches <- name_matrix[name_matrix[,2] == ed, , drop=FALSE]
+      youngest <- matches[order(matches[,1]), , drop=FALSE][1,]
+      fs_name <- paste0(old[o], "_1")
+      ms_name <- paste0(youngest[1], "_",youngest[2])
+     total_tips[[fs_name]] <- data$sequences$SA[[ms_name]]
     }
   }
 
