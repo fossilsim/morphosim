@@ -7,6 +7,7 @@
 plotMorphoGrid(
   data = NULL,
   timetree = FALSE,
+  seq = "tips",
   num.trait = "all",
   col = c("lavender", "white", "lightskyblue1", "pink", "gold2", "forestgreen", "coral")
 )
@@ -15,6 +16,8 @@ plotMorphoGrid(
 \item{data}{A morpho object}
 
 \item{timetree}{TRUE or FALSE Indicate whether you want to plot a time tree or not. default FALSE, uses distance tree if FALSE}
+
+\item{seq}{the sequence data to plot: "tips", "nodes", "SA", or "recon"}
 
 \item{num.trait}{default is set to "all" which plots all traits in black font. If you
 want to focus on a specific trait set it here, e.g. num.trait = 1 and this trait will
@@ -40,5 +43,5 @@ morpho_data <- sim.morpho(tree = phy,
                           ACRV.ncats = 4 )
 
 # plot the character matrix
-plotMorphoGrid(data = morpho_data, num.trait = "all")
+plotMorphoGrid(data = morpho_data, seq = "tips", num.trait = "all")
 }

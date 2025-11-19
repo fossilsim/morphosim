@@ -288,10 +288,28 @@ combine.morpho <- function(x, y) {
 #' @return a `morpho object`
 #'
 #' @export
-#' @example
+#' @examples
+#' #' # simulate a phylogenetic tree
+#' t = TreeSim::sim.bd.taxa(n = 5, numbsim = 1, lambda = 0.1, mu = 0.05)[[1]]
+#'
+#' # simulate fossil sampling
+#' f = FossilSim::sim.fossils.poisson(rate = 0.1 tree = t, root.edge = F)
+#'
+#' # simulate characters along the branches of the tree
+#' morpho_data <-  sim.morpho(tree = phy,
+#'                            k = c(2,3,4),
+#'                            trait.num = 20,
+#'                            ancestral = TRUE,
+#'                            partition = c(10,5,5),
+#'                            ACRV = "gamma",
+#'                            variable = TRUE,
+#'                            ACRV.ncats = 4,
+#'                            define.Q = NULL,
+#'                            fossil = f)
+#'
 #' re <- get.reconstructed(morpho_data)
 #'
-get.reconstructed <- function(data = morpho_data) {
+get.reconstructed <- function(data) {
   if (!is.morpho(data)) stop ("must provide a morpho object")
   if (is.null(data$fossil)) stop ("must provide a morpho object with fossil information")
 
