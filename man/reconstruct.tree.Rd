@@ -19,7 +19,3 @@ This function generates colors for branches when plotting a reconstructed tree
 from a morpho object containing fossil data. Branches that are part of the
 reconstructed tree or have fossils along them are colored black; all others are grey.
 }
-\examples{
-# Assuming `morpho_data` is a morpho object with fossil data:
-# branch_colors <- reconstruct.tree(morpho_data)
-}

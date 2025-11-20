@@ -27,103 +27,18 @@ write.recon.tree <- function (data, file) {
 #'
 #' @param data Morpho object
 #' @param file File name
-#' @param keep_matrix Logical. If TRUE, returns a matrix showing the naming transformations
-#' between `morphsim` and `fossilsim` of Sampled ancestors.
 #' @examples
 #' \dontrun{
 #' write.recon.matrix(data = morpho_data, file = "reconstructed.nex")
 #'}
 #' @export
 #'
-write.recon.matrix <- function (data, file = NULL, keep_align = FALSE) {
+write.recon.matrix <- function (data, file = NULL) {
 
-  if (!is.morpho(data)) stop ("must provide a morpho object")
-  if (is.null(data$fossil)) stop ("need a fossil object for reconstruction")
-
-  r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
-                                                          tree = data$trees$TimeTree,
-                                                          tip_order = "youngest_first")
-  SA_tips <- c()
-  tps <- unname(r_tree$tree$tip.label)
-  matches <- grepl("_1$", tps )
-  # Extract elements that match
-  reconTreeTips <- gsub("_1$", "", tps[matches])
-
-  ## add these tip labels to the file + plus all sampled ancestor
-  seq_tips <- which(names(data$sequences$tips) %in% reconTreeTips)
-
-  ## older fossil sampling events
-  old <- c()
-  if (any(as.numeric(sub("t", "", reconTreeTips)) >
-          length(data$trees$EvolTree$tip.label))){
-
-    old_number <- which(as.numeric(sub("t", "", reconTreeTips)) >
-      length(data$trees$EvolTree$tip.label))
-
-    old <- c(old, reconTreeTips[old_number])
+  mat <- reconstruct.matrix(data)
+  ape::write.nexus.data(mat, file = file, format = "standard")
 
   }
-
-  matches <- grepl("_2$", tps )
-  reconSA <-  gsub("_2$", "", tps[matches])
-
-
-  transformation <- matrix(ncol = 2, nrow = length(reconSA))
-  colnames(transformation) <- c("Morphsim", "Fossilsim")
-  if (length(reconSA) > 0){
-
-    for (l in 1:length(reconSA)){
-      t_label <- which(data$trees$TimeTree$tip.label == reconSA[l])
-      b_num <- which(data$trees$TimeTree$edge[,2] == t_label)
-      spec_min <- min(data$fossil$hmin[data$fossil$ape.branch == b_num])
-      spec_num <- data$fossil$specimen[ data$fossil$hmin == spec_min ]
-      SA_tips <- rbind(SA_tips, c(paste0(spec_num, "_", b_num)))
-
-      transformation[l,"Morphsim"] <- SA_tips[l]
-      transformation[l,"Fossilsim"] <- reconSA[l]
-    }
-
-    total_tips <- c(data$sequences$tips[c(seq_tips)], data$sequences$SA[c(SA_tips)])
-  } else {
-    total_tips <- data$sequences$tips[c(seq_tips)]
-  }
-
-  ## need to change the sequence names to match the reconstructed tree
-  for ( l in 1:length(seq_tips)){
-    current <- names(data$sequences$tips[c(seq_tips)[l]])
-    names(total_tips)[names(total_tips) == current ] <- paste0(current, "_1")
-  }
-
-  if (length(reconSA) > 0){
-    for( l in 1:length(SA_tips)){
-      rematch <- unname(transformation[l,"Fossilsim"])
-      names(total_tips)[names(total_tips) == SA_tips[l]] <- paste0(rematch, "_2")
-    }
-  }
-
-  # deals with fossil sampling events not on tips
-  if (length(old) > 0){
-    n <- names(data$sequences$SA)
-    sa_names <- strsplit(names(data$sequences$SA), "_")
-    name_matrix <- t(sapply(sa_names, function(x) as.numeric(x)))
-    for ( o in 1:length(old)){
-      ed <- which (data$trees$EvolTree$edge[,2] == as.numeric(sub("t", "", old[o])))
-      matches <- name_matrix[name_matrix[,2] == ed, , drop=FALSE]
-      youngest <- matches[order(matches[,1]), , drop=FALSE][1,]
-      fs_name <- paste0(old[o], "_1")
-      ms_name <- paste0(youngest[1], "_",youngest[2])
-     total_tips[[fs_name]] <- data$sequences$SA[[ms_name]]
-    }
-  }
-
-  if(!is.null(file)) {
-    ape::write.nexus.data(total_tips , file = file, format = "standard")
-  }
-
-  if(!is.null(keep_align)){
-    return(total_tips)
-  }
-}
 
 
 #' Write the taxa ages

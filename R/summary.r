@@ -309,14 +309,14 @@ combine.morpho <- function(x, y) {
 #'
 #' re <- get_reconstructed(morpho_data)
 #'
-get_reconstructed <- function(data) {
+get.reconstructed <- function(data) {
   if (!is.morpho(data)) stop ("must provide a morpho object")
   if (is.null(data$fossil)) stop ("must provide a morpho object with fossil information")
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                         tree = data$trees$TimeTree,
                                                         tip_order = "youngest_first")
-  recon <- write.recon.matrix(data, keep_align = T)
+  recon <- reconstruct.matrix(data)
 
   data$sequences[["recon"]] <- recon
   data$trees[["Recon"]] <- r_tree

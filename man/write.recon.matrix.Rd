@@ -4,15 +4,12 @@
 \alias{write.recon.matrix}
 \title{Write reconstructed character matrix to file}
 \usage{
-write.recon.matrix(data, file = NULL, keep_align = FALSE)
+write.recon.matrix(data, file = NULL)
 }
 \arguments{
 \item{data}{Morpho object}
 
 \item{file}{File name}
-
-\item{keep_matrix}{Logical. If TRUE, returns a matrix showing the naming transformations
-between `morphsim` and `fossilsim` of Sampled ancestors.}
 }
 \description{
 Write the character matrix for the reconstructed tree to a nexus file
