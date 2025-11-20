@@ -37,8 +37,8 @@ write.recon.tree <- function (data, file) {
 #'
 write.recon.matrix <- function (data, file = NULL, keep_align = FALSE) {
 
-  if (!is.morpho(morpho_data)) stop ("must provide a morpho object")
-  if (is.null(morpho_data$fossil)) stop ("need a fossil object for reconstruction")
+  if (!is.morpho(data)) stop ("must provide a morpho object")
+  if (is.null(data$fossil)) stop ("need a fossil object for reconstruction")
 
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                           tree = data$trees$TimeTree,

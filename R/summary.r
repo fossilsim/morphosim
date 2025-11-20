@@ -316,7 +316,7 @@ get.reconstructed <- function(data) {
   r_tree <- FossilSim::reconstructed.tree.fossils.objects(fossils  = data$fossil,
                                                         tree = data$trees$TimeTree,
                                                         tip_order = "youngest_first")
-  recon <- write.recon.matrix(morpho_data, keep_align = T)
+  recon <- write.recon.matrix(data, keep_align = T)
 
   data$sequences[["recon"]] <- recon
   data$trees[["Recon"]] <- r_tree
