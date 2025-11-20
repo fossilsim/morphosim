@@ -15,6 +15,7 @@
   label.offset = 0.05,
   e.cex = 0.5,
   f.cex = 1,
+  box.cex = 4,
   col = c("#fdfdfd", "lightgray", "lightblue", "pink", "yellow", "green", "orange"),
   col.timescale = "darkgrey",
   ...
@@ -41,6 +42,8 @@ tree or not. Default = FALSE (uses distance tree if FALSE).}
 \item{e.cex}{Size of extant taxa.}
 
 \item{f.cex}{Size of fossils.}
+
+\item{box.cex}{Size of traits on plot}
 
 \item{col}{A vector of colors that should be the same length or longer than
 the number of different character states (k). If not specified, the traits

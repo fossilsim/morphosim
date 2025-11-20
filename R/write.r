@@ -261,8 +261,6 @@ write.recon.tsv <- function (data, file, uncertainty = 0){
 #' @examples
 #' morphsim_fossilsim <- function(data = morpho_data)
 #'
-#' @export
-
 morphsim_fossilsim <- function (data = NULL){
 
   if(is.null(data$fossil)) stop("Morpho object does not contian fossils")

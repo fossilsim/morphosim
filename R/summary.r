@@ -307,9 +307,9 @@ combine.morpho <- function(x, y) {
 #'                            define.Q = NULL,
 #'                            fossil = f)
 #'
-#' re <- get.reconstructed(morpho_data)
+#' re <- get_reconstructed(morpho_data)
 #'
-get.reconstructed <- function(data) {
+get_reconstructed <- function(data) {
   if (!is.morpho(data)) stop ("must provide a morpho object")
   if (is.null(data$fossil)) stop ("must provide a morpho object with fossil information")
 

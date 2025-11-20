@@ -14,6 +14,7 @@
 #' @param label.offset Distance of tip label to tree tips.
 #' @param f.cex Size of fossils.
 #' @param e.cex Size of extant taxa.
+#' @param box.cex Size of traits on plot
 #' @param col A vector of colors that should be the same length or longer than
 #'   the number of different character states (k). If not specified, the traits
 #'   from 0 to 6 can be differentiated.
@@ -55,6 +56,7 @@ plot.morpho <- function(x = NULL,
                         label.offset = 0.05,
                         e.cex = 0.5,
                         f.cex = 1,
+                        box.cex = 4,
                         col = c("#fdfdfd", "lightgray", "lightblue", "pink",
                                 "yellow", "green", "orange"),
                         col.timescale = "darkgrey",
@@ -155,9 +157,9 @@ plot.morpho <- function(x = NULL,
       points(
         0, yy[root], pch = 22, col = "black",
         bg = col[as.numeric(data$root.states[trait]) + 1],
-        cex = 4
+        cex = box.cex
       )
-      text(0, yy[root], label = as.numeric(data$root.states[trait]))
+      text(0, yy[root], label = as.numeric(data$root.states[trait]), cex = box.cex / 4)
     }
 
     if (nrow(df) > 0) {
@@ -175,8 +177,8 @@ plot.morpho <- function(x = NULL,
           point_y <- yy[data$trees$EvolTree[["edge"]][branch, 2]]
         }
         paint <- as.numeric(df$state[i]) + 1
-        points(point_x, point_y, pch = 22, col = "black", bg = col[paint], cex = 4)
-        text(point_x, point_y, labels = as.numeric(df$state[i]))
+        points(point_x, point_y, pch = 22, col = "black", bg = col[paint], cex = box.cex)
+        text(point_x, point_y, labels = as.numeric(df$state[i]), cex = box.cex / 4)
       }
     }
   }
