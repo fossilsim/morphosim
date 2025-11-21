@@ -220,7 +220,7 @@ find_path_to_tip <- function(tree, tip) {
 #' @export
 #'
 #' @examples
-#' combined <- combine_morpho(morpho1, morpho2)
+#' combined <- combine.morpho(morpho1, morpho2)
 combine.morpho <- function(x, y) {
 
   if (!inherits(x, "morpho")) stop("x must be a 'morpho' object")
@@ -293,7 +293,7 @@ combine.morpho <- function(x, y) {
 #' t = TreeSim::sim.bd.taxa(n = 5, numbsim = 1, lambda = 0.1, mu = 0.05)[[1]]
 #'
 #' # simulate fossil sampling
-#' f = FossilSim::sim.fossils.poisson(rate = 0.1 tree = t, root.edge = F)
+#' f = FossilSim::sim.fossils.poisson(rate = 0.1, tree = t, root.edge = F)
 #'
 #' # simulate characters along the branches of the tree
 #' morpho_data <-  sim.morpho(tree = phy,
